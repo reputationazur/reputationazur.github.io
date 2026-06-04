@@ -32,29 +32,11 @@
       position: fixed;
       inset: 0;
       z-index: 0;
-      background: linear-gradient(160deg, #e8f4fc 0%, var(--cream) 50%, #f5efe2 100%);
+      background: white;
       overflow: hidden;
     }
 
-    .wave {
-      position: absolute;
-      bottom: 0;
-      left: -10%;
-      width: 120%;
-      height: 45%;
-      border-radius: 50% 50% 0 0 / 30% 30% 0 0;
-      opacity: 0.12;
-      animation: swell 7s ease-in-out infinite;
-    }
 
-    .wave-1 { background: var(--azur); animation-delay: 0s; }
-    .wave-2 { background: var(--azur-light); animation-delay: 1.5s; height: 38%; opacity: 0.08; }
-    .wave-3 { background: var(--gold-deep); animation-delay: 3s; height: 28%; opacity: 0.07; }
-
-    @keyframes swell {
-      0%, 100% { transform: translateY(0) scaleX(1); }
-      50% { transform: translateY(-18px) scaleX(1.03); }
-    }
 
     /* Étoiles flottantes en arrière-plan */
     .float-star {
@@ -332,9 +314,7 @@
 <body>
 
   <div class="bg">
-    <div class="wave wave-1"></div>
-    <div class="wave wave-2"></div>
-    <div class="wave wave-3"></div>
+
     <div class="particles" id="particles"></div>
     <div id="floatstars"></div>
   </div>
