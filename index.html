@@ -14,6 +14,7 @@
       --azur-light: #0089E0;
       --gold: #FBBC04;
       --gold-deep: #C9A84C;
+      --cream: #FAF8F3;
       --dark: #1A1A2E;
       --text: #3D3D4E;
       --text-light: #7A7A8C;
@@ -27,19 +28,150 @@
       overflow: hidden;
     }
 
-    /* Particules scintillantes */
-    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    /* Bandes noires cinéma */
+    .cinema-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      height: clamp(28px, 5vw, 52px);
+      background: #0a0a0a;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .cinema-bar.top { top: 0; }
+    .cinema-bar.bottom { bottom: 0; }
+
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: white;
+      overflow: hidden;
+    }
+
+    /* Étoiles flottantes arrière-plan */
+    .float-star {
+      position: absolute;
+      color: var(--gold);
+      opacity: 0;
+      animation: floatStar var(--fd) ease-in-out infinite;
+      animation-delay: var(--fdelay);
+      font-size: var(--fsize);
+      pointer-events: none;
+      filter: drop-shadow(0 2px 6px rgba(251, 188, 4, 0.35));
+    }
+
+    @keyframes floatStar {
+      0%, 100% { opacity: 0; transform: translateY(0) rotate(0deg); }
+      20% { opacity: 0.3; }
+      50% { opacity: 0.18; transform: translateY(-22px) rotate(18deg); }
+      80% { opacity: 0.25; }
+    }
+
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
     .star-particle {
       position: absolute;
+      width: 3px;
+      height: 3px;
       border-radius: 50%;
       background: var(--gold-deep);
       opacity: 0;
       animation: twinkle var(--dur) ease-in-out infinite;
       animation-delay: var(--delay);
     }
+
     @keyframes twinkle {
       0%, 100% { opacity: 0; transform: scale(0.5); }
-      50% { opacity: 0.4; transform: scale(1.2); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    /* Feed d'avis défilant */
+    .review-feed {
+      position: fixed;
+      right: 18px;
+      top: clamp(28px, 5vw, 52px);
+      bottom: clamp(28px, 5vw, 52px);
+      width: 220px;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 10;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+    }
+
+    .review-track {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: scrollFeed 32s linear infinite;
+      padding-top: 20px;
+    }
+
+    @keyframes scrollFeed {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+
+    .review-card {
+      background: white;
+      border-radius: 12px;
+      padding: 0.7rem 0.85rem;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.09), 0 1px 4px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      width: 210px;
+      flex-shrink: 0;
+    }
+
+    .review-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .review-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      overflow: hidden;
+    }
+
+    .review-name {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #1A1A2E;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .review-stars {
+      font-size: 0.6rem;
+      color: #FBBC04;
+      letter-spacing: 0.05em;
+    }
+
+    .review-text {
+      font-size: 0.62rem;
+      color: #7A7A8C;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     /* Layout principal */
@@ -69,6 +201,7 @@
       letter-spacing: -0.02em;
       line-height: 1;
     }
+
     .brand-name span { color: var(--azur); }
 
     .brand-tagline {
@@ -80,7 +213,7 @@
       color: var(--text-light);
     }
 
-    /* Bulle étoiles Google */
+    /* Étoiles Google style — bulle */
     .google-stars {
       display: flex;
       justify-content: center;
@@ -88,6 +221,7 @@
       opacity: 0;
       animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
     }
+
     .google-stars-bubble {
       display: inline-flex;
       align-items: center;
@@ -98,6 +232,7 @@
       box-shadow: 0 4px 22px rgba(0,0,0,0.13), 0 1px 5px rgba(0,0,0,0.07);
       position: relative;
     }
+
     .google-stars-bubble::after {
       content: '';
       position: absolute;
@@ -108,38 +243,41 @@
       border-right: 11px solid transparent;
       border-top: 12px solid white;
     }
+
     .google-stars .s {
       font-size: clamp(1.5rem, 3.5vw, 2rem);
       color: var(--gold);
+      filter: drop-shadow(0 1px 2px rgba(251, 188, 4, 0.3));
       display: inline-block;
       animation: starPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
+
     .google-stars .s:nth-child(1) { animation-delay: 0.5s; }
     .google-stars .s:nth-child(2) { animation-delay: 0.62s; }
     .google-stars .s:nth-child(3) { animation-delay: 0.74s; }
     .google-stars .s:nth-child(4) { animation-delay: 0.86s; }
     .google-stars .s:nth-child(5) { animation-delay: 0.98s; }
+
     @keyframes starPop {
       0% { opacity: 0; transform: scale(0.2) rotate(-30deg); }
       100% { opacity: 1; transform: scale(1) rotate(0deg); }
     }
 
-    /* Séparateur */
     .divider {
       width: 48px;
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
-      margin: 1.8rem auto;
+      margin: 1.6rem auto;
       opacity: 0;
       animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
     }
 
-    /* Message */
     .message {
       opacity: 0;
       transform: translateY(20px);
       animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.75s forwards;
     }
+
     .message h1 {
       font-family: 'Playfair Display', serif;
       font-style: italic;
@@ -149,6 +287,7 @@
       line-height: 1.4;
       max-width: 520px;
     }
+
     .message p {
       margin-top: 1rem;
       font-size: 0.95rem;
@@ -158,7 +297,6 @@
       line-height: 1.7;
     }
 
-    /* Badge */
     .badge {
       display: inline-flex;
       align-items: center;
@@ -171,16 +309,20 @@
       opacity: 0;
       animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.95s forwards;
     }
+
     .badge-dot {
-      width: 7px; height: 7px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--gold);
       animation: pulse 2s ease-in-out infinite;
     }
+
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.4; transform: scale(0.6); }
     }
+
     .badge span {
       font-size: 0.75rem;
       letter-spacing: 0.12em;
@@ -189,13 +331,19 @@
       font-weight: 500;
     }
 
-    /* Contact */
     .contact {
       margin-top: 2.2rem;
       opacity: 0;
       animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.1s forwards;
     }
-    .contact p { font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.7rem; }
+
+    .contact p {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 0.7rem;
+      letter-spacing: 0.05em;
+    }
+
     .contact-links {
       display: flex;
       align-items: center;
@@ -203,6 +351,7 @@
       gap: 1.5rem;
       flex-wrap: wrap;
     }
+
     .contact-links a {
       display: flex;
       align-items: center;
@@ -211,131 +360,65 @@
       font-size: 0.88rem;
       color: var(--azur);
       font-weight: 500;
-      transition: color 0.2s;
+      transition: color 0.2s, gap 0.2s;
     }
-    .contact-links a:hover { color: var(--azur-light); }
-    .contact-links a svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-    /* Footer */
+    .contact-links a:hover { color: var(--azur-light); gap: 0.6rem; }
+
+    .contact-links a svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
     .footer {
       position: fixed;
-      bottom: 1.5rem;
-      left: 0; right: 0;
+      bottom: clamp(32px, 6vw, 60px);
+      left: 0;
+      right: 0;
       text-align: center;
       font-size: 0.72rem;
       color: var(--text-light);
       opacity: 0;
       animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.3s forwards;
       letter-spacing: 0.05em;
+      z-index: 2;
     }
 
     @keyframes fadeUp {
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* ===== NOTIFICATIONS STYLE MESSENGER ===== */
-    .notif-stack {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      display: flex;
-      flex-direction: column-reverse;
-      gap: 10px;
-      z-index: 100;
-      pointer-events: none;
-    }
-
-    .notif {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: white;
-      border-radius: 14px;
-      padding: 10px 14px 10px 10px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 1px 6px rgba(0,0,0,0.07);
-      min-width: 220px;
-      max-width: 260px;
-      transform: translateX(110%);
-      opacity: 0;
-      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
-    }
-
-    .notif.show {
-      transform: translateX(0);
-      opacity: 1;
-    }
-
-    .notif.hide {
-      transform: translateX(110%);
-      opacity: 0;
-      transition: transform 0.35s ease, opacity 0.3s ease;
-    }
-
-    .notif-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: white;
-      flex-shrink: 0;
-    }
-
-    .notif-body { flex: 1; overflow: hidden; }
-
-    .notif-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .notif-name {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--dark);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .notif-stars {
-      font-size: 0.6rem;
-      color: var(--gold);
-      flex-shrink: 0;
-    }
-
-    .notif-text {
-      font-size: 0.67rem;
-      color: var(--text-light);
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .notif-logo {
-      width: 14px;
-      height: 14px;
-      flex-shrink: 0;
-      opacity: 0.5;
-    }
   </style>
 </head>
 <body>
 
-  <div class="particles" id="particles"></div>
+  <!-- Bandes cinéma -->
+  <div class="cinema-bar top"></div>
+  <div class="cinema-bar bottom"></div>
+
+  <div class="bg">
+    <div class="particles" id="particles"></div>
+    <div id="floatstars"></div>
+  </div>
+
+  <!-- Feed avis défilant -->
+  <div class="review-feed">
+    <div class="review-track" id="reviewtrack"></div>
+  </div>
 
   <div class="container">
+
     <div class="brand">
       <div class="brand-name">Reputation<span>Azur</span></div>
       <div class="brand-tagline">Alpes-Maritimes · Réputation en ligne</div>
+
       <div class="google-stars">
         <div class="google-stars-bubble">
-          <span class="s">★</span><span class="s">★</span><span class="s">★</span><span class="s">★</span><span class="s">★</span>
+          <span class="s">★</span>
+          <span class="s">★</span>
+          <span class="s">★</span>
+          <span class="s">★</span>
+          <span class="s">★</span>
         </div>
       </div>
     </div>
@@ -345,6 +428,7 @@
     <div class="message">
       <h1>Notre site arrive bientôt.</h1>
       <p>Nous préparons quelque chose de soigné pour vous. En attendant, nous sommes déjà opérationnels et prenons les premiers clients.</p>
+
       <div class="badge">
         <div class="badge-dot"></div>
         <span>Site en cours de construction</span>
@@ -355,102 +439,78 @@
       <p>Contactez-nous directement</p>
       <div class="contact-links">
         <a href="mailto:contact@reputationazur.fr">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="M2 7l10 7 10-7"/>
+          </svg>
           contact@reputationazur.fr
         </a>
         <a href="tel:0601775814">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 2 .7 2.9a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.9.3 1.9.6 2.9.7A2 2 0 0122 16.9z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 2 .7 2.9a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.5c.9.3 1.9.6 2.9.7A2 2 0 0122 16.9z"/>
+          </svg>
           06.01.77.58.14
         </a>
       </div>
     </div>
+
   </div>
 
   <div class="footer">
     Jennifer Biscaglia EI — ReputationAzur · SIRET 105 774 202 00011 · TVA non applicable — art. L. 223 et s. du CIBS
   </div>
 
-  <!-- Zone notifications -->
-  <div class="notif-stack" id="notifStack"></div>
-
   <script>
-    // Particules
+    // Particules scintillantes
     const pc = document.getElementById('particles');
-    for (let i = 0; i < 18; i++) {
+    for (let i = 0; i < 20; i++) {
       const s = document.createElement('div');
       s.className = 'star-particle';
-      s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*80}%;--dur:${3+Math.random()*4}s;--delay:${Math.random()*5}s;width:${1.5+Math.random()*2}px;height:${1.5+Math.random()*2}px;`;
+      s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*70}%;--dur:${3+Math.random()*4}s;--delay:${Math.random()*5}s;width:${1.5+Math.random()*2}px;height:${1.5+Math.random()*2}px;`;
       pc.appendChild(s);
     }
 
-    // Données avis
+    // Étoiles flottantes arrière-plan
+    const fs = document.getElementById('floatstars');
+    const positions = [
+      {l:'8%',t:'15%'},{l:'5%',t:'55%'},{l:'15%',t:'80%'},
+      {l:'50%',t:'8%'},{l:'30%',t:'20%'},{l:'40%',t:'75%'},
+    ];
+    positions.forEach(p => {
+      const el = document.createElement('span');
+      el.className = 'float-star';
+      el.textContent = '★';
+      el.style.cssText = `left:${p.l};top:${p.t};--fd:${5+Math.random()*5}s;--fdelay:${Math.random()*6}s;--fsize:${0.8+Math.random()*1.2}rem;`;
+      fs.appendChild(el);
+    });
+
+    // Feed d'avis défilant avec emojis
     const reviews = [
-      { name: 'Marie L.',     stars: '★★★★★', text: 'Service impeccable, je recommande !', color: '#E8734A', letter: 'M' },
-      { name: 'Thomas B.',    stars: '★★★★★', text: 'Excellent, très professionnel.',        color: '#4A90D9', letter: 'T' },
-      { name: 'Sophie R.',    stars: '★★★★★', text: 'Réponses parfaites, top !',             color: '#5CB85C', letter: 'S' },
-      { name: 'Jean-Paul M.', stars: '★★★★☆', text: 'Très bon accueil, merci.',             color: '#9B59B6', letter: 'J' },
-      { name: 'Anna K.',      stars: '★★★★★', text: 'Wunderbar! Sehr professionell.',        color: '#E8734A', letter: 'A' },
-      { name: 'Lucas D.',     stars: '★★★★★', text: 'Notre note Google a progressé !',       color: '#00897B', letter: 'L' },
-      { name: 'Camille F.',   stars: '★★★★★', text: 'Ton impeccable, très satisfaite.',      color: '#D81B60', letter: 'C' },
-      { name: 'Marco V.',     stars: '★★★★★', text: 'Ottimo servizio, molto soddisfatto!',   color: '#F4511E', letter: 'M' },
-      { name: 'Nathalie P.',  stars: '★★★★☆', text: 'Professionnelle et disponible.',        color: '#8E24AA', letter: 'N' },
-      { name: 'David R.',     stars: '★★★★★', text: 'Excellent rapport qualité-prix.',       color: '#1E88E5', letter: 'D' },
+      { name: 'Marie L.',     stars: '★★★★★', text: '👍 Service impeccable, réponses très professionnelles.', color: '#E8734A', letter: 'M' },
+      { name: 'Thomas B.',    stars: '★★★★★', text: '🙌 Excellent travail, je recommande vivement !',         color: '#4A90D9', letter: 'T' },
+      { name: 'Sophie R.',    stars: '★★★★★', text: '👌 Très réactif et à l\'écoute. Top !',                  color: '#5CB85C', letter: 'S' },
+      { name: 'Jean-Paul M.', stars: '★★★★☆', text: '😊 Très bon accueil, service de qualité.',               color: '#9B59B6', letter: 'J' },
+      { name: 'Anna K.',      stars: '★★★★★', text: '👍 Wunderbar! Sehr professionell.',                      color: '#E8734A', letter: 'A' },
+      { name: 'Lucas D.',     stars: '★★★★★', text: '🚀 Notre note Google a vraiment progressé !',            color: '#00897B', letter: 'L' },
+      { name: 'Camille F.',   stars: '★★★★★', text: '💯 Réponses parfaites, ton impeccable.',                 color: '#D81B60', letter: 'C' },
+      { name: 'Marco V.',     stars: '★★★★★', text: '👏 Ottimo servizio, molto soddisfatto!',                 color: '#F4511E', letter: 'M' },
+      { name: 'Nathalie P.',  stars: '★★★★☆', text: '😍 Professionnelle et disponible.',                      color: '#8E24AA', letter: 'N' },
+      { name: 'David R.',     stars: '★★★★★', text: '👍 Excellent rapport qualité-prix.',                     color: '#1E88E5', letter: 'D' },
     ];
 
-    const stack = document.getElementById('notifStack');
-    const MAX_VISIBLE = 3;
-    let index = 0;
-    const activeNotifs = [];
-
-    function showNext() {
-      const r = reviews[index % reviews.length];
-      index++;
-
-      // Créer la notif
-      const notif = document.createElement('div');
-      notif.className = 'notif';
-      notif.innerHTML = `
-        <div class="notif-avatar" style="background:${r.color}">${r.letter}</div>
-        <div class="notif-body">
-          <div class="notif-top">
-            <span class="notif-name">${r.name}</span>
-            <span class="notif-stars">${r.stars}</span>
-          </div>
-          <div class="notif-text">${r.text}</div>
+    const track = document.getElementById('reviewtrack');
+    [...reviews, ...reviews].forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'review-card';
+      card.innerHTML = `
+        <div class="review-avatar" style="background:${r.color}">${r.letter}</div>
+        <div class="review-info">
+          <div class="review-name">${r.name}</div>
+          <div class="review-stars">${r.stars}</div>
+          <div class="review-text">${r.text}</div>
         </div>`;
-
-      stack.prepend(notif);
-      activeNotifs.push(notif);
-
-      // Animer l'entrée
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => { notif.classList.add('show'); });
-      });
-
-      // Retirer si trop de notifs visibles
-      if (activeNotifs.length > MAX_VISIBLE) {
-        const old = activeNotifs.shift();
-        old.classList.add('hide');
-        setTimeout(() => old.remove(), 400);
-      }
-
-      // Disparition auto après 4s
-      setTimeout(() => {
-        notif.classList.remove('show');
-        notif.classList.add('hide');
-        setTimeout(() => {
-          notif.remove();
-          const idx = activeNotifs.indexOf(notif);
-          if (idx > -1) activeNotifs.splice(idx, 1);
-        }, 400);
-      }, 4000);
-    }
-
-    // Démarrer après 2s, puis toutes les 3s
-    setTimeout(() => {
-      showNext();
-      setInterval(showNext, 3000);
-    }, 2000);
+      track.appendChild(card);
+    });
   </script>
 
 </body>
