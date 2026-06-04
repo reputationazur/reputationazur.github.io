@@ -152,21 +152,42 @@
       color: var(--text-light);
     }
 
-    /* ★ Étoiles Google style ★ */
+    /* ★ Étoiles Google style — bulle ★ */
     .google-stars {
       display: flex;
-      align-items: center;
       justify-content: center;
-      gap: 0.2rem;
-      margin-top: 1.1rem;
+      margin-top: 1.2rem;
       opacity: 0;
       animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+    }
+
+    .google-stars-bubble {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.15rem;
+      background: white;
+      padding: 0.55rem 1.3rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 22px rgba(0,0,0,0.13), 0 1px 5px rgba(0,0,0,0.07);
+      position: relative;
+    }
+
+    /* Pointe de la bulle vers le bas */
+    .google-stars-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 11px solid transparent;
+      border-right: 11px solid transparent;
+      border-top: 12px solid white;
     }
 
     .google-stars .s {
       font-size: clamp(1.5rem, 3.5vw, 2rem);
       color: var(--gold);
-      filter: drop-shadow(0 2px 8px rgba(251, 188, 4, 0.5));
+      filter: drop-shadow(0 1px 2px rgba(251, 188, 4, 0.3));
       display: inline-block;
       animation: starPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
@@ -324,13 +345,15 @@
       <div class="brand-name">Reputation<span>Azur</span></div>
       <div class="brand-tagline">Alpes-Maritimes · Réputation en ligne</div>
 
-      <!-- Étoiles style Google -->
+      <!-- Étoiles style Google — bulle -->
       <div class="google-stars">
-        <span class="s">★</span>
-        <span class="s">★</span>
-        <span class="s">★</span>
-        <span class="s">★</span>
-        <span class="s">★</span>
+        <div class="google-stars-bubble">
+          <span class="s">★</span>
+          <span class="s">★</span>
+          <span class="s">★</span>
+          <span class="s">★</span>
+          <span class="s">★</span>
+        </div>
       </div>
     </div>
 
