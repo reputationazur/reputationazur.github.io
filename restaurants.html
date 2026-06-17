@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReputationAzur — Gestion des avis Google & TripAdvisor · Restaurants</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C9A84C; --gold-light: #E8C97A; --gold-pale: #FAF4E6;
+      --cream: #F7F2EA; --ink: #1A1208; --muted: #6B5D4A;
+      --border: rgba(201,168,76,.2); --white: #FFFFFF;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 0 3rem; transition: all .5s ease; }
+    nav.solid { background: rgba(247,242,234,.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); box-shadow: 0 2px 24px rgba(0,0,0,.05); }
+    .nav-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--white); text-decoration: none; letter-spacing: .02em; transition: color .3s; }
+    nav.solid .nav-logo { color: var(--ink); }
+    .nav-logo em { font-style: italic; color: var(--gold); }
+    .nav-back { font-size: .8rem; color: rgba(255,255,255,.7); text-decoration: none; display: flex; align-items: center; gap: .4rem; transition: color .3s; }
+    nav.solid .nav-back { color: var(--muted); }
+    .nav-back:hover { color: var(--gold); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: .875rem; color: rgba(255,255,255,.8); transition: color .3s; }
+    nav.solid .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-pill { border: 1px solid rgba(255,255,255,.4); border-radius: 100px; padding: .5rem 1.4rem; color: white !important; transition: all .3s !important; }
+    nav.solid .nav-pill { border-color: var(--gold); color: var(--gold) !important; }
+    .nav-pill:hover { background: var(--gold) !important; color: var(--ink) !important; border-color: var(--gold) !important; }
+
+    /* ── HERO ── */
+    .hero { position: relative; height: 100vh; min-height: 700px; display: flex; align-items: flex-end; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1800&q=85&auto=format&fit=crop'); background-size: cover; background-position: center 40%; transform: scale(1.05); animation: heroZoom 12s ease-out forwards; }
+    @keyframes heroZoom { from{transform:scale(1.1)} to{transform:scale(1.01)} }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,8,4,.15) 0%, rgba(10,8,4,.1) 30%, rgba(10,8,4,.6) 70%, rgba(10,8,4,.92) 100%); }
+    .hero-line { position: absolute; top: 0; left: 50%; width: 1px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); transform: translateX(-50%); animation: lineDrop 2s ease-out .5s both; }
+    @keyframes lineDrop { from{height:0;opacity:0} to{height:100%;opacity:.4} }
+    .hero-content { position: relative; z-index: 10; width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 3rem 5rem; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: .6rem; margin-bottom: 1.5rem; opacity: 0; animation: riseUp .8s ease .8s forwards; background: rgba(0,0,0,.35); backdrop-filter: blur(6px); padding: .5rem 1rem .5rem .6rem; border-radius: 100px; }
+    .hero-eyebrow-line { height: 1px; width: 40px; background: var(--gold); flex-shrink: 0; }
+    .hero-eyebrow span { font-size: .78rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: white; text-shadow: none; }
+    .hero-h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.05; color: white; letter-spacing: -.01em; margin-bottom: 2rem; opacity: 0; animation: riseUp .9s ease 1s forwards; }
+    .hero-h1 strong { font-weight: 600; }
+    .hero-h1 em { font-style: italic; color: var(--gold-light); }
+    .hero-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 3rem; flex-wrap: wrap; opacity: 0; animation: riseUp .9s ease 1.2s forwards; }
+    .hero-desc { font-size: 1rem; font-weight: 300; color: rgba(255,255,255,.7); max-width: 440px; line-height: 1.8; }
+    .hero-actions { display: flex; align-items: center; gap: 1.2rem; }
+    .btn-gold { display: inline-flex; align-items: center; gap: .6rem; background: var(--gold); color: var(--ink); padding: 1rem 2.2rem; border-radius: 100px; font-size: .9rem; font-weight: 500; text-decoration: none; letter-spacing: .04em; transition: all .3s ease; }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(201,168,76,.4); }
+    .btn-outline-white { display: inline-flex; align-items: center; gap: .6rem; background: transparent; color: white; padding: 1rem 2.2rem; border-radius: 100px; font-size: .9rem; font-weight: 400; text-decoration: none; border: 1px solid rgba(255,255,255,.35); letter-spacing: .04em; transition: all .3s ease; }
+    .btn-outline-white:hover { border-color: var(--gold); color: var(--gold); }
+    .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: .4rem; opacity: 0; animation: fadeIn 1s ease 2s forwards; }
+    .scroll-hint span { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.4); }
+    .scroll-arrow { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0%,100%{opacity:.6;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.15)} }
+    @keyframes riseUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+    /* ── STATS ── */
+    .stats-section { background: var(--ink); padding: 3.5rem 3rem; }
+    .stats-inner { max-width: 1300px; margin: 0 auto; display: flex; gap: 0; }
+    .stats-row { display: flex; flex: 1; }
+    .s-stat { flex: 1; padding: 0 2.5rem; border-left: 1px solid rgba(255,255,255,.08); }
+    .s-stat:first-child { border-left: none; }
+    .s-num { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 600; color: white; line-height: 1; }
+    .s-num .g { color: var(--gold); }
+    .s-label { font-size: .78rem; color: rgba(255,255,255,.45); margin-top: .4rem; line-height: 1.55; max-width: 200px; }
+    .s-src { font-size: .62rem; color: rgba(255,255,255,.2); margin-top: .3rem; }
+
+    /* ── SECTIONS ── */
+    .section { padding: 7rem 3rem; }
+    .section-inner { max-width: 1300px; margin: 0 auto; }
+    .why-section { background: var(--white); }
+    .s-tag { font-size: .68rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: .8rem; }
+    .s-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 3.6rem); font-weight: 400; color: var(--ink); line-height: 1.15; letter-spacing: -.01em; margin-bottom: 1rem; }
+    .s-sub { font-size: .95rem; color: var(--muted); max-width: 500px; line-height: 1.75; margin-bottom: 4rem; font-weight: 300; }
+
+    .rev { opacity:0; transform:translateY(36px); transition:opacity .9s ease,transform .9s ease; }
+    .rev.in { opacity:1; transform:translateY(0); }
+    .rev-l { opacity:0; transform:translateX(-40px); transition:opacity .9s ease,transform .9s ease; }
+    .rev-l.in { opacity:1; transform:translateX(0); }
+    .rev-r { opacity:0; transform:translateX(40px); transition:opacity .9s ease,transform .9s ease; }
+    .rev-r.in { opacity:1; transform:translateX(0); }
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+    .why-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .why-photo { position: relative; border-radius: 4px; overflow: hidden; aspect-ratio: 3/4; }
+    .why-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 8s ease; }
+    .why-photo:hover img { transform: scale(1.04); }
+    .why-photo::before { content: ''; position: absolute; inset: 16px; border: 1px solid rgba(201,168,76,.35); border-radius: 2px; z-index: 1; pointer-events: none; }
+    .why-badge { position: absolute; bottom: 2rem; left: 1.5rem; background: var(--ink); color: white; border-radius: 4px; padding: 1.2rem 1.5rem; z-index: 2; box-shadow: 0 16px 40px rgba(0,0,0,.2); }
+    .why-badge .big { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 600; color: var(--gold); line-height: 1; }
+    .why-badge .lbl { font-size: .72rem; color: rgba(255,255,255,.55); margin-top: .2rem; line-height: 1.4; max-width: 160px; }
+    .why-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .why-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+    .why-item-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--gold); line-height: 1; flex-shrink: 0; min-width: 2rem; text-align: right; }
+    .why-item-text strong { display: block; font-size: .9rem; font-weight: 600; color: var(--ink); margin-bottom: .3rem; }
+    .why-item-text p { font-size: .84rem; color: var(--muted); line-height: 1.7; }
+
+    /* Offres */
+    .offers-section { background: var(--ink); }
+    .offers-section .s-title { color: white; }
+    .offers-section .s-tag { color: var(--gold); }
+    .offers-section .s-sub { color: rgba(255,255,255,.4); }
+    .offers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .offer-card { border: 1px solid rgba(255,255,255,.08); border-radius: 4px; padding: 2.2rem; transition: all .4s ease; position: relative; overflow: hidden; background: rgba(255,255,255,.03); }
+    .offer-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform: scaleX(0); transition: transform .4s ease; }
+    .offer-card:hover { background: rgba(255,255,255,.06); transform: translateY(-4px); }
+    .offer-card:hover::after { transform: scaleX(1); }
+    .offer-card.feat { border-color: rgba(201,168,76,.3); background: rgba(201,168,76,.05); }
+    .offer-card.feat::after { transform: scaleX(1); }
+    .o-badge { display: inline-block; font-size: .65rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); background: var(--gold); padding: .2rem .7rem; border-radius: 100px; margin-bottom: 1.2rem; }
+    .o-name { font-size: .7rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: .5rem; }
+    .o-price { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: white; line-height: 1; }
+    .o-price sup { font-size: 1.3rem; vertical-align: super; }
+    .o-price sub { font-size: 1rem; font-weight: 300; color: rgba(255,255,255,.3); }
+    .o-promo { font-size: .75rem; color: #6EE7B7; margin: .4rem 0 1.2rem; }
+    .o-sep { height: 1px; background: rgba(255,255,255,.06); margin: 1.2rem 0; }
+    .o-desc { font-size: .75rem; color: rgba(255,255,255,.3); font-style: italic; margin-bottom: 1rem; line-height: 1.5; }
+    .o-list { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .o-list li { display: flex; gap: .5rem; font-size: .82rem; color: rgba(255,255,255,.6); line-height: 1.45; }
+    .o-list li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+
+    /* Objections */
+    .obj-section { background: var(--cream); }
+    .obj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .obj-card { background: var(--cream); padding: 2rem; transition: background .3s; }
+    .obj-card:hover { background: var(--white); }
+    .obj-q { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-style: italic; font-weight: 600; color: var(--ink); margin-bottom: .7rem; line-height: 1.3; }
+    .obj-a { font-size: .84rem; color: var(--muted); line-height: 1.75; font-weight: 300; }
+
+    /* Process */
+    .process-section { background: var(--white); }
+    .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3rem; position: relative; }
+    .process-grid::before { content:''; position:absolute; top:28px; left:calc(16.7% + 1rem); right:calc(16.7% + 1rem); height:1px; background:linear-gradient(90deg,var(--gold),rgba(201,168,76,.2)); }
+    .p-card { text-align:center; }
+    .p-num { width:56px; height:56px; border-radius:50%; margin:0 auto 1.5rem; background:var(--ink); color:var(--gold); position:relative; z-index:1; display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; box-shadow:0 0 0 6px var(--white), 0 0 0 7px var(--border); }
+    .p-card h3 { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:600; color:var(--ink); margin-bottom:.5rem; }
+    .p-card p { font-size:.84rem; color:var(--muted); line-height:1.7; font-weight:300; }
+
+    /* Contact */
+    .contact-section { background: var(--ink); }
+    .contact-section .s-title { color:white; }
+    .contact-section .s-tag { color:var(--gold); }
+    .contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:6rem; align-items:start; }
+    .contact-info p { font-size:.92rem; color:rgba(255,255,255,.45); line-height:1.8; margin-bottom:2.5rem; font-weight:300; }
+    .c-item { display:flex; gap:1rem; align-items:center; margin-bottom:1rem; text-decoration:none; }
+    .c-icon { width:44px; height:44px; border-radius:4px; border:1px solid rgba(201,168,76,.25); display:flex; align-items:center; justify-content:center; font-size:1rem; transition:all .3s; }
+    .c-item:hover .c-icon { background:var(--gold); border-color:var(--gold); }
+    .c-txt strong { display:block; font-size:.88rem; color:white; font-weight:500; }
+    .c-txt small { font-size:.75rem; color:rgba(255,255,255,.3); }
+    .form-box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:4px; padding:3rem; }
+    .form-box h4 { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:400; color:white; margin-bottom:2rem; font-style:italic; }
+    .f-group { margin-bottom:1.2rem; }
+    .f-group label { display:block; font-size:.68rem; font-weight:500; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:.5rem; }
+    .f-group input, .f-group select { width:100%; padding:.8rem 0; background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,.12); font-family:'DM Sans',sans-serif; font-size:.9rem; color:white; outline:none; transition:border-color .3s; -webkit-appearance:none; }
+    .f-group input::placeholder { color:rgba(255,255,255,.2); }
+    .f-group input:focus, .f-group select:focus { border-color:var(--gold); }
+    .f-group select option { background:var(--ink); }
+    .f-row { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .f-submit { width:100%; margin-top:2rem; padding:1.1rem; background:var(--gold); color:var(--ink); border:none; border-radius:100px; font-family:'DM Sans',sans-serif; font-size:.9rem; font-weight:600; letter-spacing:.05em; cursor:pointer; transition:all .3s; }
+    .f-submit:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 12px 30px rgba(201,168,76,.3); }
+    .f-note { text-align:center; font-size:.72rem; color:rgba(255,255,255,.2); margin-top:.8rem; letter-spacing:.03em; }
+
+    footer { background:var(--ink); border-top:1px solid rgba(255,255,255,.05); padding:2.5rem 3rem; }
+    .footer-inner { max-width:1300px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+    .f-logo { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:white; }
+    .f-logo em { font-style:italic; color:var(--gold); }
+    .f-back { font-size:.78rem; color:rgba(255,255,255,.3); text-decoration:none; transition:color .3s; }
+    .f-back:hover { color:var(--gold); }
+    .f-legal { font-size:.68rem; color:rgba(255,255,255,.2); line-height:1.8; text-align:right; }
+
+    @media (max-width:1000px) {
+      .why-layout { grid-template-columns:1fr; gap:3rem; }
+      .why-photo { aspect-ratio:16/9; }
+      .contact-grid { grid-template-columns:1fr; gap:3rem; }
+      .process-grid { grid-template-columns:1fr; }
+      .process-grid::before { display:none; }
+    }
+    @media (max-width:768px) {
+      nav { padding:0 1.5rem; }
+      .nav-links { display:none; }
+      .hero-content { padding:0 1.5rem 4rem; }
+      .section { padding:5rem 1.5rem; }
+      .stats-row { flex-direction:column; gap:1.5rem; }
+      .s-stat { border-left:none; border-top:1px solid rgba(255,255,255,.08); padding:1.5rem 0 0; }
+      .s-stat:first-child { border-top:none; padding-top:0; }
+      .f-row { grid-template-columns:1fr; }
+      .footer-inner { flex-direction:column; text-align:center; }
+      .f-legal { text-align:center; }
+      .hero-bottom { flex-direction:column; align-items:flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="index_v2.html" class="nav-back">← Retour</a>
+    <a href="index_v2.html" class="nav-logo">Reputation<em>Azur</em></a>
+    <ul class="nav-links">
+      <li><a href="#pourquoi">Pourquoi agir</a></li>
+      <li><a href="#offres">Offres</a></li>
+      <li><a href="#process">Comment ça marche</a></li>
+      <li><a href="#contact" class="nav-pill">Démo gratuite</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-line"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span>Restaurants · Alpes-Maritimes</span>
+    </div>
+    <h1 class="hero-h1">Vos avis Google<br><em>& TripAdvisor,</em><br><strong>gérés par des professionnels.</strong></h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">Chaque avis traité sous 5 jours ouvrés — en français, anglais, allemand et italien — dans l'ambiance de votre établissement.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-gold">Démonstration gratuite</a>
+        <a href="#offres" class="btn-outline-white">Voir les offres</a>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Découvrir</span><div class="scroll-arrow"></div></div>
+</section>
+
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stats-row">
+      <div class="s-stat">
+        <div class="s-num"><span class="ctr" data-t="93">0</span><span class="g">%</span></div>
+        <div class="s-label">des clients consultent les avis Google ou TripAdvisor avant de choisir un restaurant</div>
+        <div class="s-src">BrightLocal 2024</div>
+      </div>
+      <div class="s-stat">
+        <div class="s-num">1,<span class="g">7×</span></div>
+        <div class="s-label">plus de confiance accordée aux établissements qui répondent à leurs avis</div>
+        <div class="s-src">Review-Collect 2025</div>
+      </div>
+      <div class="s-stat">
+        <div class="s-num">9<span class="g">/10</span></div>
+        <div class="s-label">consommateurs attendent une réponse à leur avis — seuls 7% disent ne pas en attendre</div>
+        <div class="s-src">BrightLocal 2024 & 2025</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section why-section" id="pourquoi">
+  <div class="section-inner">
+    <div class="why-layout">
+      <div class="rev-l">
+        <div class="why-photo">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=85&auto=format&fit=crop" alt="Restaurant gastronomique Côte d'Azur" loading="lazy">
+          <div class="why-badge"><div class="big">5 j.</div><div class="lbl">délai max de réponse à chaque avis</div></div>
+        </div>
+      </div>
+      <div class="rev-r">
+        <span class="s-tag">Ce que coûte l'inaction</span>
+        <h2 class="s-title">Chaque avis sans réponse,<br><em>c'est un couvert perdu</em></h2>
+        <p class="s-sub">Sur la Côte d'Azur, vos clients lisent les avis avant même de réserver. Votre réputation se joue en quelques secondes.</p>
+        <div class="why-list">
+          <div class="why-item">
+            <div class="why-item-num">01</div>
+            <div class="why-item-text">
+              <strong>1 avis négatif sans réponse</strong>
+              <p>94% des consommateurs ont évité un établissement après un avis négatif sans réponse. Estimé à 105–175€ perdus par semaine (panier moyen 35€).</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-item-num">02</div>
+            <div class="why-item-text">
+              <strong>Avis EN / DE / IT sans réponse</strong>
+              <p>Les touristes — clientèle principale de la Côte d'Azur — passent à la concurrence. Une réponse dans leur langue crée le lien immédiatement.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-item-num">03</div>
+            <div class="why-item-text">
+              <strong>Vous répondez après le service</strong>
+              <p>Sous le coup de l'émotion, après 14h de travail. Une réponse maladroite peut coûter bien plus qu'une absence.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section offers-section" id="offres">
+  <div class="section-inner">
+    <span class="s-tag">Nos offres</span>
+    <h2 class="s-title">Simple. Transparent. Efficace.</h2>
+    <p class="s-sub">3 durées au choix — plus l&apos;engagement est long, plus le tarif est avantageux. Résiliable avec 30 jours de préavis après la période souscrite.</p>
+
+    <div class="duration-table rev" style="margin-bottom:3rem;overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;color:white;font-size:.82rem;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:.8rem 1rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;text-transform:uppercase;">Offre</th>
+            <th style="padding:.8rem 1rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-align:center;">3 mois</th>
+            <th style="padding:.8rem 1rem;background:rgba(201,168,76,.15);color:var(--gold);font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:center;">6 mois ★</th>
+            <th style="padding:.8rem 1rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-align:center;">12 mois</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-weight:500;">Essentiel</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">180€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-weight:700;color:var(--gold);">165€</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">150€</td>
+          </tr>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-weight:500;">Prestige ★</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">240€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-weight:700;color:var(--gold);">220€</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">200€</td>
+          </tr>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-weight:500;">Premium</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">360€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-weight:700;color:var(--gold);">330€</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">300€</td>
+          </tr>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-weight:500;">Pack Duo</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">420€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-weight:700;color:var(--gold);">385€</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">350€</td>
+          </tr>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-size:.72rem;color:rgba(255,255,255,.35);">Avis offerts au démarrage</td>
+            <td style="padding:.75rem 1rem;text-align:center;font-size:.72rem;color:rgba(255,255,255,.35);">5 avis</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-size:.72rem;color:var(--gold-light);">10 avis</td>
+            <td style="padding:.75rem 1rem;text-align:center;font-size:.72rem;color:rgba(255,255,255,.35);">20 avis</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:.72rem;color:rgba(255,255,255,.25);margin-top:.8rem;">Tarifs en euros/mois par établissement. TVA non applicable — art. L. 223 et s. du CIBS.</p>
+    </div>
+
+    <div class="offers-grid">
+      <div class="offer-card rev d1">
+        <div class="o-name">Essentiel</div>
+        <div class="o-price"><sup>€</sup>165<sub>/mois</sub></div>
+        <div class="o-promo">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
+        <div class="o-desc">Commerces locaux & restaurants · Avis Google</div>
+        <div class="o-sep"></div>
+        <ul class="o-list">
+          <li>Surveillance hebdomadaire des avis Google</li>
+          <li>Réponses professionnelles personnalisées</li>
+          <li>Publication directe ou validation préalable</li>
+          <li>Gestion avis positifs, négatifs et frauduleux</li>
+          <li>Ambiance définie à la fiche de cadrage</li>
+          <li>Alertes avis critiques incluses</li>
+          <li>Réponse sous 5 jours ouvrés</li>
+        </ul>
+      </div>
+      <div class="offer-card feat rev d2">
+        <div class="o-badge">★ Recommandé</div>
+        <div class="o-name">Prestige</div>
+        <div class="o-price"><sup>€</sup>220<sub>/mois</sub></div>
+        <div class="o-promo">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
+        <div class="o-desc">Restaurants touristiques · Google + TripAdvisor</div>
+        <div class="o-sep"></div>
+        <ul class="o-list">
+          <li>Tout l&apos;Essentiel, plus :</li>
+          <li>Avis TripAdvisor inclus</li>
+          <li>Réponses multilingues FR · EN · DE · IT</li>
+          <li>Priorité aux touristes internationaux</li>
+          <li>Adapté zones touristiques & arrière-pays</li>
+        </ul>
+      </div>
+      <div class="offer-card rev d3">
+        <div class="o-name">Premium</div>
+        <div class="o-price"><sup>€</sup>330<sub>/mois</sub></div>
+        <div class="o-promo">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
+        <div class="o-desc">Image complète en ligne</div>
+        <div class="o-sep"></div>
+        <ul class="o-list">
+          <li>Tout le Prestige, plus :</li>
+          <li>Commentaires Facebook inclus</li>
+          <li>Rapport mensuel PDF (note, évolution)</li>
+          <li>Alertes avis critiques en temps réel</li>
+          <li>Recommandations mensuelles</li>
+        </ul>
+      </div>
+      <div class="offer-card rev d4">
+        <div class="o-name">Pack Duo</div>
+        <div class="o-price"><sup>€</sup>385<sub>/mois</sub></div>
+        <div class="o-promo">↳ Tarif 6 mois · 2 × Prestige au lieu de 440€</div>
+        <div class="o-desc">2 établissements · Prestige × 2</div>
+        <div class="o-sep"></div>
+        <ul class="o-list">
+          <li>Offre Prestige × 2 établissements</li>
+          <li>10 avis offerts par établissement</li>
+          <li>Interlocuteur unique</li>
+          <li>Facturation groupée simplifiée</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rev" style="margin-top:4rem;">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;color:white;margin-bottom:.5rem;">Prestations ponctuelles</h3>
+      <p style="font-size:.85rem;color:rgba(255,255,255,.35);margin-bottom:1.5rem;">Sans abonnement requis · Intervention unique</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
+          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Optimisation Fiche</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">150€</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Remise à neuf : photos, description, horaires, catégories</div>
+        </div>
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
+          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Pack Mise en Route</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">150€</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Revendication et complétion de votre fiche Google & TripAdvisor</div>
+        </div>
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
+          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Rattrapage Historique</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">120€</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Réponses sur 25 avis anciens · Une fois par établissement</div>
+        </div>
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
+          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Kit Collecte d&apos;Avis</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">50€</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">QR code + chevalet, carte, sticker vitrine aux couleurs de votre établissement</div>
+        </div>
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
+          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Audit Réputation</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">75€</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Analyse Google/TripAdvisor : points critiques et recommandations écrites</div>
+        </div>
+        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
+          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Email Relance Clients</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">100€</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Rédaction d&apos;un email pour demander des avis Google à vos clients</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section obj-section">
+  <div class="section-inner">
+    <span class="s-tag">Vos questions</span>
+    <h2 class="s-title">On a les réponses</h2>
+    <div class="obj-grid rev">
+      <div class="obj-card"><div class="obj-q">C'est trop cher.</div><div class="obj-a">150€/mois, c'est moins cher que perdre 3 couverts par semaine. Un seul client récupéré grâce à une bonne réponse couvre le mois.</div></div>
+      <div class="obj-card"><div class="obj-q">Je réponds déjà moi-même.</div><div class="obj-a">Après un service de 12h, sous le coup de l'émotion — c'est risqué. Nous répondons avec recul, en plusieurs langues, dans l'ambiance que vos futurs clients vont juger.</div></div>
+      <div class="obj-card"><div class="obj-q">Je n'ai pas beaucoup d'avis.</div><div class="obj-a">C'est le bon moment. Chaque avis sans réponse influence des dizaines de futurs clients. Mieux vaut construire sa réputation avant la haute saison.</div></div>
+      <div class="obj-card"><div class="obj-q">Les réponses multilingues ?</div><div class="obj-a">IA pour la rédaction initiale, relecture humaine avant publication. Vitesse de la machine, qualité du professionnel.</div></div>
+      <div class="obj-card"><div class="obj-q">Vous avez des références ?</div><div class="obj-a">Nous sommes en phase de lancement avec un premier partenaire sur la Côte d'Azur. C'est pourquoi nous offrons une démonstration gratuite — vous jugez vous-même avant de signer.</div></div>
+      <div class="obj-card"><div class="obj-q">Je vais réfléchir.</div><div class="obj-a">Bien sûr. En attendant, nous vous préparons des exemples sur vos vrais avis — sans engagement. Vous décidez avec le résultat sous les yeux.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section process-section" id="process">
+  <div class="section-inner">
+    <span class="s-tag" style="text-align:center;display:block;">Comment ça marche</span>
+    <h2 class="s-title" style="text-align:center;margin-bottom:.5rem;">Démarrer en 3 étapes</h2>
+    <p class="s-sub" style="margin:0 auto 5rem;text-align:center;">Aucune installation. Aucune complexité.</p>
+    <div class="process-grid">
+      <div class="p-card rev d1"><div class="p-num">1</div><h3>Démonstration gratuite</h3><p>Nous rédigeons des exemples sur vos vrais avis Google — sans accès à votre compte, sans engagement.</p></div>
+      <div class="p-card rev d2"><div class="p-num">2</div><h3>Vous validez, on signe</h3><p>Fiche de cadrage + devis. Vous définissez l'ambiance, les points forts, les sujets à éviter.</p></div>
+      <div class="p-card rev d3"><div class="p-num">3</div><h3>On gère, vous cuisinez</h3><p>Chaque avis traité sous 5 jours ouvrés. Notification à chaque réponse publiée.</p></div>
+    </div>
+    <div style="text-align:center;margin-top:4rem;"><a href="#contact" class="btn-gold">Je veux ma démonstration gratuite →</a></div>
+  </div>
+</section>
+
+<section class="section contact-section" id="contact">
+  <div class="section-inner">
+    <div class="contact-grid">
+      <div class="rev-l">
+        <span class="s-tag">Contact</span>
+        <h2 class="s-title" style="font-size:clamp(2rem,3.5vw,3rem);">Parlons de<br><em style="color:var(--gold);">votre restaurant</em></h2>
+        <p>Réponse sous 24h. Démonstration gratuite sur vos vrais avis — aucun accès à votre compte requis.</p>
+        <a href="tel:0744419315" class="c-item"><div class="c-icon">📞</div><div class="c-txt"><strong>07.44.41.93.15</strong><small>Lun–Ven · 9h–18h</small></div></a>
+        <a href="mailto:contact@reputationazur.fr" class="c-item"><div class="c-icon">✉️</div><div class="c-txt"><strong>contact@reputationazur.fr</strong></div></a>
+        <div class="c-item"><div class="c-icon">📍</div><div class="c-txt"><strong>Antibes — Alpes-Maritimes</strong><small>Intervention 06 & 83</small></div></div>
+      </div>
+      <div class="rev-r">
+        <div class="form-box">
+          <h4>Demande de démonstration gratuite</h4>
+          <div class="f-row">
+            <div class="f-group"><label>Prénom</label><input type="text" placeholder="Jean"></div>
+            <div class="f-group"><label>Nom</label><input type="text" placeholder="Dupont"></div>
+          </div>
+          <div class="f-group"><label>Nom du restaurant</label><input type="text" placeholder="Le Bistrot du Port"></div>
+          <div class="f-group"><label>Email</label><input type="email" placeholder="jean@monresto.fr"></div>
+          <div class="f-group"><label>Offre souhaitée</label>
+            <select>
+              <option>Essentiel — 150€/mois</option>
+              <option selected>Prestige ★ — 200€/mois</option>
+              <option>Premium — 300€/mois</option>
+              <option>Pack Duo — 350€/mois</option>
+              <option>Je ne sais pas encore</option>
+            </select>
+          </div>
+          <button class="f-submit" onclick="alert('Merci ! Jennifer vous contacte sous 24h.')">Recevoir ma démonstration →</button>
+          <div class="f-note">Sans engagement · Avis offerts au démarrage · Réponse sous 24h</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="f-logo">Reputation<em>Azur</em></div>
+    <a href="index_v2.html" class="f-back">← Changer de profil</a>
+    <div class="f-legal">Jennifer Biscaglia EI · SIRET 105 774 202 00011 · Code APE 7021Z<br>06600 Antibes · TVA non applicable — art. L. 223 et s. du CIBS<br>© 2026 ReputationAzur</div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('solid', window.scrollY > 80));
+  const ro = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.12 });
+  document.querySelectorAll('.rev, .rev-l, .rev-r').forEach(el => ro.observe(el));
+  const co = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target; const target = +el.dataset.t; let n = 0;
+      const step = Math.ceil(target / 35);
+      const t = setInterval(() => { n = Math.min(n + step, target); el.textContent = n; if (n >= target) clearInterval(t); }, 28);
+      co.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.ctr').forEach(c => co.observe(c));
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReputationAzur — Gestion des avis Google & TripAdvisor · Côte d'Azur</title>
+  <meta name="description" content="ReputationAzur gère vos avis Google et TripAdvisor pour restaurants et hôtels des Alpes-Maritimes.">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --ink: #1A1208;
+      --muted: #6B5D4A;
+      --white: #FFFFFF;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ── PANEL ── */
+    .panel {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .panel-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transform: scale(1.05);
+      transition: transform 8s ease;
+    }
+    .panel:hover .panel-bg { transform: scale(1.08); }
+
+    .panel-resto .panel-bg {
+      background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=85&auto=format&fit=crop');
+    }
+    .panel-hotel .panel-bg {
+      background-image: url('https://images.unsplash.com/photo-1455587734955-081b22074882?w=1200&q=85&auto=format&fit=crop');
+    }
+
+    .panel-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(10,8,4,.3) 0%, rgba(10,8,4,.75) 100%);
+      transition: background .4s ease;
+    }
+    .panel:hover .panel-overlay {
+      background: linear-gradient(to bottom, rgba(10,8,4,.2) 0%, rgba(10,8,4,.85) 100%);
+    }
+
+    /* Séparateur vertical central */
+    .panel-resto::after {
+      content: '';
+      position: absolute; top: 10%; bottom: 10%; right: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(201,168,76,.5), transparent);
+      z-index: 5;
+    }
+
+    .panel-content {
+      position: relative; z-index: 2;
+      text-align: center;
+      padding: 2rem;
+      transform: translateY(10px);
+      transition: transform .5s ease;
+    }
+    .panel:hover .panel-content { transform: translateY(-6px); }
+
+    .panel-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 1.2rem;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
+    }
+
+    .panel-tag {
+      font-size: .7rem; font-weight: 500; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--gold-light);
+      margin-bottom: .8rem; display: block;
+    }
+
+    .panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+      font-weight: 300; line-height: 1.1;
+      color: white; letter-spacing: -.01em;
+      margin-bottom: 1.2rem;
+    }
+    .panel-title em { font-style: italic; color: var(--gold-light); }
+
+    .panel-desc {
+      font-size: .9rem; font-weight: 300;
+      color: rgba(255,255,255,.65);
+      max-width: 320px; margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .panel-cta {
+      display: inline-flex; align-items: center; gap: .6rem;
+      border: 1px solid rgba(201,168,76,.5); border-radius: 100px;
+      padding: .75rem 2rem; color: var(--gold-light);
+      font-size: .85rem; font-weight: 500; letter-spacing: .06em;
+      transition: all .3s ease;
+    }
+    .panel:hover .panel-cta {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--ink);
+    }
+    .panel-cta-arrow { transition: transform .3s ease; }
+    .panel:hover .panel-cta-arrow { transform: translateX(4px); }
+
+    /* Stats mini */
+    .panel-stats {
+      display: flex; gap: 2rem; justify-content: center;
+      margin-top: 2.5rem;
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .panel:hover .panel-stats { opacity: 1; transform: translateY(0); }
+    .pstat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 600; color: var(--gold); line-height: 1;
+    }
+    .pstat-lbl { font-size: .65rem; color: rgba(255,255,255,.45); margin-top: .2rem; max-width: 100px; line-height: 1.4; }
+
+    /* Logo centré en haut */
+    .site-logo {
+      position: fixed; top: 2rem; left: 50%; transform: translateX(-50%);
+      z-index: 10;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600;
+      color: white; text-decoration: none;
+      letter-spacing: .02em;
+      text-shadow: 0 2px 12px rgba(0,0,0,.4);
+      white-space: nowrap;
+    }
+    .site-logo em { font-style: italic; color: var(--gold); }
+
+    /* Badge "Choisissez" */
+    .choose-label {
+      position: fixed; top: 2.2rem; left: 50%; transform: translateX(-50%);
+      z-index: 10; text-align: center;
+    }
+    .choose-sub {
+      display: block; margin-top: 3rem;
+      font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+    }
+
+    /* Ligne or verticale centrale animée */
+    .center-line {
+      position: fixed; top: 0; left: 50%; width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(201,168,76,.4), transparent);
+      height: 100vh; z-index: 4; pointer-events: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      body { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; overflow: auto; }
+      html, body { height: auto; }
+      .panel { height: 100vh; }
+      .panel-resto::after { display: none; }
+      .center-line { display: none; }
+      .site-logo { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#" class="site-logo">Reputation<em>Azur</em></a>
+  <div class="center-line"></div>
+
+  <!-- Panel Restaurants -->
+  <a href="restaurants.html" class="panel panel-resto">
+    <div class="panel-bg"></div>
+    <div class="panel-overlay"></div>
+    <div class="panel-content">
+      <span class="panel-icon">🍽️</span>
+      <span class="panel-tag">Vous êtes</span>
+      <h1 class="panel-title">Restaurateur<br><em>ou propriétaire</em><br>de restaurant</h1>
+      <p class="panel-desc">Gérez vos avis Google et TripAdvisor. Réponses pro sous 5 jours, multilingues FR/EN/DE/IT.</p>
+      <div class="panel-cta">
+        Découvrir notre offre <span class="panel-cta-arrow">→</span>
+      </div>
+      <div class="panel-stats">
+        <div>
+          <div class="pstat-num">93%</div>
+          <div class="pstat-lbl">des clients lisent les avis avant de choisir</div>
+        </div>
+        <div>
+          <div class="pstat-num">9/10</div>
+          <div class="pstat-lbl">attendent une réponse à leur avis</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- Panel Hôtels -->
+  <a href="hotels.html" class="panel panel-hotel">
+    <div class="panel-bg"></div>
+    <div class="panel-overlay"></div>
+    <div class="panel-content">
+      <span class="panel-icon">🏨</span>
+      <span class="panel-tag">Vous êtes</span>
+      <h1 class="panel-title">Hôtelier<br><em>ou responsable</em><br>d'hébergement</h1>
+      <p class="panel-desc">Répondez à vos avis TripAdvisor et Google. Améliorez votre classement et vos réservations.</p>
+      <div class="panel-cta">
+        Découvrir notre offre <span class="panel-cta-arrow">→</span>
+      </div>
+      <div class="panel-stats">
+        <div>
+          <div class="pstat-num">95%</div>
+          <div class="pstat-lbl">lisent les avis avant de réserver un hébergement</div>
+        </div>
+        <div>
+          <div class="pstat-num">+21%</div>
+          <div class="pstat-lbl">de réservations pour un hôtel qui répond</div>
+        </div>
+      </div>
+    </div>
+  </a>
+
+</body>
+</html>
