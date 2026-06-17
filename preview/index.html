@@ -169,45 +169,41 @@
 
     /* Responsive mobile */
     @media (max-width: 700px) {
-      body { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; overflow: auto; }
-      html, body { height: auto; overflow: auto; }
-      .panel { height: 100svh; min-height: 500px; }
+      html, body { height: 100%; overflow: hidden; }
+
+      body {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+
+      .panel { height: 50vh; min-height: 0; }
       .panel-resto::after { display: none; }
-      .center-line { display: none; }
-      .site-logo { font-size: 1.1rem; top: 1.2rem; }
 
-      /* Stats toujours visibles sur mobile */
-      .panel-stats {
-        opacity: 1 !important;
-        transform: translateY(0) !important;
+      .center-line {
+        top: 50%; bottom: auto;
+        left: 0; right: 0;
+        width: 100%; height: 1px;
+        background: linear-gradient(to right, transparent, rgba(201,168,76,.5), transparent);
       }
 
-      /* Titre plus petit */
-      .panel-title { font-size: clamp(2rem, 8vw, 3rem); margin-bottom: .8rem; }
-      .panel-desc { font-size: .82rem; margin-bottom: 1.2rem; }
-      .panel-icon { font-size: 2.2rem; margin-bottom: .8rem; }
-      .panel-tag { font-size: .65rem; margin-bottom: .5rem; }
-      .panel-cta { padding: .6rem 1.5rem; font-size: .8rem; }
-      .pstat-num { font-size: 1.3rem; }
-      .pstat-lbl { font-size: .6rem; max-width: 80px; }
-      .panel-stats { gap: 1.2rem; margin-top: 1.5rem; }
+      .site-logo { display: none; }
 
-      /* Indicateur de scroll entre les deux panels */
-      .scroll-indicator {
-        position: absolute;
-        bottom: 1rem; left: 50%;
-        transform: translateX(-50%);
-        font-size: .65rem; letter-spacing: .15em; text-transform: uppercase;
-        color: rgba(255,255,255,.5);
-        display: flex; flex-direction: column; align-items: center; gap: .3rem;
-        z-index: 3;
+      .panel-content {
+        transform: none !important;
+        padding: 1rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: .4rem;
       }
-      .scroll-indicator::after {
-        content: '↓';
-        font-size: 1rem; color: var(--gold);
-        animation: bounce 1.5s ease-in-out infinite;
-      }
-      @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+      .panel-icon { font-size: 2rem; margin-bottom: 0; }
+      .panel-tag { font-size: .62rem; margin-bottom: 0; }
+      .panel-title { font-size: clamp(1.8rem, 7vw, 2.4rem); margin-bottom: 0; }
+      .panel-desc { display: none; }
+      .panel-stats { display: none; }
+      .panel-cta { opacity: 1; padding: .55rem 1.3rem; font-size: .8rem; margin-top: .3rem; }
     }
   </style>
 </head>
