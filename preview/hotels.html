@@ -15,23 +15,25 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
 
+    /* ── NAV ── */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 0 3rem; transition: all .5s ease; }
     nav.solid { background: rgba(247,242,234,.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); box-shadow: 0 2px 24px rgba(0,0,0,.05); }
     .nav-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
     .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--white); text-decoration: none; letter-spacing: .02em; transition: color .3s; }
     nav.solid .nav-logo { color: var(--ink); }
     .nav-logo em { font-style: italic; color: var(--gold); }
-    .nav-back { font-size: .8rem; color: rgba(255,255,255,.7); text-decoration: none; display: flex; align-items: center; gap: .4rem; transition: color .3s; }
+    .nav-back { font-size: .88rem; font-weight: 500; color: rgba(255,255,255,.85); text-decoration: none; display: flex; align-items: center; gap: .4rem; transition: color .3s; }
     nav.solid .nav-back { color: var(--muted); }
     .nav-back:hover { color: var(--gold); }
     .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
-    .nav-links a { text-decoration: none; font-size: .875rem; color: rgba(255,255,255,.8); transition: color .3s; }
+    .nav-links a { text-decoration: none; font-size: .95rem; font-weight: 500; color: rgba(255,255,255,.9); transition: color .3s; }
     nav.solid .nav-links a { color: var(--muted); }
     .nav-links a:hover { color: var(--gold); }
     .nav-pill { border: 1px solid rgba(255,255,255,.4); border-radius: 100px; padding: .5rem 1.4rem; color: white !important; transition: all .3s !important; }
     nav.solid .nav-pill { border-color: var(--gold); color: var(--gold) !important; }
     .nav-pill:hover { background: var(--gold) !important; color: var(--ink) !important; border-color: var(--gold) !important; }
 
+    /* ── HERO ── */
     .hero { position: relative; height: 100vh; min-height: 700px; display: flex; align-items: flex-end; overflow: hidden; }
     .hero-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1455587734955-081b22074882?w=1800&q=85&auto=format&fit=crop'); background-size: cover; background-position: center 40%; transform: scale(1.05); animation: heroZoom 12s ease-out forwards; }
     @keyframes heroZoom { from{transform:scale(1.1)} to{transform:scale(1.01)} }
@@ -41,7 +43,7 @@
     .hero-content { position: relative; z-index: 10; width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 3rem 5rem; }
     .hero-eyebrow { display: inline-flex; align-items: center; gap: .6rem; margin-bottom: 1.5rem; opacity: 0; animation: riseUp .8s ease .8s forwards; background: rgba(0,0,0,.35); backdrop-filter: blur(6px); padding: .5rem 1rem .5rem .6rem; border-radius: 100px; }
     .hero-eyebrow-line { height: 1px; width: 40px; background: var(--gold); flex-shrink: 0; }
-    .hero-eyebrow span { font-size: .78rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: white; }
+    .hero-eyebrow span { font-size: .78rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: white; text-shadow: none; }
     .hero-h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.05; color: white; letter-spacing: -.01em; margin-bottom: 2rem; opacity: 0; animation: riseUp .9s ease 1s forwards; }
     .hero-h1 strong { font-weight: 600; }
     .hero-h1 em { font-style: italic; color: var(--gold-light); }
@@ -59,6 +61,7 @@
     @keyframes riseUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
+    /* ── STATS ── */
     .stats-section { background: var(--ink); padding: 3.5rem 3rem; }
     .stats-inner { max-width: 1300px; margin: 0 auto; display: flex; gap: 0; }
     .stats-row { display: flex; flex: 1; }
@@ -69,12 +72,36 @@
     .s-label { font-size: .78rem; color: rgba(255,255,255,.45); margin-top: .4rem; line-height: 1.55; max-width: 200px; }
     .s-src { font-size: .62rem; color: rgba(255,255,255,.2); margin-top: .3rem; }
 
+    /* ── SECTIONS ── */
     .section { padding: 7rem 3rem; }
     .section-inner { max-width: 1300px; margin: 0 auto; }
-    .why-section { background: var(--white); }
+    .why-section {
+      background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1800&q=85&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+    .why-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(10,8,4,.55) 0%, rgba(10,8,4,.65) 100%);
+      z-index: 0;
+    }
+    .why-section .section-inner { position: relative; z-index: 1; }
+    .why-section .s-tag { color: var(--gold); }
+    .why-section .s-title { color: white; }
+    .why-section .s-sub { color: rgba(255,255,255,.5); max-width: 600px; }
     .s-tag { font-size: .68rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: .8rem; }
     .s-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 3.6rem); font-weight: 400; color: var(--ink); line-height: 1.15; letter-spacing: -.01em; margin-bottom: 1rem; }
     .s-sub { font-size: .95rem; color: var(--muted); max-width: 500px; line-height: 1.75; margin-bottom: 4rem; font-weight: 300; }
+
+    /* ── DURATION PICKER ── */
+    .dur-btn { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.5); border-radius: 100px; padding: .55rem 1.4rem; font-family: 'DM Sans', sans-serif; font-size: .82rem; font-weight: 500; cursor: pointer; letter-spacing: .04em; transition: all .25s ease; }
+    .dur-btn:hover { border-color: rgba(201,168,76,.4); color: rgba(255,255,255,.8); }
+    .dur-btn.active { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 600; }
+    .dyn-price { display: inline-block; transition: opacity .2s ease; }
+    .dyn-price.fade { opacity: 0; }
 
     .rev { opacity:0; transform:translateY(36px); transition:opacity .9s ease,transform .9s ease; }
     .rev.in { opacity:1; transform:translateY(0); }
@@ -84,6 +111,63 @@
     .rev-r.in { opacity:1; transform:translateX(0); }
     .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
 
+    /* ── COMPARATIF SANS / AVEC ── */
+    .cmp-toggle-wrap { display:flex; justify-content:center; margin-bottom:2.5rem; }
+    .cmp-toggle { display:inline-flex; background:rgba(255,255,255,.08); border-radius:100px; padding:4px; gap:4px; }
+    .cmp-btn { display:flex; align-items:center; gap:.5rem; border:none; border-radius:100px; padding:.6rem 1.5rem; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; cursor:pointer; transition:all .3s ease; background:transparent; color:rgba(255,255,255,.5); letter-spacing:.02em; }
+    .cmp-btn-icon { font-size:.9rem; font-weight:700; }
+    .cmp-btn-sans.active { background:#FEE2E2; color:#B91C1C; }
+    .cmp-btn-avec.active { background:#D1FAE5; color:#065F46; }
+    /* Desktop : toggle caché, 2 colonnes visibles */
+    @media (min-width:768px) { .cmp-toggle-wrap { display:none; } }
+
+    .cmp-grid { display:grid; grid-template-columns:1fr auto 1fr; gap:0; align-items:start; }
+
+    .cmp-col { border-radius:8px; overflow:hidden; }
+    .cmp-col-sans { border:1px solid rgba(239,68,68,.25); background:rgba(0,0,0,.35); backdrop-filter:blur(8px); }
+    .cmp-col-avec { border:1px solid rgba(201,168,76,.3); background:rgba(0,0,0,.35); backdrop-filter:blur(8px); }
+
+    .cmp-col-header { display:flex; align-items:center; gap:.8rem; padding:1.5rem 2rem; }
+    .cmp-col-sans .cmp-col-header { background:rgba(239,68,68,.1); border-bottom:1px solid rgba(239,68,68,.15); }
+    .cmp-col-avec .cmp-col-header { background:rgba(201,168,76,.1); border-bottom:1px solid rgba(201,168,76,.18); }
+    .cmp-col-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:700; flex-shrink:0; }
+    .cmp-icon-sans { background:rgba(239,68,68,.2); color:#FCA5A5; }
+    .cmp-icon-avec { background:rgba(201,168,76,.2); color:var(--gold); }
+    .cmp-col-title { font-size:.78rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; }
+    .cmp-col-sans .cmp-col-title { color:#FCA5A5; }
+    .cmp-col-avec .cmp-col-title { color:var(--gold-light); }
+
+    .cmp-items { padding:1.5rem 2rem; display:flex; flex-direction:column; gap:1.5rem; }
+    .cmp-item { display:flex; gap:1rem; align-items:flex-start; }
+    .cmp-item-num { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; line-height:1; flex-shrink:0; min-width:2rem; text-align:right; }
+    .cmp-item-num.sans { color:rgba(239,68,68,.4); }
+    .cmp-item-num.avec { color:rgba(201,168,76,.5); }
+    .cmp-item-body strong { display:block; font-size:.88rem; font-weight:600; color:rgba(255,255,255,.9); margin-bottom:.3rem; }
+    .cmp-item-body p { font-size:.82rem; color:rgba(255,255,255,.5); line-height:1.7; margin-bottom:.6rem; font-weight:300; }
+    .cmp-pill { display:inline-block; font-size:.7rem; font-weight:600; letter-spacing:.04em; border-radius:100px; padding:.25rem .8rem; }
+    .cmp-pill-bad { background:rgba(239,68,68,.15); color:#FCA5A5; }
+    .cmp-pill-good { background:rgba(201,168,76,.15); color:var(--gold-light); }
+
+    .cmp-col-footer { padding:1.2rem 2rem; }
+    .cmp-footer-sans { background:rgba(239,68,68,.08); border-top:1px solid rgba(239,68,68,.12); }
+    .cmp-footer-avec { background:rgba(201,168,76,.08); border-top:1px solid rgba(201,168,76,.15); }
+    .cmp-footer-sum { font-size:.8rem; font-weight:500; font-style:italic; }
+    .cmp-footer-sans .cmp-footer-sum { color:#FCA5A5; }
+    .cmp-footer-avec .cmp-footer-sum { color:var(--gold-light); }
+
+    .cmp-sep { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 1.5rem; gap:.5rem; align-self:center; }
+    .cmp-sep-line { width:1px; height:80px; background:linear-gradient(to bottom, transparent, rgba(255,255,255,.15), transparent); }
+    .cmp-sep-vs { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:300; color:rgba(255,255,255,.3); letter-spacing:.1em; }
+
+    /* Mobile : toggle actif, une colonne à la fois */
+    @media (max-width:767px) {
+      .cmp-grid { grid-template-columns:1fr; }
+      .cmp-sep { display:none; }
+      .cmp-col { display:none; }
+      .cmp-col.visible { display:block; }
+    }
+
+    /* ── WHY (ancien) — gardé pour compatibilité ── */
     .why-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
     .why-photo { position: relative; border-radius: 4px; overflow: hidden; aspect-ratio: 3/4; }
     .why-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 8s ease; }
@@ -98,6 +182,7 @@
     .why-item-text strong { display: block; font-size: .9rem; font-weight: 600; color: var(--ink); margin-bottom: .3rem; }
     .why-item-text p { font-size: .84rem; color: var(--muted); line-height: 1.7; }
 
+    /* Offres */
     .offers-section { background: var(--ink); }
     .offers-section .s-title { color: white; }
     .offers-section .s-tag { color: var(--gold); }
@@ -121,6 +206,7 @@
     .o-list li { display: flex; gap: .5rem; font-size: .82rem; color: rgba(255,255,255,.6); line-height: 1.45; }
     .o-list li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
 
+    /* Objections */
     .obj-section { background: var(--cream); }
     .obj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
     .obj-card { background: var(--cream); padding: 2rem; transition: background .3s; }
@@ -128,6 +214,7 @@
     .obj-q { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-style: italic; font-weight: 600; color: var(--ink); margin-bottom: .7rem; line-height: 1.3; }
     .obj-a { font-size: .84rem; color: var(--muted); line-height: 1.75; font-weight: 300; }
 
+    /* Process */
     .process-section { background: var(--white); }
     .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3rem; position: relative; }
     .process-grid::before { content:''; position:absolute; top:28px; left:calc(16.7% + 1rem); right:calc(16.7% + 1rem); height:1px; background:linear-gradient(90deg,var(--gold),rgba(201,168,76,.2)); }
@@ -136,6 +223,7 @@
     .p-card h3 { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:600; color:var(--ink); margin-bottom:.5rem; }
     .p-card p { font-size:.84rem; color:var(--muted); line-height:1.7; font-weight:300; }
 
+    /* Contact */
     .contact-section { background: var(--ink); }
     .contact-section .s-title { color:white; }
     .contact-section .s-tag { color:var(--gold); }
@@ -193,8 +281,8 @@
 
 <nav id="nav">
   <div class="nav-inner">
-    <a href="index_v2.html" class="nav-back">← Retour</a>
-    <a href="index_v2.html" class="nav-logo">Reputation<em>Azur</em></a>
+    <a href="index.html" class="nav-back">← Retour</a>
+    <a href="index.html" class="nav-logo">Reputation<em>Azur</em></a>
     <ul class="nav-links">
       <li><a href="#pourquoi">Pourquoi agir</a></li>
       <li><a href="#offres">Offres</a></li>
@@ -217,7 +305,7 @@
     <div class="hero-bottom">
       <p class="hero-desc">Chaque avis Google et TripAdvisor, traité sous 5 jours ouvrés — en français, anglais, allemand et italien — dans l'ambiance de votre établissement.</p>
       <div class="hero-actions">
-        <a href="#contact" class="btn-gold">Démonstration gratuite</a>
+        <a href="#pourquoi" class="btn-gold">En savoir plus ↓</a>
         <a href="#offres" class="btn-outline-white">Voir les offres</a>
       </div>
     </div>
@@ -249,41 +337,114 @@
 
 <section class="section why-section" id="pourquoi">
   <div class="section-inner">
-    <div class="why-layout">
-      <div class="rev-l">
-        <div class="why-photo">
-          <img src="https://images.unsplash.com/photo-1455587734955-081b22074882?w=800&q=85&auto=format&fit=crop" alt="Hôtel luxe piscine vue mer" loading="lazy">
-          <div class="why-badge"><div class="big">5 j.</div><div class="lbl">délai max de réponse à chaque avis</div></div>
-        </div>
+    <span class="s-tag" style="text-align:center;display:block;">Ce que coûte l'inaction</span>
+    <h2 class="s-title" style="text-align:center;margin-bottom:.5rem;">Chaque avis sans réponse,<br><em>c'est une réservation perdue</em></h2>
+    <p class="s-sub" style="margin:0 auto 3rem;text-align:center;">Les voyageurs comparent les avis avant de réserver. Avec une nuitée moyenne à 120€, deux réservations récupérées dans le mois couvrent largement notre service.</p>
+
+    <!-- Toggle -->
+    <div class="cmp-toggle-wrap rev">
+      <div class="cmp-toggle">
+        <button class="cmp-btn cmp-btn-sans active" onclick="setCmp('sans')">
+          <span class="cmp-btn-icon">✗</span> Sans ReputationAzur
+        </button>
+        <button class="cmp-btn cmp-btn-avec" onclick="setCmp('avec')">
+          <span class="cmp-btn-icon">✓</span> Avec ReputationAzur
+        </button>
       </div>
-      <div class="rev-r">
-        <span class="s-tag">Ce que coûte l'inaction</span>
-        <h2 class="s-title">Chaque avis sans réponse,<br><em>c'est une réservation perdue</em></h2>
-        <p class="s-sub">Les voyageurs comparent les avis avant de réserver. Avec une nuitée moyenne de 120€, deux réservations récupérées dans le mois couvrent largement notre service.</p>
-        <div class="why-list">
-          <div class="why-item">
-            <div class="why-item-num">01</div>
-            <div class="why-item-text">
+    </div>
+
+    <!-- Comparatif côte à côte desktop / toggle mobile -->
+    <div class="cmp-grid rev">
+
+      <!-- COL SANS -->
+      <div class="cmp-col cmp-col-sans" id="col-sans">
+        <div class="cmp-col-header">
+          <div class="cmp-col-icon cmp-icon-sans">✗</div>
+          <div class="cmp-col-title">Sans ReputationAzur</div>
+        </div>
+        <div class="cmp-items">
+
+          <div class="cmp-item">
+            <div class="cmp-item-num sans">01</div>
+            <div class="cmp-item-body">
               <strong>Réservations et tarif sous pression</strong>
-              <p>1 point de note en moins = −13,5% de probabilité de réservation (Cornell). Et 3 voyageurs sur 4 paient plus cher un hébergement mieux noté (Expedia 2025). Une bonne réputation, c'est plus de réservations et la capacité à tenir votre tarif.</p>
+              <p>1 point de note en moins = −13,5% de probabilité de réservation (Cornell). Et 3 voyageurs sur 4 paient plus cher un hébergement mieux noté. Une mauvaise réputation, c'est moins de réservations et un tarif difficile à tenir.</p>
+              <div class="cmp-pill cmp-pill-bad">Note basse = tarif et taux d'occupation en baisse</div>
             </div>
           </div>
-          <div class="why-item">
-            <div class="why-item-num">02</div>
-            <div class="why-item-text">
-              <strong>+21% de demandes de réservation</strong>
-              <p>C'est le gain mesuré pour un hôtel qui répond à ses avis — et jusqu'à +24% au-delà de 50% d'avis traités (Expedia Traveler Value Index 2025). Un chiffre concret, pas une promesse.</p>
+
+          <div class="cmp-item">
+            <div class="cmp-item-num sans">02</div>
+            <div class="cmp-item-body">
+              <strong>Voyageurs internationaux sans réponse</strong>
+              <p>Les avis EN / DE / IT restent sans réponse. Le voyageur passe à la concurrence. Sur la Côte d'Azur, chaque langue non traitée, c'est un segment de clientèle perdu.</p>
+              <div class="cmp-pill cmp-pill-bad">Clientèle internationale perdue</div>
             </div>
           </div>
-          <div class="why-item">
-            <div class="why-item-num">03</div>
-            <div class="why-item-text">
-              <strong>Touristes internationaux sans réponse dans leur langue</strong>
-              <p>La Côte d'Azur accueille anglophones, germanophones et italophones. Répondre dans leur langue transforme un avis en ambassadeur — et influe directement sur la décision de réserver.</p>
+
+          <div class="cmp-item">
+            <div class="cmp-item-num sans">03</div>
+            <div class="cmp-item-body">
+              <strong>Vous répondez entre deux check-in</strong>
+              <p>Sous le coup de l'émotion, après une longue journée. Une réponse maladroite à un avis injuste peut faire plus de dégâts qu'une absence de réponse.</p>
+              <div class="cmp-pill cmp-pill-bad">Risque d'erreur au pire moment</div>
             </div>
           </div>
+
+        </div>
+        <div class="cmp-col-footer cmp-footer-sans">
+          <div class="cmp-footer-sum">Résultat : votre note stagne, vos concurrents avancent.</div>
         </div>
       </div>
+
+      <!-- Séparateur -->
+      <div class="cmp-sep"><div class="cmp-sep-line"></div><div class="cmp-sep-vs">VS</div><div class="cmp-sep-line"></div></div>
+
+      <!-- COL AVEC -->
+      <div class="cmp-col cmp-col-avec" id="col-avec">
+        <div class="cmp-col-header">
+          <div class="cmp-col-icon cmp-icon-avec">✓</div>
+          <div class="cmp-col-title">Avec ReputationAzur</div>
+        </div>
+        <div class="cmp-items">
+
+          <div class="cmp-item">
+            <div class="cmp-item-num avec">01</div>
+            <div class="cmp-item-body">
+              <strong>+21% de réservations mesurées</strong>
+              <p>C'est le gain constaté pour un hôtel qui répond à ses avis — jusqu'à +24% au-delà de 50% d'avis traités (Expedia 2025). Chaque réponse publiée travaille pour vous 24h/24.</p>
+              <div class="cmp-pill cmp-pill-good">Réservations et tarif consolidés</div>
+            </div>
+          </div>
+
+          <div class="cmp-item">
+            <div class="cmp-item-num avec">02</div>
+            <div class="cmp-item-body">
+              <strong>FR · EN · DE · IT inclus</strong>
+              <p>Chaque touriste reçoit une réponse dans sa langue. Ce geste simple transforme un visiteur en ambassadeur — et améliore votre positionnement sur Google.</p>
+              <div class="cmp-pill cmp-pill-good">Clientèle internationale fidélisée</div>
+            </div>
+          </div>
+
+          <div class="cmp-item">
+            <div class="cmp-item-num avec">03</div>
+            <div class="cmp-item-body">
+              <strong>Vous gérez, on répond</strong>
+              <p>Aucune connexion requise de votre part. Nous gérons. Zéro charge mentale.</p>
+              <div class="cmp-pill cmp-pill-good">Votre temps reste dans votre établissement</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="cmp-col-footer cmp-footer-avec">
+          <div class="cmp-footer-sum">Résultat : votre note progresse, vos réservations suivent.</div>
+        </div>
+      </div>
+
+    </div><!-- /cmp-grid -->
+
+    <div class="rev" style="text-align:center;margin-top:3.5rem;">
+      <a href="#contact" class="btn-gold">Démonstration gratuite →</a>
     </div>
   </div>
 </section>
@@ -291,7 +452,7 @@
 <section class="section offers-section" id="offres">
   <div class="section-inner">
     <span class="s-tag">Nos offres</span>
-    <h2 class="s-title">Simple. Transparent. Efficace.</h2>
+    <h2 class="s-title">Clair. Transparent. Efficace.</h2>
     <p class="s-sub">3 durées au choix — plus l&apos;engagement est long, plus le tarif est avantageux. Résiliable avec 30 jours de préavis après la période souscrite.</p>
 
     <div class="duration-table rev" style="margin-bottom:3rem;overflow-x:auto;">
@@ -340,12 +501,20 @@
       <p style="font-size:.72rem;color:rgba(255,255,255,.25);margin-top:.8rem;">Tarifs en euros/mois par établissement. TVA non applicable — art. L. 223 et s. du CIBS.</p>
     </div>
 
+    <!-- Sélecteur de durée -->
+    <div class="duration-picker rev" style="display:flex;align-items:center;gap:.75rem;margin-bottom:2.5rem;flex-wrap:wrap;">
+      <span style="font-size:.78rem;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;margin-right:.5rem;">Durée d'engagement</span>
+      <button class="dur-btn" data-dur="3" onclick="setDuration(3)">3 mois</button>
+      <button class="dur-btn active" data-dur="6" onclick="setDuration(6)">6 mois ★</button>
+      <button class="dur-btn" data-dur="12" onclick="setDuration(12)">12 mois</button>
+    </div>
+
     <div class="offers-grid">
       <div class="offer-card rev d1">
         <div class="o-name">Essentiel</div>
-        <div class="o-price"><sup>€</sup>165<sub>/mois</sub></div>
-        <div class="o-promo">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
-        <div class="o-desc">Petits hébergements · Avis Google</div>
+        <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="180" data-6="165" data-12="150">165</span><sub>/mois</sub></div>
+        <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 5 avis offerts au démarrage" data-6="↳ Tarif 6 mois · 10 avis offerts au démarrage" data-12="↳ Tarif 12 mois · 20 avis offerts au démarrage">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
+        <div class="o-desc">Petits hébergements & chambres d'hôtes · Avis Google</div>
         <div class="o-sep"></div>
         <ul class="o-list">
           <li>Surveillance hebdomadaire des avis Google</li>
@@ -360,8 +529,8 @@
       <div class="offer-card feat rev d2">
         <div class="o-badge">★ Recommandé</div>
         <div class="o-name">Prestige</div>
-        <div class="o-price"><sup>€</sup>220<sub>/mois</sub></div>
-        <div class="o-promo">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
+        <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="240" data-6="220" data-12="200">220</span><sub>/mois</sub></div>
+        <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 5 avis offerts au démarrage" data-6="↳ Tarif 6 mois · 10 avis offerts au démarrage" data-12="↳ Tarif 12 mois · 20 avis offerts au démarrage">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
         <div class="o-desc">Hôtels à clientèle touristique · TripAdvisor + Google</div>
         <div class="o-sep"></div>
         <ul class="o-list">
@@ -369,13 +538,13 @@
           <li>Avis TripAdvisor inclus</li>
           <li>Réponses multilingues FR · EN · DE · IT</li>
           <li>Priorité aux voyageurs internationaux</li>
-          <li>Adapté à la saisonnalité Côte d&apos;Azur</li>
+          <li>Adapté zones touristiques & arrière-pays</li>
         </ul>
       </div>
       <div class="offer-card rev d3">
         <div class="o-name">Premium</div>
-        <div class="o-price"><sup>€</sup>330<sub>/mois</sub></div>
-        <div class="o-promo">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
+        <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="360" data-6="330" data-12="300">330</span><sub>/mois</sub></div>
+        <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 5 avis offerts au démarrage" data-6="↳ Tarif 6 mois · 10 avis offerts au démarrage" data-12="↳ Tarif 12 mois · 20 avis offerts au démarrage">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
         <div class="o-desc">Image complète en ligne</div>
         <div class="o-sep"></div>
         <ul class="o-list">
@@ -388,13 +557,13 @@
       </div>
       <div class="offer-card rev d4">
         <div class="o-name">Pack Duo</div>
-        <div class="o-price"><sup>€</sup>385<sub>/mois</sub></div>
-        <div class="o-promo">↳ Tarif 6 mois · 2 × Prestige au lieu de 440€</div>
+        <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="420" data-6="385" data-12="350">385</span><sub>/mois</sub></div>
+        <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 2 × Prestige au lieu de 480€" data-6="↳ Tarif 6 mois · 2 × Prestige au lieu de 440€" data-12="↳ Tarif 12 mois · 2 × Prestige au lieu de 400€">↳ Tarif 6 mois · 2 × Prestige au lieu de 440€</div>
         <div class="o-desc">2 établissements · Prestige × 2</div>
         <div class="o-sep"></div>
         <ul class="o-list">
           <li>Offre Prestige × 2 établissements</li>
-          <li>10 avis offerts par établissement</li>
+          <li class="dyn-duo-avis" data-3="5 avis offerts par établissement" data-6="10 avis offerts par établissement" data-12="20 avis offerts par établissement">10 avis offerts par établissement</li>
           <li>Interlocuteur unique</li>
           <li>Facturation groupée simplifiée</li>
         </ul>
@@ -433,7 +602,7 @@
         <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
           <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Email Relance Clients</div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">100€</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Rédaction d&apos;un email pour demander des avis à vos clients</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Rédaction d&apos;un email pour demander des avis Google à vos clients</div>
         </div>
       </div>
     </div>
@@ -445,12 +614,12 @@
     <span class="s-tag">Vos questions</span>
     <h2 class="s-title">On a les réponses</h2>
     <div class="obj-grid rev">
-      <div class="obj-card"><div class="obj-q">C'est trop cher.</div><div class="obj-a">Dès 150€/mois, c'est moins cher que de perdre une seule réservation. Avec une nuitée à 120€, deux réservations récupérées dans le mois couvrent largement le service.</div></div>
-      <div class="obj-card"><div class="obj-q">Je réponds déjà moi-même.</div><div class="obj-a">Répondre entre deux check-in, sous le coup de l'émotion, c'est risqué. Nous répondons avec recul, en plusieurs langues, avec le professionnalisme que vos futurs voyageurs vont juger.</div></div>
-      <div class="obj-card"><div class="obj-q">Je n'ai pas beaucoup d'avis.</div><div class="obj-a">C'est exactement le bon moment. Chaque avis sans réponse influence des dizaines de futurs voyageurs. Mieux vaut construire une bonne réputation avant la haute saison.</div></div>
-      <div class="obj-card"><div class="obj-q">Et Booking.com ?</div><div class="obj-a">Booking est un cas particulier : seul un voyageur ayant réservé peut y laisser un avis, et les réponses se gèrent depuis votre extranet. Nous concentrons notre travail là où votre réponse est publique et pèse le plus sur un voyageur qui vous découvre : Google et TripAdvisor.</div></div>
-      <div class="obj-card"><div class="obj-q">Vous avez des références ?</div><div class="obj-a">Nous sommes en phase de lancement sur la Côte d'Azur. C'est pourquoi nous offrons une démonstration gratuite sur vos propres avis — vous jugez le résultat vous-même avant de vous engager.</div></div>
-      <div class="obj-card"><div class="obj-q">Je vais réfléchir.</div><div class="obj-a">Bien sûr. En attendant, nous vous préparons une démonstration gratuite sur vos vrais avis — sans engagement, sans rendez-vous. Vous décidez avec le résultat sous les yeux.</div></div>
+      <div class="obj-card"><div class="obj-q">C'est trop cher.</div><div class="obj-a">Dès 150€/mois, c'est moins cher que perdre une seule réservation. Avec une nuitée à 120€, deux réservations récupérées dans le mois couvrent largement le service.</div></div>
+      <div class="obj-card"><div class="obj-q">Je réponds déjà moi-même.</div><div class="obj-a">Après un service de 12h, sous le coup de l'émotion — c'est risqué. Nous répondons avec recul, en plusieurs langues, dans l'ambiance que vos futurs clients vont juger.</div></div>
+      <div class="obj-card"><div class="obj-q">Je n'ai pas beaucoup d'avis.</div><div class="obj-a">C'est le bon moment. Chaque avis sans réponse influence des dizaines de futurs clients. Mieux vaut construire sa réputation avant la haute saison.</div></div>
+      <div class="obj-card"><div class="obj-q">Les réponses multilingues ?</div><div class="obj-a">IA pour la rédaction initiale, relecture humaine avant publication. Vitesse de la machine, qualité du professionnel.</div></div>
+      <div class="obj-card"><div class="obj-q">Vous avez des références ?</div><div class="obj-a">Nous sommes en phase de lancement avec un premier partenaire sur la Côte d'Azur. C'est pourquoi nous offrons une démonstration gratuite — vous jugez vous-même avant de signer.</div></div>
+      <div class="obj-card"><div class="obj-q">Je vais réfléchir.</div><div class="obj-a">Bien sûr. En attendant, nous vous préparons des exemples sur vos vrais avis — sans engagement. Vous décidez avec le résultat sous les yeux.</div></div>
     </div>
   </div>
 </section>
@@ -461,9 +630,9 @@
     <h2 class="s-title" style="text-align:center;margin-bottom:.5rem;">Démarrer en 3 étapes</h2>
     <p class="s-sub" style="margin:0 auto 5rem;text-align:center;">Aucune installation. Aucune complexité.</p>
     <div class="process-grid">
-      <div class="p-card rev d1"><div class="p-num">1</div><h3>Démonstration gratuite</h3><p>Nous rédigeons des exemples sur vos vrais avis TripAdvisor et Google — sans accès à votre compte, sans engagement.</p></div>
-      <div class="p-card rev d2"><div class="p-num">2</div><h3>Vous validez, on signe</h3><p>Fiche de cadrage + devis. Vous définissez le ton, les points forts, les sujets à ne pas aborder.</p></div>
-      <div class="p-card rev d3"><div class="p-num">3</div><h3>On gère, vous accueillez</h3><p>Chaque avis traité sous 5 jours ouvrés. Notification à chaque réponse publiée. Dès le démarrage, vos avis sans réponse sont traités gratuitement.</p></div>
+      <div class="p-card rev d1"><div class="p-num">1</div><h3>Démonstration gratuite</h3><p>Nous rédigeons des exemples sur vos vrais avis Google et TripAdvisor — sans accès à votre compte, sans engagement.</p></div>
+      <div class="p-card rev d2"><div class="p-num">2</div><h3>Vous validez, on signe</h3><p>Fiche de cadrage + devis. Vous définissez l'ambiance, les points forts, les sujets à éviter.</p></div>
+      <div class="p-card rev d3"><div class="p-num">3</div><h3>On gère, vous dirigez</h3><p>Chaque avis traité sous 5 jours ouvrés. Vous pouvez consulter les réponses publiées à tout moment sur votre fiche Google.</p></div>
     </div>
     <div style="text-align:center;margin-top:4rem;"><a href="#contact" class="btn-gold">Je veux ma démonstration gratuite →</a></div>
   </div>
@@ -488,7 +657,7 @@
             <div class="f-group"><label>Nom</label><input type="text" placeholder="Dupont"></div>
           </div>
           <div class="f-group"><label>Nom de l'hôtel</label><input type="text" placeholder="Hôtel Beau Rivage"></div>
-          <div class="f-group"><label>Email</label><input type="email" placeholder="jean@monhotel.fr"></div>
+          <div class="f-group"><label>Email</label><input type="email" placeholder="jean@monresto.fr"></div>
           <div class="f-group"><label>Offre souhaitée</label>
             <select>
               <option>Essentiel — 150€/mois</option>
@@ -509,12 +678,60 @@
 <footer>
   <div class="footer-inner">
     <div class="f-logo">Reputation<em>Azur</em></div>
-    <a href="index_v2.html" class="f-back">← Changer de profil</a>
+    <a href="index.html" class="f-back">← Changer de profil</a>
     <div class="f-legal">Jennifer Biscaglia EI · SIRET 105 774 202 00011 · Code APE 7021Z<br>06600 Antibes · TVA non applicable — art. L. 223 et s. du CIBS<br>© 2026 ReputationAzur</div>
   </div>
 </footer>
 
 <script>
+  // ── COMPARATIF TOGGLE (mobile) ──
+  function setCmp(mode) {
+    document.querySelectorAll('.cmp-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.cmp-btn-' + mode).classList.add('active');
+    document.getElementById('col-sans').classList.toggle('visible', mode === 'sans');
+    document.getElementById('col-avec').classList.toggle('visible', mode === 'avec');
+  }
+  // Init mobile : afficher "sans" par défaut
+  if (window.innerWidth < 768) {
+    document.getElementById('col-sans').classList.add('visible');
+  } else {
+    document.getElementById('col-sans').classList.add('visible');
+    document.getElementById('col-avec').classList.add('visible');
+  }
+
+  // ── DURATION PICKER ──
+  function setDuration(dur) {
+    // Boutons actifs
+    document.querySelectorAll('.dur-btn').forEach(b => b.classList.toggle('active', +b.dataset.dur === dur));
+
+    // Prix avec micro-fade
+    document.querySelectorAll('.dyn-price').forEach(el => {
+      el.classList.add('fade');
+      setTimeout(() => {
+        el.textContent = el.dataset[dur];
+        el.classList.remove('fade');
+      }, 180);
+    });
+
+    // Lignes promo
+    document.querySelectorAll('.dyn-promo').forEach(el => {
+      el.classList.add('fade');
+      setTimeout(() => {
+        el.textContent = el.dataset[dur];
+        el.classList.remove('fade');
+      }, 180);
+    });
+
+    // Avis Pack Duo
+    document.querySelectorAll('.dyn-duo-avis').forEach(el => {
+      el.classList.add('fade');
+      setTimeout(() => {
+        el.textContent = el.dataset[dur];
+        el.classList.remove('fade');
+      }, 180);
+    });
+  }
+
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => nav.classList.toggle('solid', window.scrollY > 80));
   const ro = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.12 });
