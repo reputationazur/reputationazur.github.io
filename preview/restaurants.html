@@ -103,6 +103,20 @@
     .dyn-price { display: inline-block; transition: opacity .2s ease; }
     .dyn-price.fade { opacity: 0; }
 
+    /* ── TOOLTIP PRESTATIONS ── */
+    .pp-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
+    .pp-card { position:relative; border:1px solid rgba(255,255,255,.08); border-radius:4px; padding:1.3rem; background:rgba(255,255,255,.02); cursor:default; transition:border-color .25s, background .25s; }
+    .pp-card:hover { border-color:rgba(201,168,76,.35); background:rgba(255,255,255,.05); }
+    .pp-label { font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-bottom:.4rem; }
+    .pp-price { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:white; font-weight:300; }
+    .pp-short { font-size:.78rem; color:rgba(255,255,255,.4); margin-top:.4rem; line-height:1.5; }
+    .pp-hint { font-size:.65rem; color:rgba(201,168,76,.5); margin-top:.5rem; letter-spacing:.04em; }
+    /* Tooltip */
+    .pp-tooltip { position:absolute; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%); width:240px; background:rgba(20,14,4,.97); border:1px solid rgba(201,168,76,.25); border-radius:6px; padding:1rem 1.1rem; opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; transform:translateX(-50%) translateY(6px); z-index:100; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+    .pp-card:hover .pp-tooltip { opacity:1; transform:translateX(-50%) translateY(0); }
+    .pp-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:rgba(201,168,76,.25); }
+    .pp-tooltip-title { font-size:.72rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:.5rem; }
+    .pp-tooltip-body { font-size:.8rem; color:rgba(255,255,255,.7); line-height:1.65; }
     .rev { opacity:0; transform:translateY(36px); transition:opacity .9s ease,transform .9s ease; }
     .rev.in { opacity:1; transform:translateY(0); }
     .rev-l { opacity:0; transform:translateX(-40px); transition:opacity .9s ease,transform .9s ease; }
@@ -573,37 +587,74 @@
     <div class="rev" style="margin-top:4rem;">
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;color:white;margin-bottom:.5rem;">Prestations ponctuelles</h3>
       <p style="font-size:.85rem;color:rgba(255,255,255,.35);margin-bottom:1.5rem;">Sans abonnement requis · Intervention unique</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
-          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Optimisation Fiche</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">150€</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Remise à neuf : photos, description, horaires, catégories</div>
+      <div class="pp-grid">
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Optimisation Fiche Google</div>
+            <div class="pp-tooltip-body">Remise à neuf complète de votre fiche : photos, description optimisée, horaires, catégories et attributs — via l'accès gestionnaire que vous nous fournissez.</div>
+          </div>
+          <div class="pp-label">Optimisation Fiche</div>
+          <div class="pp-price">150€</div>
+          <div class="pp-short">Remise à neuf : photos, description, horaires, catégories</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
         </div>
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
-          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Pack Mise en Route</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">150€</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Revendication et complétion de votre fiche Google & TripAdvisor</div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Pack Mise en Route</div>
+            <div class="pp-tooltip-body">Vous n'avez pas (ou plus) la main sur votre fiche ? Nous la revendiquons auprès de Google et TripAdvisor, puis la complétons (horaires, description, catégories, photos). Vous en restez propriétaire. Idéal pour une ouverture ou une fiche jamais revendiquée.</div>
+          </div>
+          <div class="pp-label">Pack Mise en Route</div>
+          <div class="pp-price">150€</div>
+          <div class="pp-short">Revendication et complétion de votre fiche Google & TripAdvisor</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
         </div>
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
-          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Rattrapage Historique</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">120€</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Réponses sur 25 avis anciens · Une fois par établissement</div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Rattrapage d'Historique</div>
+            <div class="pp-tooltip-body">Nous répondons à votre stock d'avis anciens restés sans réponse, par tranche de 25 avis. Une seule fois par établissement, sur les avis antérieurs à la commande.</div>
+          </div>
+          <div class="pp-label">Rattrapage Historique</div>
+          <div class="pp-price">120€</div>
+          <div class="pp-short">Réponses sur 25 avis anciens · Une fois par établissement</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
         </div>
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
-          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Kit Collecte d&apos;Avis</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">50€</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">QR code + chevalet, carte, sticker vitrine aux couleurs de votre établissement</div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Kit Collecte d'Avis</div>
+            <div class="pp-tooltip-body">Kit numérique prêt à imprimer pour inciter vos clients à laisser un avis : QR code lié à votre fiche, formats chevalet de table, carte et sticker vitrine, aux couleurs de votre établissement. Vous imprimez (guide fourni).</div>
+          </div>
+          <div class="pp-label">Kit Collecte d'Avis</div>
+          <div class="pp-price">50€</div>
+          <div class="pp-short">QR code + chevalet, carte, sticker vitrine aux couleurs de votre établissement</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
         </div>
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
-          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Audit Réputation</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">75€</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Analyse Google/TripAdvisor : points critiques et recommandations écrites</div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Audit Réputation</div>
+            <div class="pp-tooltip-body">Analyse complète de votre présence Google et TripAdvisor : état des lieux, points critiques, recommandations écrites. Vous repartez avec un rapport clair sur ce qui freine votre réputation et quoi faire en priorité.</div>
+          </div>
+          <div class="pp-label">Audit Réputation</div>
+          <div class="pp-price">75€</div>
+          <div class="pp-short">Analyse Google/TripAdvisor : points critiques et recommandations écrites</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
         </div>
-        <div style="border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:1.3rem;background:rgba(255,255,255,.02);">
-          <div style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Email Relance Clients</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:white;font-weight:300;">100€</div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.4rem;line-height:1.5;">Rédaction d&apos;un email pour demander des avis Google à vos clients</div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Email Relance Clients</div>
+            <div class="pp-tooltip-body">Rédaction d'un email de relance pour demander des avis Google — texte prêt à envoyer, l'envoi restant à votre charge. Idéal si vous disposez d'un fichier clients (coiffeurs, garages, boutiques…)</div>
+          </div>
+          <div class="pp-label">Email Relance Clients</div>
+          <div class="pp-price">100€</div>
+          <div class="pp-short">Rédaction d'un email pour demander des avis Google à vos clients</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
         </div>
+
       </div>
     </div>
   </div>
