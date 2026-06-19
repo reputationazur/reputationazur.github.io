@@ -287,6 +287,13 @@
       .footer-inner { flex-direction:column; text-align:center; }
       .f-legal { text-align:center; }
       .hero-bottom { flex-direction:column; align-items:flex-start; }
+      .offers-grid { grid-template-columns:1fr; }
+      .pp-grid { grid-template-columns:1fr; }
+      .pp-tooltip { bottom:auto; top:calc(100% + 8px); transform:translateX(-50%) translateY(0); left:50%; }
+      .pp-card:hover .pp-tooltip { transform:translateX(-50%) translateY(0); opacity:1; }
+      .pp-tooltip::after { top:auto; bottom:100%; border-top-color:transparent; border-bottom-color:rgba(201,168,76,.25); }
+      .pp-card.open .pp-tooltip { opacity:1; pointer-events:auto; }
+      .obj-grid { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -796,6 +803,20 @@
     });
   }, { threshold: 0.5 });
   document.querySelectorAll('.ctr').forEach(c => co.observe(c));
+
+  // ── TOOLTIP TAP MOBILE ──
+  document.querySelectorAll('.pp-card').forEach(card => {
+    card.addEventListener('click', e => {
+      const isOpen = card.classList.contains('open');
+      document.querySelectorAll('.pp-card').forEach(c => c.classList.remove('open'));
+      if (!isOpen) card.classList.add('open');
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.pp-card')) {
+      document.querySelectorAll('.pp-card').forEach(c => c.classList.remove('open'));
+    }
+  });
 </script>
 </body>
 </html>
