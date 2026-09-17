@@ -782,8 +782,9 @@
                 <option>Je ne sais pas encore</option>
               </select>
             </div>
+            <div class="f-group"><label>Une question ou une demande particulière ?</label><textarea id="demo-message" rows="3" placeholder="Facultatif" style="width:100%;padding:.8rem 0;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.12);font-family:'Jost',sans-serif;font-size:.9rem;color:white;outline:none;resize:vertical;"></textarea></div>
             <button type="submit" class="f-submit" id="demo-submit-btn">Recevoir ma démonstration →</button>
-            <p id="demo-success" class="f-msg success" style="display:none;">Merci ! Votre demande a bien été enregistrée, Jennifer vous contacte sous 24h.</p>
+            <p id="demo-success" class="f-msg success" style="display:none;">Merci ! Votre demande a bien été enregistrée, nous vous recontacterons sous 24h.</p>
             <p id="demo-error" class="f-msg error" style="display:none;">Une erreur est survenue. Vous pouvez nous écrire directement à <a href="mailto:contact@reputationazur.fr" style="color:inherit;">contact@reputationazur.fr</a>.</p>
             <div class="f-note">Sans engagement · Avis offerts au démarrage · Réponse sous 24h</div>
           </form>
@@ -887,7 +888,8 @@
     nom: "entry.2141442231",
     restaurant: "entry.653132159",
     email: "entry.458910783",
-    offre: "entry.946986761"
+    offre: "entry.946986761",
+    message: "entry.172266905"
   };
 
   function submitDemoForm(e) {
@@ -897,6 +899,7 @@
     var restaurantEl = document.getElementById('demo-restaurant');
     var emailEl = document.getElementById('demo-email');
     var offreEl = document.getElementById('demo-offre');
+    var messageEl = document.getElementById('demo-message');
     var btn = document.getElementById('demo-submit-btn');
     var successEl = document.getElementById('demo-success');
     var errorEl = document.getElementById('demo-error');
@@ -916,6 +919,7 @@
     body.append(DEMO_GFORM_ENTRIES.restaurant, restaurantEl.value.trim());
     body.append(DEMO_GFORM_ENTRIES.email, emailEl.value.trim());
     body.append(DEMO_GFORM_ENTRIES.offre, offreEl.value);
+    body.append(DEMO_GFORM_ENTRIES.message, messageEl.value.trim());
 
     fetch(DEMO_GFORM_ACTION_URL, {
       method: 'POST',
