@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReputationAzur — Gestion des avis Google & TripAdvisor · Restaurants</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C09850; --gold-light: #F0D282; --gold-pale: #F6ECD9;
+      --cream: #F2EDE5; --ink: #162332; --muted: #4A5A6B;
+      --border: rgba(192,152,80,.2); --white: #FFFFFF;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 0 3rem; transition: all .5s ease; }
+    nav.solid { background: rgba(242,237,229,.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); box-shadow: 0 2px 24px rgba(0,0,0,.05); }
+    .nav-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .nav-logo { font-family: 'Jost', sans-serif; font-size: 1.15rem; font-weight: 500; letter-spacing: .04em; color: var(--white); text-decoration: none; transition: color .3s; }
+    nav.solid .nav-logo { color: var(--ink); }
+    .nav-logo em { font-style: normal; font-family: 'Cormorant', serif; font-weight: 600; font-size: 1.35rem; color: var(--gold); margin-left: 1px; }
+    .nav-back { font-size: .88rem; font-weight: 500; color: rgba(255,255,255,.85); text-decoration: none; display: flex; align-items: center; gap: .4rem; transition: color .3s; }
+    nav.solid .nav-back { color: var(--muted); }
+    .nav-back:hover { color: var(--gold); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: .95rem; font-weight: 500; color: rgba(255,255,255,.9); transition: color .3s; }
+    nav.solid .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-pill { border: 1px solid rgba(255,255,255,.4); border-radius: 100px; padding: .5rem 1.4rem; color: white !important; transition: all .3s !important; }
+    nav.solid .nav-pill { border-color: var(--gold); color: var(--gold) !important; }
+    .nav-pill:hover { background: var(--gold) !important; color: var(--ink) !important; border-color: var(--gold) !important; }
+
+    /* ── HERO ── */
+    .hero { position: relative; height: 100vh; min-height: 700px; display: flex; align-items: flex-end; overflow: hidden; }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: repeating-conic-gradient(from 0deg at 50% 38%, rgba(240,210,130,.05) 0deg 3deg, transparent 3deg 11deg);
+      mix-blend-mode: overlay;
+    }
+
+    .hero-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1800&q=85&auto=format&fit=crop'); background-size: cover; background-position: center 40%; transform: scale(1.05); animation: heroZoom 12s ease-out forwards; }
+    @keyframes heroZoom { from{transform:scale(1.1)} to{transform:scale(1.01)} }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(14,24,36,.15) 0%, rgba(14,24,36,.1) 30%, rgba(14,24,36,.6) 70%, rgba(14,24,36,.92) 100%); }
+    .hero-line { position: absolute; top: 0; left: 50%; width: 1px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); transform: translateX(-50%); animation: lineDrop 2s ease-out .5s both; }
+    @keyframes lineDrop { from{height:0;opacity:0} to{height:100%;opacity:.4} }
+    .hero-content { position: relative; z-index: 10; width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 3rem 5rem; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: .6rem; margin-bottom: 1.5rem; opacity: 0; animation: riseUp .8s ease .8s forwards; background: rgba(0,0,0,.35); backdrop-filter: blur(6px); padding: .5rem 1rem .5rem .6rem; border-radius: 100px; }
+    .hero-eyebrow-line { position: relative; height: 1px; width: 40px; background: var(--gold); flex-shrink: 0; }
+    .hero-eyebrow-line::after { content:''; position:absolute; right:-4px; top:50%; width:5px; height:5px; background:var(--gold); transform:translateY(-50%) rotate(45deg); }
+    .hero-eyebrow span { font-size: .78rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: white; text-shadow: none; }
+    .hero-h1 { font-family: 'Cormorant', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.05; color: white; letter-spacing: -.01em; margin-bottom: 2rem; opacity: 0; animation: riseUp .9s ease 1s forwards; }
+    .hero-h1 strong { font-weight: 600; }
+    .hero-h1 em { font-style: italic; color: var(--gold-light); }
+    .hero-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 3rem; flex-wrap: wrap; opacity: 0; animation: riseUp .9s ease 1.2s forwards; }
+    .hero-desc { font-size: 1rem; font-weight: 300; color: rgba(255,255,255,.7); max-width: 440px; line-height: 1.8; }
+    .hero-actions { display: flex; align-items: center; gap: 1.2rem; }
+    .btn-gold { display: inline-flex; align-items: center; gap: .6rem; background: var(--gold); color: var(--ink); padding: 1rem 2.2rem; border-radius: 100px; font-size: .9rem; font-weight: 500; text-decoration: none; letter-spacing: .04em; transition: all .3s ease; }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(192,152,80,.4); }
+    .btn-outline-white { display: inline-flex; align-items: center; gap: .6rem; background: transparent; color: white; padding: 1rem 2.2rem; border-radius: 100px; font-size: .9rem; font-weight: 400; text-decoration: none; border: 1px solid rgba(255,255,255,.35); letter-spacing: .04em; transition: all .3s ease; }
+    .btn-outline-white:hover { border-color: var(--gold); color: var(--gold); }
+    .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: .4rem; opacity: 0; animation: fadeIn 1s ease 2s forwards; }
+    .scroll-hint span { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.4); }
+    .scroll-arrow { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0%,100%{opacity:.6;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.15)} }
+    @keyframes riseUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+    /* ── STATS ── */
+    .stats-section { background: var(--ink); padding: 3.5rem 3rem; }
+    .stats-inner { max-width: 1300px; margin: 0 auto; display: flex; gap: 0; }
+    .stats-row { display: flex; flex: 1; }
+    .s-stat { flex: 1; padding: 0 2.5rem; border-left: 1px solid rgba(255,255,255,.08); }
+    .s-stat:first-child { border-left: none; }
+    .s-num { font-family: 'Cormorant', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 600; color: white; line-height: 1; }
+    .s-num .g { color: var(--gold); }
+    .s-label { font-size: .78rem; color: rgba(255,255,255,.45); margin-top: .4rem; line-height: 1.55; max-width: 200px; }
+    .s-src { font-size: .62rem; color: rgba(255,255,255,.2); margin-top: .3rem; }
+
+    /* ── SECTIONS ── */
+    .section { padding: 7rem 3rem; }
+    .section-inner { max-width: 1300px; margin: 0 auto; }
+    .why-section {
+      background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1800&q=85&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+    .why-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(14,24,36,.55) 0%, rgba(14,24,36,.65) 100%);
+      z-index: 0;
+    }
+    .why-section .section-inner { position: relative; z-index: 1; }
+    .why-section .s-tag { color: var(--gold); }
+    .why-section .s-title { color: white; }
+    .why-section .s-sub { color: rgba(255,255,255,.5); max-width: 600px; }
+    .s-tag { font-size: .68rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: .8rem; }
+    .s-title { font-family: 'Cormorant', serif; font-size: clamp(2.2rem, 4vw, 3.6rem); font-weight: 400; color: var(--ink); line-height: 1.15; letter-spacing: -.01em; margin-bottom: 1rem; }
+    .s-sub { font-size: .95rem; color: var(--muted); max-width: 500px; line-height: 1.75; margin-bottom: 4rem; font-weight: 300; }
+
+    /* ── DURATION PICKER ── */
+    .dur-btn { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.5); border-radius: 100px; padding: .55rem 1.4rem; font-family: 'Jost', sans-serif; font-size: .82rem; font-weight: 500; cursor: pointer; letter-spacing: .04em; transition: all .25s ease; }
+    .dur-btn:hover { border-color: rgba(192,152,80,.4); color: rgba(255,255,255,.8); }
+    .dur-btn.active { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 600; }
+    .dyn-price { display: inline-block; transition: opacity .2s ease; }
+    .dyn-price.fade { opacity: 0; }
+
+    /* ── TOOLTIP PRESTATIONS ── */
+    .pp-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
+    .pp-card { position:relative; border:1px solid rgba(255,255,255,.08); border-radius:4px; padding:1.3rem; background:rgba(255,255,255,.02); cursor:default; transition:border-color .25s, background .25s; }
+    .pp-card:hover { border-color:rgba(192,152,80,.35); background:rgba(255,255,255,.05); }
+    .pp-label { font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-bottom:.4rem; }
+    .pp-price { font-family:'Cormorant',serif; font-size:1.8rem; color:white; font-weight:300; }
+    .pp-short { font-size:.78rem; color:rgba(255,255,255,.4); margin-top:.4rem; line-height:1.5; }
+    .pp-hint { font-size:.65rem; color:rgba(192,152,80,.5); margin-top:.5rem; letter-spacing:.04em; }
+    /* Tooltip */
+    .pp-tooltip { position:absolute; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%); width:240px; background:rgba(18,28,40,.97); border:1px solid rgba(192,152,80,.25); border-radius:6px; padding:1rem 1.1rem; opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; transform:translateX(-50%) translateY(6px); z-index:100; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+    .pp-card:hover .pp-tooltip { opacity:1; transform:translateX(-50%) translateY(0); }
+    .pp-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:rgba(192,152,80,.25); }
+    .pp-tooltip-title { font-size:.72rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:.5rem; }
+    .pp-tooltip-body { font-size:.8rem; color:rgba(255,255,255,.7); line-height:1.65; }
+    .rev { opacity:0; transform:translateY(36px); transition:opacity .9s ease,transform .9s ease; }
+    .rev.in { opacity:1; transform:translateY(0); }
+    .rev-l { opacity:0; transform:translateX(-40px); transition:opacity .9s ease,transform .9s ease; }
+    .rev-l.in { opacity:1; transform:translateX(0); }
+    .rev-r { opacity:0; transform:translateX(40px); transition:opacity .9s ease,transform .9s ease; }
+    .rev-r.in { opacity:1; transform:translateX(0); }
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+    /* ── COMPARATIF SANS / AVEC ── */
+    .cmp-toggle-wrap { display:flex; justify-content:center; margin-bottom:2.5rem; }
+    .cmp-toggle { display:inline-flex; background:rgba(255,255,255,.08); border-radius:100px; padding:4px; gap:4px; }
+    .cmp-btn { display:flex; align-items:center; gap:.5rem; border:none; border-radius:100px; padding:.6rem 1.5rem; font-family:'Jost',sans-serif; font-size:.82rem; font-weight:500; cursor:pointer; transition:all .3s ease; background:transparent; color:rgba(255,255,255,.5); letter-spacing:.02em; }
+    .cmp-btn-icon { font-size:.9rem; font-weight:700; }
+    .cmp-btn-sans.active { background:#FEE2E2; color:#B91C1C; }
+    .cmp-btn-avec.active { background:#D1FAE5; color:#065F46; }
+    /* Desktop : toggle caché, 2 colonnes visibles */
+    @media (min-width:768px) { .cmp-toggle-wrap { display:none; } }
+
+    .cmp-grid { display:grid; grid-template-columns:1fr auto 1fr; gap:0; align-items:start; }
+
+    .cmp-col { border-radius:8px; overflow:hidden; }
+    .cmp-col-sans { border:1px solid rgba(239,68,68,.25); background:rgba(0,0,0,.35); backdrop-filter:blur(8px); }
+    .cmp-col-avec { border:1px solid rgba(192,152,80,.3); background:rgba(0,0,0,.35); backdrop-filter:blur(8px); }
+
+    .cmp-col-header { display:flex; align-items:center; gap:.8rem; padding:1.5rem 2rem; }
+    .cmp-col-sans .cmp-col-header { background:rgba(239,68,68,.1); border-bottom:1px solid rgba(239,68,68,.15); }
+    .cmp-col-avec .cmp-col-header { background:rgba(192,152,80,.1); border-bottom:1px solid rgba(192,152,80,.18); }
+    .cmp-col-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:700; flex-shrink:0; }
+    .cmp-icon-sans { background:rgba(239,68,68,.2); color:#FCA5A5; }
+    .cmp-icon-avec { background:rgba(192,152,80,.2); color:var(--gold); }
+    .cmp-col-title { font-size:.78rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; }
+    .cmp-col-sans .cmp-col-title { color:#FCA5A5; }
+    .cmp-col-avec .cmp-col-title { color:var(--gold-light); }
+
+    .cmp-items { padding:1.5rem 2rem; display:flex; flex-direction:column; gap:1.5rem; }
+    .cmp-item { display:flex; gap:1rem; align-items:flex-start; }
+    .cmp-item-num { font-family:'Cormorant',serif; font-size:1.8rem; font-weight:300; line-height:1; flex-shrink:0; min-width:2rem; text-align:right; }
+    .cmp-item-num.sans { color:rgba(239,68,68,.4); }
+    .cmp-item-num.avec { color:rgba(192,152,80,.5); }
+    .cmp-item-body strong { display:block; font-size:.88rem; font-weight:600; color:rgba(255,255,255,.9); margin-bottom:.3rem; }
+    .cmp-item-body p { font-size:.82rem; color:rgba(255,255,255,.5); line-height:1.7; margin-bottom:.6rem; font-weight:300; }
+    .cmp-pill { display:inline-block; font-size:.7rem; font-weight:600; letter-spacing:.04em; border-radius:100px; padding:.25rem .8rem; }
+    .cmp-pill-bad { background:rgba(239,68,68,.15); color:#FCA5A5; }
+    .cmp-pill-good { background:rgba(192,152,80,.15); color:var(--gold-light); }
+
+    .cmp-col-footer { padding:1.2rem 2rem; }
+    .cmp-footer-sans { background:rgba(239,68,68,.08); border-top:1px solid rgba(239,68,68,.12); }
+    .cmp-footer-avec { background:rgba(192,152,80,.08); border-top:1px solid rgba(192,152,80,.15); }
+    .cmp-footer-sum { font-size:.8rem; font-weight:500; font-style:italic; }
+    .cmp-footer-sans .cmp-footer-sum { color:#FCA5A5; }
+    .cmp-footer-avec .cmp-footer-sum { color:var(--gold-light); }
+
+    .cmp-sep { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 1.5rem; gap:.5rem; align-self:center; }
+    .cmp-sep-line { width:1px; height:80px; background:linear-gradient(to bottom, transparent, rgba(255,255,255,.15), transparent); }
+    .cmp-sep-vs { font-family:'Cormorant',serif; font-size:1.1rem; font-weight:300; color:rgba(255,255,255,.3); letter-spacing:.1em; }
+
+    /* Mobile : toggle actif, une colonne à la fois */
+    @media (max-width:767px) {
+      .cmp-grid { grid-template-columns:1fr; }
+      .cmp-sep { display:none; }
+      .cmp-col { display:none; }
+      .cmp-col.visible { display:block; }
+    }
+
+    /* ── WHY (ancien) — gardé pour compatibilité ── */
+    .why-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .why-photo { position: relative; border-radius: 4px; overflow: hidden; aspect-ratio: 3/4; }
+    .why-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 8s ease; }
+    .why-photo:hover img { transform: scale(1.04); }
+    .why-photo::before { content: ''; position: absolute; inset: 16px; border: 1px solid rgba(192,152,80,.35); border-radius: 2px; z-index: 1; pointer-events: none; }
+    .why-badge { position: absolute; bottom: 2rem; left: 1.5rem; background: var(--ink); color: white; border-radius: 4px; padding: 1.2rem 1.5rem; z-index: 2; box-shadow: 0 16px 40px rgba(0,0,0,.2); }
+    .why-badge .big { font-family: 'Cormorant', serif; font-size: 2.5rem; font-weight: 600; color: var(--gold); line-height: 1; }
+    .why-badge .lbl { font-size: .72rem; color: rgba(255,255,255,.55); margin-top: .2rem; line-height: 1.4; max-width: 160px; }
+    .why-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .why-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+    .why-item-num { font-family: 'Cormorant', serif; font-size: 2rem; font-weight: 300; color: var(--gold); line-height: 1; flex-shrink: 0; min-width: 2rem; text-align: right; }
+    .why-item-text strong { display: block; font-size: .9rem; font-weight: 600; color: var(--ink); margin-bottom: .3rem; }
+    .why-item-text p { font-size: .84rem; color: var(--muted); line-height: 1.7; }
+
+    /* Offres */
+    .offers-section { background: var(--ink); }
+    .offers-section .s-title { color: white; }
+    .offers-section .s-tag { color: var(--gold); }
+    .offers-section .s-sub { color: rgba(255,255,255,.4); }
+    .offers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .offer-card { border: 1px solid rgba(255,255,255,.08); border-radius: 4px; padding: 2.2rem; transition: all .4s ease; position: relative; overflow: hidden; background: rgba(255,255,255,.03); }
+    .offer-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform: scaleX(0); transition: transform .4s ease; }
+    .offer-card:hover { background: rgba(255,255,255,.06); transform: translateY(-4px); }
+    .offer-card:hover::after { transform: scaleX(1); }
+    .offer-card.feat { border-color: rgba(192,152,80,.3); background: rgba(192,152,80,.05); }
+    .offer-card.feat::after { transform: scaleX(1); }
+    .o-badge { display: inline-block; font-size: .65rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); background: var(--gold); padding: .2rem .7rem; border-radius: 100px; margin-bottom: 1.2rem; }
+    .o-name { font-size: .7rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: .5rem; }
+    .o-price { font-family: 'Cormorant', serif; font-size: 3.5rem; font-weight: 300; color: white; line-height: 1; }
+    .o-price sup { font-size: 1.3rem; vertical-align: super; }
+    .o-price sub { font-size: 1rem; font-weight: 300; color: rgba(255,255,255,.3); }
+    .o-promo { font-size: .75rem; color: #6EE7B7; margin: .4rem 0 1.2rem; }
+    .o-sep { height: 1px; background: rgba(255,255,255,.06); margin: 1.2rem 0; }
+    .o-desc { font-size: .75rem; color: rgba(255,255,255,.3); font-style: italic; margin-bottom: 1rem; line-height: 1.5; }
+    .o-list { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .o-list li { display: flex; gap: .5rem; font-size: .82rem; color: rgba(255,255,255,.6); line-height: 1.45; }
+    .o-list li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+
+    /* Objections */
+    .obj-section { background: var(--cream); }
+    .obj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .obj-card { background: var(--cream); padding: 2rem; transition: background .3s; }
+    .obj-card:hover { background: var(--white); }
+    .obj-q { font-family: 'Cormorant', serif; font-size: 1.15rem; font-style: italic; font-weight: 600; color: var(--ink); margin-bottom: .7rem; line-height: 1.3; }
+    .obj-a { font-size: .84rem; color: var(--muted); line-height: 1.75; font-weight: 300; }
+
+    /* Process */
+    .process-section { background: var(--white); }
+    .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3rem; position: relative; }
+    .process-grid::before { content:''; position:absolute; top:28px; left:calc(16.7% + 1rem); right:calc(16.7% + 1rem); height:1px; background:linear-gradient(90deg,var(--gold),rgba(192,152,80,.2)); }
+    .p-card { text-align:center; }
+    .p-num { width:56px; height:56px; border-radius:50%; margin:0 auto 1.5rem; background:var(--ink); color:var(--gold); position:relative; z-index:1; display:flex; align-items:center; justify-content:center; font-family:'Cormorant',serif; font-size:1.5rem; font-weight:600; box-shadow:0 0 0 6px var(--white), 0 0 0 7px var(--border); }
+    .p-card h3 { font-family:'Cormorant',serif; font-size:1.2rem; font-weight:600; color:var(--ink); margin-bottom:.5rem; }
+    .p-card p { font-size:.84rem; color:var(--muted); line-height:1.7; font-weight:300; }
+
+    /* Contact */
+    .contact-section { background: var(--ink); }
+    .contact-section .s-title { color:white; }
+    .contact-section .s-tag { color:var(--gold); }
+    .contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:6rem; align-items:start; }
+    .contact-info p { font-size:.92rem; color:rgba(255,255,255,.45); line-height:1.8; margin-bottom:2.5rem; font-weight:300; }
+    .c-item { display:flex; gap:1rem; align-items:center; margin-bottom:1rem; text-decoration:none; }
+    .c-icon { width:44px; height:44px; border-radius:4px; border:1px solid rgba(192,152,80,.25); display:flex; align-items:center; justify-content:center; font-size:1rem; transition:all .3s; }
+    .c-item:hover .c-icon { background:var(--gold); border-color:var(--gold); }
+    .c-txt strong { display:block; font-size:.88rem; color:white; font-weight:500; }
+    .c-txt small { font-size:.75rem; color:rgba(255,255,255,.3); }
+    .form-box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:4px; padding:3rem; }
+    .form-box h4 { font-family:'Cormorant',serif; font-size:1.6rem; font-weight:400; color:white; margin-bottom:2rem; font-style:italic; }
+    .f-group { margin-bottom:1.2rem; }
+    .f-group label { display:block; font-size:.68rem; font-weight:500; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:.5rem; }
+    .f-group input, .f-group select { width:100%; padding:.8rem 0; background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,.12); font-family:'Jost',sans-serif; font-size:.9rem; color:white; outline:none; transition:border-color .3s; -webkit-appearance:none; }
+    .f-group input::placeholder { color:rgba(255,255,255,.2); }
+    .f-group input:focus, .f-group select:focus { border-color:var(--gold); }
+    .f-group select option { background:var(--ink); }
+    .f-row { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .f-submit { width:100%; margin-top:2rem; padding:1.1rem; background:var(--gold); color:var(--ink); border:none; border-radius:100px; font-family:'Jost',sans-serif; font-size:.9rem; font-weight:600; letter-spacing:.05em; cursor:pointer; transition:all .3s; }
+    .f-submit:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 12px 30px rgba(192,152,80,.3); }
+    .f-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
+    .f-note { text-align:center; font-size:.72rem; color:rgba(255,255,255,.2); margin-top:.8rem; letter-spacing:.03em; }
+    .f-msg { display:none; text-align:center; font-size:.82rem; margin-top:1.2rem; padding:.9rem; border-radius:4px; letter-spacing:.02em; }
+    .f-msg.success { display:block; background:rgba(120,200,120,.08); border:1px solid rgba(120,200,120,.3); color:#9fe6a0; }
+    .f-msg.error { display:block; background:rgba(220,100,100,.08); border:1px solid rgba(220,100,100,.3); color:#f0a0a0; }
+
+    footer { background:var(--ink); border-top:1px solid rgba(255,255,255,.05); padding:2.5rem 3rem; }
+    .footer-inner { max-width:1300px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+    .f-logo { font-family:'Jost',sans-serif; font-size:1rem; font-weight:500; letter-spacing:.04em; color:white; }
+    .f-logo em { font-style:normal; font-family:'Cormorant',serif; font-weight:600; font-size:1.2rem; color:var(--gold); margin-left:1px; }
+    .f-back { font-size:.78rem; color:rgba(255,255,255,.3); text-decoration:none; transition:color .3s; }
+    .f-back:hover { color:var(--gold); }
+    .f-legal { font-size:.68rem; color:rgba(255,255,255,.2); line-height:1.8; text-align:right; }
+
+    @media (max-width:1000px) {
+      .why-layout { grid-template-columns:1fr; gap:3rem; }
+      .why-photo { aspect-ratio:16/9; }
+      .contact-grid { grid-template-columns:1fr; gap:3rem; }
+      .process-grid { grid-template-columns:1fr; }
+      .process-grid::before { display:none; }
+    }
+    @media (max-width:768px) {
+      nav { padding:0 1.5rem; }
+      .nav-links { display:none; }
+      .hero-content { padding:0 1.5rem 4rem; }
+      .section { padding:5rem 1.5rem; }
+      .stats-row { flex-direction:column; gap:1.5rem; }
+      .s-stat { border-left:none; border-top:1px solid rgba(255,255,255,.08); padding:1.5rem 0 0; }
+      .s-stat:first-child { border-top:none; padding-top:0; }
+      .f-row { grid-template-columns:1fr; }
+      .footer-inner { flex-direction:column; text-align:center; }
+      .f-legal { text-align:center; }
+      .hero-bottom { flex-direction:column; align-items:flex-start; }
+      /* Offres : 1 colonne sur mobile */
+      .offers-grid { grid-template-columns:1fr; }
+      .scroll-hint { display:none; }
+      /* Prestations ponctuelles : 1 colonne, tooltip vers le bas sur mobile */
+      .pp-grid { grid-template-columns:1fr; }
+      .pp-tooltip { bottom:auto; top:calc(100% + 8px); transform:translateX(-50%) translateY(0); left:50%; }
+      .pp-card:hover .pp-tooltip { transform:translateX(-50%) translateY(0); opacity:1; }
+      .pp-tooltip::after { top:auto; bottom:100%; border-top-color:transparent; border-bottom-color:rgba(192,152,80,.25); }
+      /* Tooltip tactile : affichage au tap */
+      .pp-card.open .pp-tooltip { opacity:1; pointer-events:auto; }
+      /* Objections : 1 colonne */
+      .obj-grid { grid-template-columns:1fr; }
+    }
+  
+    .brand-stars { display: inline-flex; align-items: center; gap: 4px; color: var(--gold); }
+    .brand-stars svg { display: block; width: 9px; height: 9px; }
+
+    .diamond-rule { display: inline-flex; align-items: center; gap: 6px; }
+    .diamond-rule .d-line { height: 1px; width: 40px; background: var(--gold); flex-shrink: 0; }
+    .diamond-rule .d-dot { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+
+    /* ── brand extras: kicker diamond, inline stars, stats sunburst, footer rule ── */
+    .s-tag::before { content:''; display:inline-block; width:5px; height:5px; background:var(--gold); transform:rotate(45deg); margin-right:.7em; margin-bottom:1px; vertical-align:middle; }
+    .istar { display:inline-block; width:.8em; height:.8em; vertical-align:-.05em; color:inherit; }
+    .stats-section { position:relative; overflow:hidden; }
+    .stats-section::before {
+      content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+      background: repeating-conic-gradient(from 0deg at 50% 0%, rgba(240,210,130,.06) 0deg 3deg, transparent 3deg 13deg);
+      mix-blend-mode: overlay;
+    }
+    .stats-inner { position:relative; z-index:1; }
+    .footer-rule { max-width:1300px; margin:0 auto; padding:0 3rem; display:flex; align-items:center; justify-content:center; gap:8px; }
+    .footer-rule .fr-line { height:1px; flex:1; max-width:280px; background:linear-gradient(to right, transparent, var(--gold), transparent); }
+    .footer-rule .fr-dot { width:5px; height:5px; background:var(--gold); transform:rotate(45deg); flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-back">← Retour</a>
+    <a href="index.html" class="nav-logo">Reputation<em>Azur</em></a>
+    <ul class="nav-links">
+      <li><a href="#pourquoi">Pourquoi agir</a></li>
+      <li><a href="#offres">Offres</a></li>
+      <li><a href="#process">Comment ça marche</a></li>
+      <li><a href="#contact" class="nav-pill">Démo gratuite</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-line"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="brand-stars" aria-hidden="true"><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg></span>
+      <div class="hero-eyebrow-line"></div>
+      <span>Restaurants · Alpes-Maritimes</span>
+    </div>
+    <h1 class="hero-h1">Vos avis Google<br><em>& TripAdvisor,</em><br><strong>gérés par des professionnels.</strong></h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">Chaque avis traité sous 5 jours ouvrés — en plusieurs langues — dans l'ambiance de votre établissement.</p>
+      <div class="hero-actions">
+        <a href="#pourquoi" class="btn-gold">En savoir plus ↓</a>
+        <a href="#offres" class="btn-outline-white">Voir les offres</a>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Découvrir</span><div class="scroll-arrow"></div></div>
+</section>
+
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stats-row">
+      <div class="s-stat">
+        <div class="s-num"><span class="ctr" data-t="93">0</span><span class="g">%</span></div>
+        <div class="s-label">des clients ont déjà effectué un achat après avoir lu des avis positifs</div>
+        <div class="s-src">BrightLocal 2024</div>
+      </div>
+      <div class="s-stat">
+        <div class="s-num"><span class="ctr" data-t="88">0</span><span class="g">%</span></div>
+        <div class="s-label">choisiraient un établissement qui répond à tous ses avis</div>
+        <div class="s-src">BrightLocal 2024</div>
+      </div>
+      <div class="s-stat">
+        <div class="s-num">9<span class="g">/10</span></div>
+        <div class="s-label">consommateurs attendent une réponse à leur avis — seuls 7% disent ne pas en attendre</div>
+        <div class="s-src">BrightLocal 2024 & 2025</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section why-section" id="pourquoi">
+  <div class="section-inner">
+    <span class="s-tag" style="text-align:center;display:block;">Ce que coûte l'inaction</span>
+    <h2 class="s-title" style="text-align:center;margin-bottom:.5rem;">Chaque avis sans réponse,<br><em>c'est un couvert perdu</em></h2>
+    <p class="s-sub" style="margin:0 auto 3rem;text-align:center;">Sur la Côte d'Azur, vos clients lisent les avis avant même de réserver. Voyez concrètement la différence.</p>
+
+    <!-- Toggle -->
+    <div class="cmp-toggle-wrap rev">
+      <div class="cmp-toggle">
+        <button class="cmp-btn cmp-btn-sans active" onclick="setCmp('sans')">
+          <span class="cmp-btn-icon">✗</span> Sans ReputationAzur
+        </button>
+        <button class="cmp-btn cmp-btn-avec" onclick="setCmp('avec')">
+          <span class="cmp-btn-icon">✓</span> Avec ReputationAzur
+        </button>
+      </div>
+    </div>
+
+    <!-- Comparatif côte à côte desktop / toggle mobile -->
+    <div class="cmp-grid rev">
+
+      <!-- COL SANS -->
+      <div class="cmp-col cmp-col-sans" id="col-sans">
+        <div class="cmp-col-header">
+          <div class="cmp-col-icon cmp-icon-sans">✗</div>
+          <div class="cmp-col-title">Sans ReputationAzur</div>
+        </div>
+        <div class="cmp-items">
+
+          <div class="cmp-item">
+            <div class="cmp-item-num sans">01</div>
+            <div class="cmp-item-body">
+              <strong>Avis négatif sans réponse</strong>
+              <p>94% des consommateurs disent qu'un avis négatif les a déjà dissuadés de choisir un établissement (ReviewTrackers). Chaque avis ignoré est un client potentiel perdu.</p>
+              <div class="cmp-pill cmp-pill-bad">Clients potentiels perdus</div>
+            </div>
+          </div>
+
+          <div class="cmp-item">
+            <div class="cmp-item-num sans">02</div>
+            <div class="cmp-item-body">
+              <strong>Touristes non répondus</strong>
+              <p>Les avis en langue étrangère restent sans réponse. Le touriste passe à la concurrence. La Côte d'Azur, c'est 14 millions de visiteurs par an — chaque langue compte.</p>
+              <div class="cmp-pill cmp-pill-bad">Clientèle internationale perdue</div>
+            </div>
+          </div>
+
+          <div class="cmp-item">
+            <div class="cmp-item-num sans">03</div>
+            <div class="cmp-item-body">
+              <strong>Vous répondez après le service</strong>
+              <p>Après 14h debout, sous le coup de l'émotion. Une réponse maladroite à un avis injuste peut faire plus de dégâts qu'une absence de réponse.</p>
+              <div class="cmp-pill cmp-pill-bad">Risque d'erreur au pire moment</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="cmp-col-footer cmp-footer-sans">
+          <div class="cmp-footer-sum">Résultat : votre note stagne, vos concurrents avancent.</div>
+        </div>
+      </div>
+
+      <!-- Séparateur -->
+      <div class="cmp-sep"><div class="cmp-sep-line"></div><div class="cmp-sep-vs">VS</div><div class="cmp-sep-line"></div></div>
+
+      <!-- COL AVEC -->
+      <div class="cmp-col cmp-col-avec" id="col-avec">
+        <div class="cmp-col-header">
+          <div class="cmp-col-icon cmp-icon-avec">✓</div>
+          <div class="cmp-col-title">Avec ReputationAzur</div>
+        </div>
+        <div class="cmp-items">
+
+          <div class="cmp-item">
+            <div class="cmp-item-num avec">01</div>
+            <div class="cmp-item-body">
+              <strong>Réponse pro sous 5 jours</strong>
+              <p>Chaque avis négatif reçoit une réponse mesurée, dans l'ambiance de votre établissement. Le futur client voit que vous prenez soin de votre réputation.</p>
+              <div class="cmp-pill cmp-pill-good">88% préfèrent un établissement qui répond</div>
+            </div>
+          </div>
+
+          <div class="cmp-item">
+            <div class="cmp-item-num avec">02</div>
+            <div class="cmp-item-body">
+              <strong>Réponses multilingues incluses</strong>
+              <p>Chaque touriste reçoit une réponse dans sa langue. Ce geste simple transforme un visiteur en ambassadeur — et améliore votre positionnement sur Google.</p>
+              <div class="cmp-pill cmp-pill-good">Clientèle internationale fidélisée</div>
+            </div>
+          </div>
+
+          <div class="cmp-item">
+            <div class="cmp-item-num avec">03</div>
+            <div class="cmp-item-body">
+              <strong>Vous gérez, on répond</strong>
+              <p>Aucune connexion requise de votre part. Nous gérons. Zéro charge mentale.</p>
+              <div class="cmp-pill cmp-pill-good">Votre temps reste dans votre établissement</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="cmp-col-footer cmp-footer-avec">
+          <div class="cmp-footer-sum">Résultat : votre note progresse, vos réservations suivent.</div>
+        </div>
+      </div>
+
+    </div><!-- /cmp-grid -->
+
+    <div class="rev" style="text-align:center;margin-top:3.5rem;">
+      <a href="#contact" class="btn-gold">Démonstration gratuite →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section offers-section" id="offres">
+  <div class="section-inner">
+    <span class="s-tag">Nos offres</span>
+    <h2 class="s-title">Clair. Transparent. Efficace.</h2>
+    <p class="s-sub">3 durées au choix — plus l&apos;engagement est long, plus le tarif est avantageux. Résiliable avec 30 jours de préavis après la période souscrite.</p>
+
+    <div class="duration-table rev" style="margin-bottom:3rem;overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;color:white;font-size:.82rem;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:.8rem 1rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;text-transform:uppercase;">Offre</th>
+            <th style="padding:.8rem 1rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-align:center;">3 mois</th>
+            <th style="padding:.8rem 1rem;background:rgba(192,152,80,.15);color:var(--gold);font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:center;">6 mois <svg class="istar" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg></th>
+            <th style="padding:.8rem 1rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-align:center;">12 mois</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-weight:500;">Essentiel</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">180€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-weight:700;color:var(--gold);">165€</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">150€</td>
+          </tr>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-weight:500;">Prestige <svg class="istar" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg></td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">240€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-weight:700;color:var(--gold);">220€</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">200€</td>
+          </tr>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-weight:500;">Premium</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">360€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-weight:700;color:var(--gold);">330€</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">300€</td>
+          </tr>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-weight:500;">Pack Duo</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">420€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-weight:700;color:var(--gold);">385€</td>
+            <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">350€</td>
+          </tr>
+          <tr style="border-top:1px solid rgba(255,255,255,.06);">
+            <td style="padding:.75rem 1rem;font-size:.72rem;color:rgba(255,255,255,.35);">Avis offerts au démarrage</td>
+            <td style="padding:.75rem 1rem;text-align:center;font-size:.72rem;color:rgba(255,255,255,.35);">5 avis</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-size:.72rem;color:var(--gold-light);">10 avis</td>
+            <td style="padding:.75rem 1rem;text-align:center;font-size:.72rem;color:rgba(255,255,255,.35);">20 avis</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:.72rem;color:rgba(255,255,255,.25);margin-top:.8rem;">Tarifs en euros/mois par établissement. TVA non applicable, art. 293 B du CGI.</p>
+    </div>
+
+    <!-- Sélecteur de durée -->
+    <div class="duration-picker rev" style="display:flex;align-items:center;gap:.75rem;margin-bottom:2.5rem;flex-wrap:wrap;">
+      <span style="font-size:.78rem;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;margin-right:.5rem;">Durée d'engagement</span>
+      <button class="dur-btn" data-dur="3" onclick="setDuration(3)">3 mois</button>
+      <button class="dur-btn active" data-dur="6" onclick="setDuration(6)">6 mois <svg class="istar" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg></button>
+      <button class="dur-btn" data-dur="12" onclick="setDuration(12)">12 mois</button>
+    </div>
+
+    <div class="offers-grid">
+      <div class="offer-card rev d1">
+        <div class="o-name">Essentiel</div>
+        <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="180" data-6="165" data-12="150">165</span><sub>/mois</sub></div>
+        <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 5 avis offerts au démarrage" data-6="↳ Tarif 6 mois · 10 avis offerts au démarrage" data-12="↳ Tarif 12 mois · 20 avis offerts au démarrage">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
+        <div class="o-desc">Commerces locaux & restaurants · Avis Google</div>
+        <div class="o-sep"></div>
+        <ul class="o-list">
+          <li>Surveillance hebdomadaire des avis Google</li>
+          <li>Réponses professionnelles personnalisées</li>
+          <li>Publication directe ou validation préalable</li>
+          <li>Gestion avis positifs, négatifs et frauduleux</li>
+          <li>Ambiance définie à la fiche de cadrage</li>
+          <li>Alertes avis critiques incluses</li>
+          <li>Réponse sous 5 jours ouvrés</li>
+        </ul>
+      </div>
+      <div class="offer-card feat rev d2">
+        <div class="o-badge"><svg class="istar" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg> Recommandé</div>
+        <div class="o-name">Prestige</div>
+        <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="240" data-6="220" data-12="200">220</span><sub>/mois</sub></div>
+        <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 5 avis offerts au démarrage" data-6="↳ Tarif 6 mois · 10 avis offerts au démarrage" data-12="↳ Tarif 12 mois · 20 avis offerts au démarrage">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
+        <div class="o-desc">Restaurants touristiques · Google + TripAdvisor</div>
+        <div class="o-sep"></div>
+        <ul class="o-list">
+          <li>Tout l&apos;Essentiel, plus :</li>
+          <li>Avis TripAdvisor inclus</li>
+          <li>Réponses multilingues</li>
+          <li>Priorité aux touristes internationaux</li>
+          <li>Adapté zones touristiques & arrière-pays</li>
+        </ul>
+      </div>
+      <div class="offer-card rev d3">
+        <div class="o-name">Premium</div>
+        <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="360" data-6="330" data-12="300">330</span><sub>/mois</sub></div>
+        <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 5 avis offerts au démarrage" data-6="↳ Tarif 6 mois · 10 avis offerts au démarrage" data-12="↳ Tarif 12 mois · 20 avis offerts au démarrage">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
+        <div class="o-desc">Image complète en ligne</div>
+        <div class="o-sep"></div>
+        <ul class="o-list">
+          <li>Tout le Prestige, plus :</li>
+          <li>Commentaires Facebook inclus</li>
+          <li>Rapport mensuel PDF (note, évolution)</li>
+          <li>Alertes avis critiques en temps réel</li>
+          <li>Recommandations mensuelles</li>
+        </ul>
+      </div>
+      <div class="offer-card rev d4">
+        <div class="o-name">Pack Duo</div>
+        <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="420" data-6="385" data-12="350">385</span><sub>/mois</sub></div>
+        <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 2 × Prestige au lieu de 480€" data-6="↳ Tarif 6 mois · 2 × Prestige au lieu de 440€" data-12="↳ Tarif 12 mois · 2 × Prestige au lieu de 400€">↳ Tarif 6 mois · 2 × Prestige au lieu de 440€</div>
+        <div class="o-desc">2 établissements · Prestige × 2</div>
+        <div class="o-sep"></div>
+        <ul class="o-list">
+          <li>Offre Prestige × 2 établissements</li>
+          <li class="dyn-duo-avis" data-3="5 avis offerts par établissement" data-6="10 avis offerts par établissement" data-12="20 avis offerts par établissement">10 avis offerts par établissement</li>
+          <li>Interlocuteur unique</li>
+          <li>Facturation groupée simplifiée</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rev" style="margin-top:4rem;">
+      <h3 style="font-family:'Cormorant',serif;font-size:1.8rem;font-weight:400;color:white;margin-bottom:.5rem;">Extensions d'abonnement</h3>
+      <p style="font-size:.85rem;color:rgba(255,255,255,.35);margin-bottom:1.5rem;">En supplément d'un abonnement actif · Incluses dans Premium</p>
+      <div class="pp-grid">
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Extension Facebook</div>
+            <div class="pp-tooltip-body">Nous répondons aussi aux commentaires et avis publiés sur votre page Facebook, selon les mêmes modalités que pour Google et TripAdvisor. Incluse par défaut dans l'offre Premium.</div>
+          </div>
+          <div class="pp-label">Extension Facebook</div>
+          <div class="pp-price">+50€/mois</div>
+          <div class="pp-short">Réponses aux commentaires et avis Facebook</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Extension Rapport Mensuel</div>
+            <div class="pp-tooltip-body">Chaque mois, un PDF récapitulatif : évolution de votre note, avis traités, faits marquants et recommandations concrètes. Incluse par défaut dans l'offre Premium.</div>
+          </div>
+          <div class="pp-label">Extension Rapport Mensuel</div>
+          <div class="pp-price">+50€/mois</div>
+          <div class="pp-short">PDF mensuel : évolution de la note, avis traités, recommandations</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rev" style="margin-top:4rem;">
+      <h3 style="font-family:'Cormorant',serif;font-size:1.8rem;font-weight:400;color:white;margin-bottom:.5rem;">Prestations ponctuelles</h3>
+      <p style="font-size:.85rem;color:rgba(255,255,255,.35);margin-bottom:1.5rem;">Sans abonnement requis · Intervention unique</p>
+      <div class="pp-grid">
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Optimisation Fiche Google</div>
+            <div class="pp-tooltip-body">Remise à neuf complète de votre fiche : photos, description optimisée, horaires, catégories et attributs — via l'accès gestionnaire que vous nous fournissez.</div>
+          </div>
+          <div class="pp-label">Optimisation Fiche</div>
+          <div class="pp-price">150€</div>
+          <div class="pp-short">Remise à neuf : photos, description, horaires, catégories</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Pack Mise en Route</div>
+            <div class="pp-tooltip-body">Vous n'avez pas (ou plus) la main sur votre fiche ? Nous la revendiquons auprès de Google et TripAdvisor, puis la complétons (horaires, description, catégories, photos). Vous en restez propriétaire. Idéal pour une ouverture ou une fiche jamais revendiquée.</div>
+          </div>
+          <div class="pp-label">Pack Mise en Route</div>
+          <div class="pp-price">150€</div>
+          <div class="pp-short">Revendication et complétion de votre fiche Google & TripAdvisor</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Rattrapage d'Historique</div>
+            <div class="pp-tooltip-body">Nous répondons à votre stock d'avis anciens restés sans réponse, par tranche de 25 avis (120€/tranche). Au-delà de 100 avis, un devis spécifique est établi. Une seule fois par établissement, sur les avis antérieurs à la commande.</div>
+          </div>
+          <div class="pp-label">Rattrapage Historique</div>
+          <div class="pp-price">120€/tranche</div>
+          <div class="pp-short">120€ par tranche de 25 avis · Jusqu'à 100 avis, au-delà sur devis</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Kit Collecte d'Avis</div>
+            <div class="pp-tooltip-body">Kit numérique prêt à imprimer pour inciter vos clients à laisser un avis : QR code lié à votre fiche, formats chevalet de table, carte et sticker vitrine, aux couleurs de votre établissement. Vous imprimez (guide fourni).</div>
+          </div>
+          <div class="pp-label">Kit Collecte d'Avis</div>
+          <div class="pp-price">50€</div>
+          <div class="pp-short">QR code + chevalet, carte, sticker vitrine aux couleurs de votre établissement</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Audit Réputation</div>
+            <div class="pp-tooltip-body">Analyse complète de votre présence Google et TripAdvisor : état des lieux, points critiques, recommandations écrites. Vous repartez avec un rapport clair sur ce qui freine votre réputation et quoi faire en priorité.</div>
+          </div>
+          <div class="pp-label">Audit Réputation</div>
+          <div class="pp-price">90€</div>
+          <div class="pp-short">Analyse Google/TripAdvisor : points critiques et recommandations écrites</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section obj-section">
+  <div class="section-inner">
+    <span class="s-tag">Vos questions</span>
+    <h2 class="s-title">On a les réponses</h2>
+    <div class="obj-grid rev">
+      <div class="obj-card"><div class="obj-q">C'est trop cher.</div><div class="obj-a">150€/mois, c'est moins cher que perdre 3 couverts par semaine. Un seul client récupéré grâce à une bonne réponse couvre le mois.</div></div>
+      <div class="obj-card"><div class="obj-q">Je réponds déjà moi-même.</div><div class="obj-a">Après un service de 12h, sous le coup de l'émotion — c'est risqué. Nous répondons avec recul, en plusieurs langues, dans l'ambiance que vos futurs clients vont juger.</div></div>
+      <div class="obj-card"><div class="obj-q">Je n'ai pas beaucoup d'avis.</div><div class="obj-a">C'est le bon moment. Chaque avis sans réponse influence des dizaines de futurs clients. Mieux vaut construire sa réputation avant la haute saison.</div></div>
+      <div class="obj-card"><div class="obj-q">Les réponses multilingues ?</div><div class="obj-a">IA pour la rédaction initiale, relecture humaine avant publication. Vitesse de la machine, qualité du professionnel.</div></div>
+      <div class="obj-card"><div class="obj-q">Vous avez des références ?</div><div class="obj-a">Nous sommes en phase de lancement avec un premier partenaire sur la Côte d'Azur. C'est pourquoi nous offrons une démonstration gratuite — vous jugez vous-même avant de signer.</div></div>
+      <div class="obj-card"><div class="obj-q">Je vais réfléchir.</div><div class="obj-a">Bien sûr. En attendant, nous vous préparons des exemples sur vos vrais avis — sans engagement. Vous décidez avec le résultat sous les yeux.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section process-section" id="process">
+  <div class="section-inner">
+    <span class="s-tag" style="text-align:center;display:block;">Comment ça marche</span>
+    <h2 class="s-title" style="text-align:center;margin-bottom:.5rem;">Démarrer en 3 étapes</h2>
+    <p class="s-sub" style="margin:0 auto 5rem;text-align:center;">Aucune installation. Aucune complexité.</p>
+    <div class="process-grid">
+      <div class="p-card rev d1"><div class="p-num">1</div><h3>Démonstration gratuite</h3><p>Nous rédigeons des exemples sur vos vrais avis Google — sans accès à votre compte, sans engagement.</p></div>
+      <div class="p-card rev d2"><div class="p-num">2</div><h3>Vous validez, on signe</h3><p>Fiche de cadrage + devis. Vous définissez l'ambiance, les points forts, les sujets à éviter.</p></div>
+      <div class="p-card rev d3"><div class="p-num">3</div><h3>On gère, vous dirigez</h3><p>Chaque avis traité sous 5 jours ouvrés. Vous pouvez consulter les réponses publiées à tout moment sur votre fiche Google.</p></div>
+    </div>
+    <div style="text-align:center;margin-top:4rem;"><a href="#contact" class="btn-gold">Je veux ma démonstration gratuite →</a></div>
+  </div>
+</section>
+
+<section class="section contact-section" id="contact">
+  <div class="section-inner">
+    <div class="contact-grid">
+      <div class="rev-l">
+        <span class="s-tag">Contact</span>
+        <h2 class="s-title" style="font-size:clamp(2rem,3.5vw,3rem);">Parlons de<br><em style="color:var(--gold);">votre restaurant</em></h2>
+        <p>Réponse sous 24h. Démonstration gratuite sur vos vrais avis — aucun accès à votre compte requis.</p>
+        <a href="tel:0744419315" class="c-item"><div class="c-icon">📞</div><div class="c-txt"><strong>07.44.41.93.15</strong><small>Lun–Ven · 9h–18h</small></div></a>
+        <a href="mailto:contact@reputationazur.fr" class="c-item"><div class="c-icon">✉️</div><div class="c-txt"><strong>contact@reputationazur.fr</strong></div></a>
+        <div class="c-item"><div class="c-icon">📍</div><div class="c-txt"><strong>Antibes — Alpes-Maritimes</strong><small>Intervention 06 & 83</small></div></div>
+      </div>
+      <div class="rev-r">
+        <div class="form-box">
+          <h4>Demande de démonstration gratuite</h4>
+          <form id="demo-form" onsubmit="return submitDemoForm(event)">
+            <div class="f-row">
+              <div class="f-group"><label>Prénom</label><input type="text" id="demo-prenom" placeholder="Jean"></div>
+              <div class="f-group"><label>Nom</label><input type="text" id="demo-nom" placeholder="Dupont" required></div>
+            </div>
+            <div class="f-group"><label>Nom du restaurant</label><input type="text" id="demo-restaurant" placeholder="Le Bistrot du Port" required></div>
+            <div class="f-group"><label>Email</label><input type="email" id="demo-email" placeholder="jean@monresto.fr" required></div>
+            <div class="f-group"><label>Offre souhaitée</label>
+              <select id="demo-offre" required>
+                <option value="" disabled selected>Choisissez une offre</option>
+                <option>Essentiel — 165€/mois (6 mois)</option>
+                <option>Prestige ★ — 220€/mois (6 mois)</option>
+                <option>Premium — 330€/mois (6 mois)</option>
+                <option>Pack Duo — 385€/mois (6 mois)</option>
+                <option>Je ne sais pas encore</option>
+              </select>
+            </div>
+            <div class="f-group"><label>Une question ou une demande particulière ?</label><textarea id="demo-message" rows="3" placeholder="Facultatif" style="width:100%;padding:.8rem 0;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.12);font-family:'Jost',sans-serif;font-size:.9rem;color:white;outline:none;resize:vertical;"></textarea></div>
+            <button type="submit" class="f-submit" id="demo-submit-btn">Recevoir ma démonstration →</button>
+            <p id="demo-success" class="f-msg success" style="display:none;">Merci ! Votre demande a bien été enregistrée, nous vous recontacterons sous 24h.</p>
+            <p id="demo-error" class="f-msg error" style="display:none;">Une erreur est survenue. Vous pouvez nous écrire directement à <a href="mailto:contact@reputationazur.fr" style="color:inherit;">contact@reputationazur.fr</a>.</p>
+            <div class="f-note">Sans engagement · Avis offerts au démarrage · Réponse sous 24h</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-rule"><span class="fr-line"></span><span class="fr-dot"></span><span class="fr-line"></span></div>
+  <div class="footer-inner">
+    <div class="f-logo">Reputation<em>Azur</em></div>
+    <a href="index.html" class="f-back">← Changer de profil</a>
+    <div class="f-legal">Jennifer Biscaglia EI · SIRET 105 774 202 00011 · Code APE 7021Z<br>06600 Antibes · TVA non applicable, art. 293 B du CGI (recodifié dans le CIBS à compter du 01/01/2027, ancienne référence tolérée jusqu'au 31/12/2027)<br>© 2026 ReputationAzur</div>
+  </div>
+</footer>
+
+<script>
+  // ── COMPARATIF TOGGLE (mobile) ──
+  function setCmp(mode) {
+    document.querySelectorAll('.cmp-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.cmp-btn-' + mode).classList.add('active');
+    document.getElementById('col-sans').classList.toggle('visible', mode === 'sans');
+    document.getElementById('col-avec').classList.toggle('visible', mode === 'avec');
+  }
+  // Init mobile : afficher "sans" par défaut
+  if (window.innerWidth < 768) {
+    document.getElementById('col-sans').classList.add('visible');
+  } else {
+    document.getElementById('col-sans').classList.add('visible');
+    document.getElementById('col-avec').classList.add('visible');
+  }
+
+  // ── DURATION PICKER ──
+  function setDuration(dur) {
+    // Boutons actifs
+    document.querySelectorAll('.dur-btn').forEach(b => b.classList.toggle('active', +b.dataset.dur === dur));
+
+    // Prix avec micro-fade
+    document.querySelectorAll('.dyn-price').forEach(el => {
+      el.classList.add('fade');
+      setTimeout(() => {
+        el.textContent = el.dataset[dur];
+        el.classList.remove('fade');
+      }, 180);
+    });
+
+    // Lignes promo
+    document.querySelectorAll('.dyn-promo').forEach(el => {
+      el.classList.add('fade');
+      setTimeout(() => {
+        el.textContent = el.dataset[dur];
+        el.classList.remove('fade');
+      }, 180);
+    });
+
+    // Avis Pack Duo
+    document.querySelectorAll('.dyn-duo-avis').forEach(el => {
+      el.classList.add('fade');
+      setTimeout(() => {
+        el.textContent = el.dataset[dur];
+        el.classList.remove('fade');
+      }, 180);
+    });
+  }
+
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('solid', window.scrollY > 80));
+  const ro = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.12 });
+  document.querySelectorAll('.rev, .rev-l, .rev-r').forEach(el => ro.observe(el));
+  const co = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target; const target = +el.dataset.t; let n = 0;
+      const step = Math.ceil(target / 35);
+      const t = setInterval(() => { n = Math.min(n + step, target); el.textContent = n; if (n >= target) clearInterval(t); }, 28);
+      co.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.ctr').forEach(c => co.observe(c));
+
+  // ── TOOLTIP TAP MOBILE ──
+  document.querySelectorAll('.pp-card').forEach(card => {
+    card.addEventListener('click', e => {
+      const isOpen = card.classList.contains('open');
+      document.querySelectorAll('.pp-card').forEach(c => c.classList.remove('open'));
+      if (!isOpen) card.classList.add('open');
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.pp-card')) {
+      document.querySelectorAll('.pp-card').forEach(c => c.classList.remove('open'));
+    }
+  });
+
+  // ── FORMULAIRE DEMANDE DE DEMONSTRATION (Google Forms) ──
+  var DEMO_GFORM_ACTION_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSc4CVrZXiTemllhE6P7i7GdrApugqTysS8gJmIwGtR2Ucvq6Q/formResponse";
+  var DEMO_GFORM_ENTRIES = {
+    prenom: "entry.465586366",
+    nom: "entry.2141442231",
+    restaurant: "entry.653132159",
+    email: "entry.458910783",
+    offre: "entry.946986761",
+    message: "entry.172266905"
+  };
+
+  function submitDemoForm(e) {
+    e.preventDefault();
+    var prenomEl = document.getElementById('demo-prenom');
+    var nomEl = document.getElementById('demo-nom');
+    var restaurantEl = document.getElementById('demo-restaurant');
+    var emailEl = document.getElementById('demo-email');
+    var offreEl = document.getElementById('demo-offre');
+    var messageEl = document.getElementById('demo-message');
+    var btn = document.getElementById('demo-submit-btn');
+    var successEl = document.getElementById('demo-success');
+    var errorEl = document.getElementById('demo-error');
+
+    if (!nomEl.value.trim() || !restaurantEl.value.trim() || !emailEl.value.trim() || !offreEl.value) {
+      return false;
+    }
+
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
+    var body = new URLSearchParams();
+    body.append(DEMO_GFORM_ENTRIES.prenom, prenomEl.value.trim());
+    body.append(DEMO_GFORM_ENTRIES.nom, nomEl.value.trim());
+    body.append(DEMO_GFORM_ENTRIES.restaurant, restaurantEl.value.trim());
+    body.append(DEMO_GFORM_ENTRIES.email, emailEl.value.trim());
+    body.append(DEMO_GFORM_ENTRIES.offre, offreEl.value);
+    body.append(DEMO_GFORM_ENTRIES.message, messageEl.value.trim());
+
+    fetch(DEMO_GFORM_ACTION_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    }).then(function () {
+      successEl.style.display = 'block';
+      document.getElementById('demo-form').reset();
+      btn.textContent = 'Recevoir ma démonstration →';
+      btn.disabled = false;
+    }).catch(function () {
+      errorEl.style.display = 'block';
+      btn.textContent = 'Recevoir ma démonstration →';
+      btn.disabled = false;
+    });
+
+    return false;
+  }
+</script>
+</body>
+</html>
