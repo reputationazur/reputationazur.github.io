@@ -4,24 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ReputationAzur — Gestion des avis Google & TripAdvisor · Hôtels</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --gold: #C9A84C; --gold-light: #E8C97A; --gold-pale: #FAF4E6;
-      --cream: #F7F2EA; --ink: #1A1208; --muted: #6B5D4A;
-      --border: rgba(201,168,76,.2); --white: #FFFFFF;
+      --gold: #C09850; --gold-light: #F0D282; --gold-pale: #F6ECD9;
+      --cream: #F2EDE5; --ink: #162332; --muted: #4A5A6B;
+      --border: rgba(192,152,80,.2); --white: #FFFFFF;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
+    body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--ink); overflow-x: hidden; }
 
     /* ── NAV ── */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 0 3rem; transition: all .5s ease; }
-    nav.solid { background: rgba(247,242,234,.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); box-shadow: 0 2px 24px rgba(0,0,0,.05); }
+    nav.solid { background: rgba(242,237,229,.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); box-shadow: 0 2px 24px rgba(0,0,0,.05); }
     .nav-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--white); text-decoration: none; letter-spacing: .02em; transition: color .3s; }
+    .nav-logo { font-family: 'Jost', sans-serif; font-size: 1.15rem; font-weight: 500; letter-spacing: .04em; color: var(--white); text-decoration: none; transition: color .3s; }
     nav.solid .nav-logo { color: var(--ink); }
-    .nav-logo em { font-style: italic; color: var(--gold); }
+    .nav-logo em { font-style: normal; font-family: 'Cormorant', serif; font-weight: 600; font-size: 1.35rem; color: var(--gold); margin-left: 1px; }
     .nav-back { font-size: .88rem; font-weight: 500; color: rgba(255,255,255,.85); text-decoration: none; display: flex; align-items: center; gap: .4rem; transition: color .3s; }
     nav.solid .nav-back { color: var(--muted); }
     .nav-back:hover { color: var(--gold); }
@@ -35,23 +35,30 @@
 
     /* ── HERO ── */
     .hero { position: relative; height: 100vh; min-height: 700px; display: flex; align-items: flex-end; overflow: hidden; }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: repeating-conic-gradient(from 0deg at 50% 38%, rgba(240,210,130,.05) 0deg 3deg, transparent 3deg 11deg);
+      mix-blend-mode: overlay;
+    }
+
     .hero-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1455587734955-081b22074882?w=1800&q=85&auto=format&fit=crop'); background-size: cover; background-position: center 40%; transform: scale(1.05); animation: heroZoom 12s ease-out forwards; }
     @keyframes heroZoom { from{transform:scale(1.1)} to{transform:scale(1.01)} }
-    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,8,4,.15) 0%, rgba(10,8,4,.1) 30%, rgba(10,8,4,.6) 70%, rgba(10,8,4,.92) 100%); }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(14,24,36,.15) 0%, rgba(14,24,36,.1) 30%, rgba(14,24,36,.6) 70%, rgba(14,24,36,.92) 100%); }
     .hero-line { position: absolute; top: 0; left: 50%; width: 1px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); transform: translateX(-50%); animation: lineDrop 2s ease-out .5s both; }
     @keyframes lineDrop { from{height:0;opacity:0} to{height:100%;opacity:.4} }
     .hero-content { position: relative; z-index: 10; width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 3rem 5rem; }
     .hero-eyebrow { display: inline-flex; align-items: center; gap: .6rem; margin-bottom: 1.5rem; opacity: 0; animation: riseUp .8s ease .8s forwards; background: rgba(0,0,0,.35); backdrop-filter: blur(6px); padding: .5rem 1rem .5rem .6rem; border-radius: 100px; }
-    .hero-eyebrow-line { height: 1px; width: 40px; background: var(--gold); flex-shrink: 0; }
+    .hero-eyebrow-line { position: relative; height: 1px; width: 40px; background: var(--gold); flex-shrink: 0; }
+    .hero-eyebrow-line::after { content:''; position:absolute; right:-4px; top:50%; width:5px; height:5px; background:var(--gold); transform:translateY(-50%) rotate(45deg); }
     .hero-eyebrow span { font-size: .78rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: white; text-shadow: none; }
-    .hero-h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.05; color: white; letter-spacing: -.01em; margin-bottom: 2rem; opacity: 0; animation: riseUp .9s ease 1s forwards; }
+    .hero-h1 { font-family: 'Cormorant', serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300; line-height: 1.05; color: white; letter-spacing: -.01em; margin-bottom: 2rem; opacity: 0; animation: riseUp .9s ease 1s forwards; }
     .hero-h1 strong { font-weight: 600; }
     .hero-h1 em { font-style: italic; color: var(--gold-light); }
     .hero-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 3rem; flex-wrap: wrap; opacity: 0; animation: riseUp .9s ease 1.2s forwards; }
     .hero-desc { font-size: 1rem; font-weight: 300; color: rgba(255,255,255,.7); max-width: 440px; line-height: 1.8; }
     .hero-actions { display: flex; align-items: center; gap: 1.2rem; }
     .btn-gold { display: inline-flex; align-items: center; gap: .6rem; background: var(--gold); color: var(--ink); padding: 1rem 2.2rem; border-radius: 100px; font-size: .9rem; font-weight: 500; text-decoration: none; letter-spacing: .04em; transition: all .3s ease; }
-    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(201,168,76,.4); }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(192,152,80,.4); }
     .btn-outline-white { display: inline-flex; align-items: center; gap: .6rem; background: transparent; color: white; padding: 1rem 2.2rem; border-radius: 100px; font-size: .9rem; font-weight: 400; text-decoration: none; border: 1px solid rgba(255,255,255,.35); letter-spacing: .04em; transition: all .3s ease; }
     .btn-outline-white:hover { border-color: var(--gold); color: var(--gold); }
     .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: .4rem; opacity: 0; animation: fadeIn 1s ease 2s forwards; }
@@ -67,7 +74,7 @@
     .stats-row { display: flex; flex: 1; }
     .s-stat { flex: 1; padding: 0 2.5rem; border-left: 1px solid rgba(255,255,255,.08); }
     .s-stat:first-child { border-left: none; }
-    .s-num { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 600; color: white; line-height: 1; }
+    .s-num { font-family: 'Cormorant', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 600; color: white; line-height: 1; }
     .s-num .g { color: var(--gold); }
     .s-label { font-size: .78rem; color: rgba(255,255,255,.45); margin-top: .4rem; line-height: 1.55; max-width: 200px; }
     .s-src { font-size: .62rem; color: rgba(255,255,255,.2); margin-top: .3rem; }
@@ -85,7 +92,7 @@
     .why-section::before {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(to bottom, rgba(10,8,4,.55) 0%, rgba(10,8,4,.65) 100%);
+      background: linear-gradient(to bottom, rgba(14,24,36,.55) 0%, rgba(14,24,36,.65) 100%);
       z-index: 0;
     }
     .why-section .section-inner { position: relative; z-index: 1; }
@@ -93,12 +100,12 @@
     .why-section .s-title { color: white; }
     .why-section .s-sub { color: rgba(255,255,255,.5); max-width: 600px; }
     .s-tag { font-size: .68rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: .8rem; }
-    .s-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4vw, 3.6rem); font-weight: 400; color: var(--ink); line-height: 1.15; letter-spacing: -.01em; margin-bottom: 1rem; }
+    .s-title { font-family: 'Cormorant', serif; font-size: clamp(2.2rem, 4vw, 3.6rem); font-weight: 400; color: var(--ink); line-height: 1.15; letter-spacing: -.01em; margin-bottom: 1rem; }
     .s-sub { font-size: .95rem; color: var(--muted); max-width: 500px; line-height: 1.75; margin-bottom: 4rem; font-weight: 300; }
 
     /* ── DURATION PICKER ── */
-    .dur-btn { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.5); border-radius: 100px; padding: .55rem 1.4rem; font-family: 'DM Sans', sans-serif; font-size: .82rem; font-weight: 500; cursor: pointer; letter-spacing: .04em; transition: all .25s ease; }
-    .dur-btn:hover { border-color: rgba(201,168,76,.4); color: rgba(255,255,255,.8); }
+    .dur-btn { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.5); border-radius: 100px; padding: .55rem 1.4rem; font-family: 'Jost', sans-serif; font-size: .82rem; font-weight: 500; cursor: pointer; letter-spacing: .04em; transition: all .25s ease; }
+    .dur-btn:hover { border-color: rgba(192,152,80,.4); color: rgba(255,255,255,.8); }
     .dur-btn.active { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 600; }
     .dyn-price { display: inline-block; transition: opacity .2s ease; }
     .dyn-price.fade { opacity: 0; }
@@ -106,14 +113,14 @@
     /* ── TOOLTIP PRESTATIONS ── */
     .pp-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
     .pp-card { position:relative; border:1px solid rgba(255,255,255,.08); border-radius:4px; padding:1.3rem; background:rgba(255,255,255,.02); cursor:default; transition:border-color .25s, background .25s; }
-    .pp-card:hover { border-color:rgba(201,168,76,.35); background:rgba(255,255,255,.05); }
+    .pp-card:hover { border-color:rgba(192,152,80,.35); background:rgba(255,255,255,.05); }
     .pp-label { font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-bottom:.4rem; }
-    .pp-price { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:white; font-weight:300; }
+    .pp-price { font-family:'Cormorant',serif; font-size:1.8rem; color:white; font-weight:300; }
     .pp-short { font-size:.78rem; color:rgba(255,255,255,.4); margin-top:.4rem; line-height:1.5; }
-    .pp-hint { font-size:.65rem; color:rgba(201,168,76,.5); margin-top:.5rem; letter-spacing:.04em; }
-    .pp-tooltip { position:absolute; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%); width:240px; background:rgba(20,14,4,.97); border:1px solid rgba(201,168,76,.25); border-radius:6px; padding:1rem 1.1rem; opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; transform:translateX(-50%) translateY(6px); z-index:100; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+    .pp-hint { font-size:.65rem; color:rgba(192,152,80,.5); margin-top:.5rem; letter-spacing:.04em; }
+    .pp-tooltip { position:absolute; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%); width:240px; background:rgba(18,28,40,.97); border:1px solid rgba(192,152,80,.25); border-radius:6px; padding:1rem 1.1rem; opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; transform:translateX(-50%) translateY(6px); z-index:100; box-shadow:0 8px 32px rgba(0,0,0,.5); }
     .pp-card:hover .pp-tooltip { opacity:1; transform:translateX(-50%) translateY(0); }
-    .pp-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:rgba(201,168,76,.25); }
+    .pp-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:rgba(192,152,80,.25); }
     .pp-tooltip-title { font-size:.72rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:.5rem; }
     .pp-tooltip-body { font-size:.8rem; color:rgba(255,255,255,.7); line-height:1.65; }
     .rev { opacity:0; transform:translateY(36px); transition:opacity .9s ease,transform .9s ease; }
@@ -127,7 +134,7 @@
     /* ── COMPARATIF SANS / AVEC ── */
     .cmp-toggle-wrap { display:flex; justify-content:center; margin-bottom:2.5rem; }
     .cmp-toggle { display:inline-flex; background:rgba(255,255,255,.08); border-radius:100px; padding:4px; gap:4px; }
-    .cmp-btn { display:flex; align-items:center; gap:.5rem; border:none; border-radius:100px; padding:.6rem 1.5rem; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; cursor:pointer; transition:all .3s ease; background:transparent; color:rgba(255,255,255,.5); letter-spacing:.02em; }
+    .cmp-btn { display:flex; align-items:center; gap:.5rem; border:none; border-radius:100px; padding:.6rem 1.5rem; font-family:'Jost',sans-serif; font-size:.82rem; font-weight:500; cursor:pointer; transition:all .3s ease; background:transparent; color:rgba(255,255,255,.5); letter-spacing:.02em; }
     .cmp-btn-icon { font-size:.9rem; font-weight:700; }
     .cmp-btn-sans.active { background:#FEE2E2; color:#B91C1C; }
     .cmp-btn-avec.active { background:#D1FAE5; color:#065F46; }
@@ -138,39 +145,39 @@
 
     .cmp-col { border-radius:8px; overflow:hidden; }
     .cmp-col-sans { border:1px solid rgba(239,68,68,.25); background:rgba(0,0,0,.35); backdrop-filter:blur(8px); }
-    .cmp-col-avec { border:1px solid rgba(201,168,76,.3); background:rgba(0,0,0,.35); backdrop-filter:blur(8px); }
+    .cmp-col-avec { border:1px solid rgba(192,152,80,.3); background:rgba(0,0,0,.35); backdrop-filter:blur(8px); }
 
     .cmp-col-header { display:flex; align-items:center; gap:.8rem; padding:1.5rem 2rem; }
     .cmp-col-sans .cmp-col-header { background:rgba(239,68,68,.1); border-bottom:1px solid rgba(239,68,68,.15); }
-    .cmp-col-avec .cmp-col-header { background:rgba(201,168,76,.1); border-bottom:1px solid rgba(201,168,76,.18); }
+    .cmp-col-avec .cmp-col-header { background:rgba(192,152,80,.1); border-bottom:1px solid rgba(192,152,80,.18); }
     .cmp-col-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:700; flex-shrink:0; }
     .cmp-icon-sans { background:rgba(239,68,68,.2); color:#FCA5A5; }
-    .cmp-icon-avec { background:rgba(201,168,76,.2); color:var(--gold); }
+    .cmp-icon-avec { background:rgba(192,152,80,.2); color:var(--gold); }
     .cmp-col-title { font-size:.78rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; }
     .cmp-col-sans .cmp-col-title { color:#FCA5A5; }
     .cmp-col-avec .cmp-col-title { color:var(--gold-light); }
 
     .cmp-items { padding:1.5rem 2rem; display:flex; flex-direction:column; gap:1.5rem; }
     .cmp-item { display:flex; gap:1rem; align-items:flex-start; }
-    .cmp-item-num { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; line-height:1; flex-shrink:0; min-width:2rem; text-align:right; }
+    .cmp-item-num { font-family:'Cormorant',serif; font-size:1.8rem; font-weight:300; line-height:1; flex-shrink:0; min-width:2rem; text-align:right; }
     .cmp-item-num.sans { color:rgba(239,68,68,.4); }
-    .cmp-item-num.avec { color:rgba(201,168,76,.5); }
+    .cmp-item-num.avec { color:rgba(192,152,80,.5); }
     .cmp-item-body strong { display:block; font-size:.88rem; font-weight:600; color:rgba(255,255,255,.9); margin-bottom:.3rem; }
     .cmp-item-body p { font-size:.82rem; color:rgba(255,255,255,.5); line-height:1.7; margin-bottom:.6rem; font-weight:300; }
     .cmp-pill { display:inline-block; font-size:.7rem; font-weight:600; letter-spacing:.04em; border-radius:100px; padding:.25rem .8rem; }
     .cmp-pill-bad { background:rgba(239,68,68,.15); color:#FCA5A5; }
-    .cmp-pill-good { background:rgba(201,168,76,.15); color:var(--gold-light); }
+    .cmp-pill-good { background:rgba(192,152,80,.15); color:var(--gold-light); }
 
     .cmp-col-footer { padding:1.2rem 2rem; }
     .cmp-footer-sans { background:rgba(239,68,68,.08); border-top:1px solid rgba(239,68,68,.12); }
-    .cmp-footer-avec { background:rgba(201,168,76,.08); border-top:1px solid rgba(201,168,76,.15); }
+    .cmp-footer-avec { background:rgba(192,152,80,.08); border-top:1px solid rgba(192,152,80,.15); }
     .cmp-footer-sum { font-size:.8rem; font-weight:500; font-style:italic; }
     .cmp-footer-sans .cmp-footer-sum { color:#FCA5A5; }
     .cmp-footer-avec .cmp-footer-sum { color:var(--gold-light); }
 
     .cmp-sep { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 1.5rem; gap:.5rem; align-self:center; }
     .cmp-sep-line { width:1px; height:80px; background:linear-gradient(to bottom, transparent, rgba(255,255,255,.15), transparent); }
-    .cmp-sep-vs { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:300; color:rgba(255,255,255,.3); letter-spacing:.1em; }
+    .cmp-sep-vs { font-family:'Cormorant',serif; font-size:1.1rem; font-weight:300; color:rgba(255,255,255,.3); letter-spacing:.1em; }
 
     /* Mobile : toggle actif, une colonne à la fois */
     @media (max-width:767px) {
@@ -185,13 +192,13 @@
     .why-photo { position: relative; border-radius: 4px; overflow: hidden; aspect-ratio: 3/4; }
     .why-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 8s ease; }
     .why-photo:hover img { transform: scale(1.04); }
-    .why-photo::before { content: ''; position: absolute; inset: 16px; border: 1px solid rgba(201,168,76,.35); border-radius: 2px; z-index: 1; pointer-events: none; }
+    .why-photo::before { content: ''; position: absolute; inset: 16px; border: 1px solid rgba(192,152,80,.35); border-radius: 2px; z-index: 1; pointer-events: none; }
     .why-badge { position: absolute; bottom: 2rem; left: 1.5rem; background: var(--ink); color: white; border-radius: 4px; padding: 1.2rem 1.5rem; z-index: 2; box-shadow: 0 16px 40px rgba(0,0,0,.2); }
-    .why-badge .big { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 600; color: var(--gold); line-height: 1; }
+    .why-badge .big { font-family: 'Cormorant', serif; font-size: 2.5rem; font-weight: 600; color: var(--gold); line-height: 1; }
     .why-badge .lbl { font-size: .72rem; color: rgba(255,255,255,.55); margin-top: .2rem; line-height: 1.4; max-width: 160px; }
     .why-list { display: flex; flex-direction: column; gap: 1.5rem; }
     .why-item { display: flex; gap: 1.2rem; align-items: flex-start; }
-    .why-item-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--gold); line-height: 1; flex-shrink: 0; min-width: 2rem; text-align: right; }
+    .why-item-num { font-family: 'Cormorant', serif; font-size: 2rem; font-weight: 300; color: var(--gold); line-height: 1; flex-shrink: 0; min-width: 2rem; text-align: right; }
     .why-item-text strong { display: block; font-size: .9rem; font-weight: 600; color: var(--ink); margin-bottom: .3rem; }
     .why-item-text p { font-size: .84rem; color: var(--muted); line-height: 1.7; }
 
@@ -205,11 +212,11 @@
     .offer-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); transform: scaleX(0); transition: transform .4s ease; }
     .offer-card:hover { background: rgba(255,255,255,.06); transform: translateY(-4px); }
     .offer-card:hover::after { transform: scaleX(1); }
-    .offer-card.feat { border-color: rgba(201,168,76,.3); background: rgba(201,168,76,.05); }
+    .offer-card.feat { border-color: rgba(192,152,80,.3); background: rgba(192,152,80,.05); }
     .offer-card.feat::after { transform: scaleX(1); }
     .o-badge { display: inline-block; font-size: .65rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); background: var(--gold); padding: .2rem .7rem; border-radius: 100px; margin-bottom: 1.2rem; }
     .o-name { font-size: .7rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-bottom: .5rem; }
-    .o-price { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: white; line-height: 1; }
+    .o-price { font-family: 'Cormorant', serif; font-size: 3.5rem; font-weight: 300; color: white; line-height: 1; }
     .o-price sup { font-size: 1.3rem; vertical-align: super; }
     .o-price sub { font-size: 1rem; font-weight: 300; color: rgba(255,255,255,.3); }
     .o-promo { font-size: .75rem; color: #6EE7B7; margin: .4rem 0 1.2rem; }
@@ -224,16 +231,16 @@
     .obj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
     .obj-card { background: var(--cream); padding: 2rem; transition: background .3s; }
     .obj-card:hover { background: var(--white); }
-    .obj-q { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-style: italic; font-weight: 600; color: var(--ink); margin-bottom: .7rem; line-height: 1.3; }
+    .obj-q { font-family: 'Cormorant', serif; font-size: 1.15rem; font-style: italic; font-weight: 600; color: var(--ink); margin-bottom: .7rem; line-height: 1.3; }
     .obj-a { font-size: .84rem; color: var(--muted); line-height: 1.75; font-weight: 300; }
 
     /* Process */
     .process-section { background: var(--white); }
     .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3rem; position: relative; }
-    .process-grid::before { content:''; position:absolute; top:28px; left:calc(16.7% + 1rem); right:calc(16.7% + 1rem); height:1px; background:linear-gradient(90deg,var(--gold),rgba(201,168,76,.2)); }
+    .process-grid::before { content:''; position:absolute; top:28px; left:calc(16.7% + 1rem); right:calc(16.7% + 1rem); height:1px; background:linear-gradient(90deg,var(--gold),rgba(192,152,80,.2)); }
     .p-card { text-align:center; }
-    .p-num { width:56px; height:56px; border-radius:50%; margin:0 auto 1.5rem; background:var(--ink); color:var(--gold); position:relative; z-index:1; display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; box-shadow:0 0 0 6px var(--white), 0 0 0 7px var(--border); }
-    .p-card h3 { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:600; color:var(--ink); margin-bottom:.5rem; }
+    .p-num { width:56px; height:56px; border-radius:50%; margin:0 auto 1.5rem; background:var(--ink); color:var(--gold); position:relative; z-index:1; display:flex; align-items:center; justify-content:center; font-family:'Cormorant',serif; font-size:1.5rem; font-weight:600; box-shadow:0 0 0 6px var(--white), 0 0 0 7px var(--border); }
+    .p-card h3 { font-family:'Cormorant',serif; font-size:1.2rem; font-weight:600; color:var(--ink); margin-bottom:.5rem; }
     .p-card p { font-size:.84rem; color:var(--muted); line-height:1.7; font-weight:300; }
 
     /* Contact */
@@ -243,27 +250,27 @@
     .contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:6rem; align-items:start; }
     .contact-info p { font-size:.92rem; color:rgba(255,255,255,.45); line-height:1.8; margin-bottom:2.5rem; font-weight:300; }
     .c-item { display:flex; gap:1rem; align-items:center; margin-bottom:1rem; text-decoration:none; }
-    .c-icon { width:44px; height:44px; border-radius:4px; border:1px solid rgba(201,168,76,.25); display:flex; align-items:center; justify-content:center; font-size:1rem; transition:all .3s; }
+    .c-icon { width:44px; height:44px; border-radius:4px; border:1px solid rgba(192,152,80,.25); display:flex; align-items:center; justify-content:center; font-size:1rem; transition:all .3s; }
     .c-item:hover .c-icon { background:var(--gold); border-color:var(--gold); }
     .c-txt strong { display:block; font-size:.88rem; color:white; font-weight:500; }
     .c-txt small { font-size:.75rem; color:rgba(255,255,255,.3); }
     .form-box { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:4px; padding:3rem; }
-    .form-box h4 { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:400; color:white; margin-bottom:2rem; font-style:italic; }
+    .form-box h4 { font-family:'Cormorant',serif; font-size:1.6rem; font-weight:400; color:white; margin-bottom:2rem; font-style:italic; }
     .f-group { margin-bottom:1.2rem; }
     .f-group label { display:block; font-size:.68rem; font-weight:500; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:.5rem; }
-    .f-group input, .f-group select { width:100%; padding:.8rem 0; background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,.12); font-family:'DM Sans',sans-serif; font-size:.9rem; color:white; outline:none; transition:border-color .3s; -webkit-appearance:none; }
+    .f-group input, .f-group select { width:100%; padding:.8rem 0; background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,.12); font-family:'Jost',sans-serif; font-size:.9rem; color:white; outline:none; transition:border-color .3s; -webkit-appearance:none; }
     .f-group input::placeholder { color:rgba(255,255,255,.2); }
     .f-group input:focus, .f-group select:focus { border-color:var(--gold); }
     .f-group select option { background:var(--ink); }
     .f-row { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
-    .f-submit { width:100%; margin-top:2rem; padding:1.1rem; background:var(--gold); color:var(--ink); border:none; border-radius:100px; font-family:'DM Sans',sans-serif; font-size:.9rem; font-weight:600; letter-spacing:.05em; cursor:pointer; transition:all .3s; }
-    .f-submit:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 12px 30px rgba(201,168,76,.3); }
+    .f-submit { width:100%; margin-top:2rem; padding:1.1rem; background:var(--gold); color:var(--ink); border:none; border-radius:100px; font-family:'Jost',sans-serif; font-size:.9rem; font-weight:600; letter-spacing:.05em; cursor:pointer; transition:all .3s; }
+    .f-submit:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 12px 30px rgba(192,152,80,.3); }
     .f-note { text-align:center; font-size:.72rem; color:rgba(255,255,255,.2); margin-top:.8rem; letter-spacing:.03em; }
 
     footer { background:var(--ink); border-top:1px solid rgba(255,255,255,.05); padding:2.5rem 3rem; }
     .footer-inner { max-width:1300px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
-    .f-logo { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:white; }
-    .f-logo em { font-style:italic; color:var(--gold); }
+    .f-logo { font-family:'Jost',sans-serif; font-size:1rem; font-weight:500; letter-spacing:.04em; color:white; }
+    .f-logo em { font-style:normal; font-family:'Cormorant',serif; font-weight:600; font-size:1.2rem; color:var(--gold); margin-left:1px; }
     .f-back { font-size:.78rem; color:rgba(255,255,255,.3); text-decoration:none; transition:color .3s; }
     .f-back:hover { color:var(--gold); }
     .f-legal { font-size:.68rem; color:rgba(255,255,255,.2); line-height:1.8; text-align:right; }
@@ -292,11 +299,32 @@
       .pp-grid { grid-template-columns:1fr; }
       .pp-tooltip { bottom:auto; top:calc(100% + 8px); transform:translateX(-50%) translateY(0); left:50%; }
       .pp-card:hover .pp-tooltip { transform:translateX(-50%) translateY(0); opacity:1; }
-      .pp-tooltip::after { top:auto; bottom:100%; border-top-color:transparent; border-bottom-color:rgba(201,168,76,.25); }
+      .pp-tooltip::after { top:auto; bottom:100%; border-top-color:transparent; border-bottom-color:rgba(192,152,80,.25); }
       .pp-card.open .pp-tooltip { opacity:1; pointer-events:auto; }
       .obj-grid { grid-template-columns:1fr; }
     }
-  </style>
+  
+    .brand-stars { display: inline-flex; align-items: center; gap: 4px; color: var(--gold); }
+    .brand-stars svg { display: block; width: 9px; height: 9px; }
+
+    .diamond-rule { display: inline-flex; align-items: center; gap: 6px; }
+    .diamond-rule .d-line { height: 1px; width: 40px; background: var(--gold); flex-shrink: 0; }
+    .diamond-rule .d-dot { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+
+    /* ── brand extras: kicker diamond, inline stars, stats sunburst, footer rule ── */
+    .s-tag::before { content:''; display:inline-block; width:5px; height:5px; background:var(--gold); transform:rotate(45deg); margin-right:.7em; margin-bottom:1px; vertical-align:middle; }
+    .istar { display:inline-block; width:.8em; height:.8em; vertical-align:-.05em; color:inherit; }
+    .stats-section { position:relative; overflow:hidden; }
+    .stats-section::before {
+      content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+      background: repeating-conic-gradient(from 0deg at 50% 0%, rgba(240,210,130,.06) 0deg 3deg, transparent 3deg 13deg);
+      mix-blend-mode: overlay;
+    }
+    .stats-inner { position:relative; z-index:1; }
+    .footer-rule { max-width:1300px; margin:0 auto; padding:0 3rem; display:flex; align-items:center; justify-content:center; gap:8px; }
+    .footer-rule .fr-line { height:1px; flex:1; max-width:280px; background:linear-gradient(to right, transparent, var(--gold), transparent); }
+    .footer-rule .fr-dot { width:5px; height:5px; background:var(--gold); transform:rotate(45deg); flex-shrink:0; }
+</style>
 </head>
 <body>
 
@@ -319,6 +347,7 @@
   <div class="hero-line"></div>
   <div class="hero-content">
     <div class="hero-eyebrow">
+      <span class="brand-stars" aria-hidden="true"><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg></span>
       <div class="hero-eyebrow-line"></div>
       <span>Hôtels & Hébergements · Alpes-Maritimes</span>
     </div>
@@ -482,7 +511,7 @@
           <tr>
             <th style="text-align:left;padding:.8rem 1rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;text-transform:uppercase;">Offre</th>
             <th style="padding:.8rem 1rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-align:center;">3 mois</th>
-            <th style="padding:.8rem 1rem;background:rgba(201,168,76,.15);color:var(--gold);font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:center;">6 mois ★</th>
+            <th style="padding:.8rem 1rem;background:rgba(192,152,80,.15);color:var(--gold);font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:center;">6 mois <svg class="istar" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg></th>
             <th style="padding:.8rem 1rem;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:.08em;text-transform:uppercase;text-align:center;">12 mois</th>
           </tr>
         </thead>
@@ -490,43 +519,43 @@
           <tr style="border-top:1px solid rgba(255,255,255,.06);">
             <td style="padding:.75rem 1rem;font-weight:500;">Essentiel</td>
             <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">180€</td>
-            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-weight:700;color:var(--gold);">165€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-weight:700;color:var(--gold);">165€</td>
             <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">150€</td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.06);">
-            <td style="padding:.75rem 1rem;font-weight:500;">Prestige ★</td>
+            <td style="padding:.75rem 1rem;font-weight:500;">Prestige <svg class="istar" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg></td>
             <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">240€</td>
-            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-weight:700;color:var(--gold);">220€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-weight:700;color:var(--gold);">220€</td>
             <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">200€</td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.06);">
             <td style="padding:.75rem 1rem;font-weight:500;">Premium</td>
             <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">360€</td>
-            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-weight:700;color:var(--gold);">330€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-weight:700;color:var(--gold);">330€</td>
             <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">300€</td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.06);">
             <td style="padding:.75rem 1rem;font-weight:500;">Pack Duo</td>
             <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">420€</td>
-            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-weight:700;color:var(--gold);">385€</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-weight:700;color:var(--gold);">385€</td>
             <td style="padding:.75rem 1rem;text-align:center;color:rgba(255,255,255,.5);">350€</td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.06);">
             <td style="padding:.75rem 1rem;font-size:.72rem;color:rgba(255,255,255,.35);">Avis offerts au démarrage</td>
             <td style="padding:.75rem 1rem;text-align:center;font-size:.72rem;color:rgba(255,255,255,.35);">5 avis</td>
-            <td style="padding:.75rem 1rem;text-align:center;background:rgba(201,168,76,.08);font-size:.72rem;color:var(--gold-light);">10 avis</td>
+            <td style="padding:.75rem 1rem;text-align:center;background:rgba(192,152,80,.08);font-size:.72rem;color:var(--gold-light);">10 avis</td>
             <td style="padding:.75rem 1rem;text-align:center;font-size:.72rem;color:rgba(255,255,255,.35);">20 avis</td>
           </tr>
         </tbody>
       </table>
-      <p style="font-size:.72rem;color:rgba(255,255,255,.25);margin-top:.8rem;">Tarifs en euros/mois par établissement. TVA non applicable — art. L. 223 et s. du CIBS.</p>
+      <p style="font-size:.72rem;color:rgba(255,255,255,.25);margin-top:.8rem;">Tarifs en euros/mois par établissement. TVA non applicable, art. 293 B du CGI.</p>
     </div>
 
     <!-- Sélecteur de durée -->
     <div class="duration-picker rev" style="display:flex;align-items:center;gap:.75rem;margin-bottom:2.5rem;flex-wrap:wrap;">
       <span style="font-size:.78rem;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;margin-right:.5rem;">Durée d'engagement</span>
       <button class="dur-btn" data-dur="3" onclick="setDuration(3)">3 mois</button>
-      <button class="dur-btn active" data-dur="6" onclick="setDuration(6)">6 mois ★</button>
+      <button class="dur-btn active" data-dur="6" onclick="setDuration(6)">6 mois <svg class="istar" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg></button>
       <button class="dur-btn" data-dur="12" onclick="setDuration(12)">12 mois</button>
     </div>
 
@@ -548,7 +577,7 @@
         </ul>
       </div>
       <div class="offer-card feat rev d2">
-        <div class="o-badge">★ Recommandé</div>
+        <div class="o-badge"><svg class="istar" viewBox="0 0 12 12" aria-hidden="true"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg> Recommandé</div>
         <div class="o-name">Prestige</div>
         <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="240" data-6="220" data-12="200">220</span><sub>/mois</sub></div>
         <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 5 avis offerts au démarrage" data-6="↳ Tarif 6 mois · 10 avis offerts au démarrage" data-12="↳ Tarif 12 mois · 20 avis offerts au démarrage">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
@@ -592,7 +621,36 @@
     </div>
 
     <div class="rev" style="margin-top:4rem;">
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;color:white;margin-bottom:.5rem;">Prestations ponctuelles</h3>
+      <h3 style="font-family:'Cormorant',serif;font-size:1.8rem;font-weight:400;color:white;margin-bottom:.5rem;">Extensions d'abonnement</h3>
+      <p style="font-size:.85rem;color:rgba(255,255,255,.35);margin-bottom:1.5rem;">En supplément d'un abonnement actif · Incluses dans Premium</p>
+      <div class="pp-grid">
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Extension Facebook</div>
+            <div class="pp-tooltip-body">Nous répondons aussi aux commentaires et avis publiés sur votre page Facebook, selon les mêmes modalités que pour Google et TripAdvisor. Incluse par défaut dans l'offre Premium.</div>
+          </div>
+          <div class="pp-label">Extension Facebook</div>
+          <div class="pp-price">+50€/mois</div>
+          <div class="pp-short">Réponses aux commentaires et avis Facebook</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Extension Rapport Mensuel</div>
+            <div class="pp-tooltip-body">Chaque mois, un PDF récapitulatif : évolution de votre note, avis traités, faits marquants et recommandations concrètes. Incluse par défaut dans l'offre Premium.</div>
+          </div>
+          <div class="pp-label">Extension Rapport Mensuel</div>
+          <div class="pp-price">+50€/mois</div>
+          <div class="pp-short">PDF mensuel : évolution de la note, avis traités, recommandations</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rev" style="margin-top:4rem;">
+      <h3 style="font-family:'Cormorant',serif;font-size:1.8rem;font-weight:400;color:white;margin-bottom:.5rem;">Prestations ponctuelles</h3>
       <p style="font-size:.85rem;color:rgba(255,255,255,.35);margin-bottom:1.5rem;">Sans abonnement requis · Intervention unique</p>
       <div class="pp-grid">
 
@@ -646,22 +704,10 @@
             <div class="pp-tooltip-body">Analyse complète de votre présence Google et TripAdvisor : état des lieux, points critiques, recommandations écrites. Vous repartez avec un rapport clair sur ce qui freine votre réputation et quoi faire en priorité.</div>
           </div>
           <div class="pp-label">Audit Réputation</div>
-          <div class="pp-price">75€</div>
+          <div class="pp-price">90€</div>
           <div class="pp-short">Analyse Google/TripAdvisor : points critiques et recommandations écrites</div>
           <div class="pp-hint">→ Survolez pour le détail</div>
         </div>
-
-        <div class="pp-card">
-          <div class="pp-tooltip">
-            <div class="pp-tooltip-title">Email Relance Clients</div>
-            <div class="pp-tooltip-body">Rédaction d'un email de relance pour demander des avis Google — texte prêt à envoyer, l'envoi restant à votre charge. Idéal si vous disposez d'un fichier clients (coiffeurs, garages, boutiques…)</div>
-          </div>
-          <div class="pp-label">Email Relance Clients</div>
-          <div class="pp-price">100€</div>
-          <div class="pp-short">Rédaction d'un email pour demander des avis Google à vos clients</div>
-          <div class="pp-hint">→ Survolez pour le détail</div>
-        </div>
-
       </div>
     </div>
   </div>
@@ -718,10 +764,10 @@
           <div class="f-group"><label>Email</label><input type="email" placeholder="jean@monresto.fr"></div>
           <div class="f-group"><label>Offre souhaitée</label>
             <select>
-              <option>Essentiel — 150€/mois</option>
-              <option selected>Prestige ★ — 200€/mois</option>
-              <option>Premium — 300€/mois</option>
-              <option>Pack Duo — 350€/mois</option>
+              <option>Essentiel — 165€/mois (6 mois)</option>
+              <option selected>Prestige ★ — 220€/mois (6 mois)</option>
+              <option>Premium — 330€/mois (6 mois)</option>
+              <option>Pack Duo — 385€/mois (6 mois)</option>
               <option>Je ne sais pas encore</option>
             </select>
           </div>
@@ -734,10 +780,11 @@
 </section>
 
 <footer>
+  <div class="footer-rule"><span class="fr-line"></span><span class="fr-dot"></span><span class="fr-line"></span></div>
   <div class="footer-inner">
     <div class="f-logo">Reputation<em>Azur</em></div>
     <a href="index.html" class="f-back">← Changer de profil</a>
-    <div class="f-legal">Jennifer Biscaglia EI · SIRET 105 774 202 00011 · Code APE 7021Z<br>06600 Antibes · TVA non applicable — art. L. 223 et s. du CIBS<br>© 2026 ReputationAzur</div>
+    <div class="f-legal">Jennifer Biscaglia EI · SIRET 105 774 202 00011 · Code APE 7021Z<br>06600 Antibes · TVA non applicable, art. 293 B du CGI (recodifié dans le CIBS à compter du 01/01/2027, ancienne référence tolérée jusqu'au 31/12/2027)<br>© 2026 ReputationAzur</div>
   </div>
 </footer>
 

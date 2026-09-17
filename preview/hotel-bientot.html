@@ -141,7 +141,9 @@
       border: none; cursor: pointer; transition: all .3s ease;
     }
     .notify-btn:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .notify-btn:disabled { opacity: .6; cursor: default; transform: none; }
     .notify-confirm { margin-top: 1rem; font-size: .82rem; color: var(--gold-light); display: none; }
+    .notify-error { margin-top: 1rem; font-size: .82rem; color: #E8A0A0; display: none; }
 
     .notify-fallback {
       margin-top: .7rem; display: none;
@@ -201,11 +203,12 @@
       <h1>Bientôt <em>disponible</em></h1>
       <p class="desc">Nous préparons actuellement notre offre dédiée aux hôtels et hébergements de la Côte d'Azur — gestion des avis Google et TripAdvisor, réponses multilingues, mise en avant des réservations. Elle sera proposée prochainement.</p>
 
-      <form class="notify-form" onsubmit="return submitNotify(event)">
+      <form class="notify-form" id="notify-form" onsubmit="return submitNotify(event)">
         <input type="email" id="notify-email" class="notify-input" placeholder="Votre adresse email" required>
-        <button type="submit" class="notify-btn">Être informé du lancement →</button>
+        <button type="submit" id="notify-btn" class="notify-btn">Être informé du lancement →</button>
       </form>
-      <p id="notify-confirm" class="notify-confirm">Merci ! Votre logiciel de messagerie va s'ouvrir pour confirmer l'envoi à contact@reputationazur.fr.</p>
+      <p id="notify-confirm" class="notify-confirm">Merci ! Votre demande a bien été enregistrée, nous vous préviendrons dès le lancement.</p>
+      <p id="notify-error" class="notify-error">Une erreur est survenue. Vous pouvez nous écrire directement :</p>
       <div id="notify-fallback" class="notify-fallback">
         <span class="notify-fallback-text">Rien ne s'est ouvert ? Écrivez-nous directement :</span>
         <button type="button" id="notify-copy-btn" class="notify-copy-btn" onclick="copyNotifyEmail()">📋 contact@reputationazur.fr</button>
@@ -221,22 +224,50 @@
   </div>
 
   <script>
+    // Formulaire Google Forms relié au compte reputationazur@gmail.com.
+    // La notification par email à chaque nouvelle réponse est activée côté Google Forms.
+    var GFORM_ACTION_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSdJzrxDZ9j9oAVEBT1mnwDyyn_ckL7tR-CChvcU5Y-9UCxrEw/formResponse";
+    var GFORM_EMAIL_ENTRY = "entry.913983701";
+
     function submitNotify(e) {
       e.preventDefault();
-      var email = document.getElementById('notify-email').value.trim();
+      var emailInput = document.getElementById('notify-email');
+      var email = emailInput.value.trim();
       if (!email) return false;
-      var subject = encodeURIComponent("Offre hôtellerie ReputationAzur — me tenir informé(e)");
-      var body = encodeURIComponent(
-        "Bonjour,\n\nJe souhaite être informé(e) du lancement de l'offre hôtellerie ReputationAzur.\n\nMon adresse email : " + email + "\n\nMerci."
-      );
-      document.getElementById('notify-confirm').style.display = 'block';
-      window.location.href = "mailto:contact@reputationazur.fr?subject=" + subject + "&body=" + body;
-      // Si le mailto n'a pas déclenché d'application (aucun client mail par défaut,
-      // cas fréquent sur certains PC/Gmail sans association configurée), on propose
-      // une solution de repli après un court délai.
-      setTimeout(function () {
-        document.getElementById('notify-fallback').style.display = 'flex';
-      }, 1200);
+
+      var btn = document.getElementById('notify-btn');
+      var confirmEl = document.getElementById('notify-confirm');
+      var errorEl = document.getElementById('notify-error');
+      var fallbackEl = document.getElementById('notify-fallback');
+
+      confirmEl.style.display = 'none';
+      errorEl.style.display = 'none';
+      fallbackEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = "Envoi en cours…";
+
+      var body = new URLSearchParams();
+      body.append(GFORM_EMAIL_ENTRY, email);
+
+      fetch(GFORM_ACTION_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
+      }).then(function () {
+        // En mode no-cors la réponse est opaque : une requête qui part sans
+        // exception réseau est considérée comme un succès.
+        confirmEl.style.display = 'block';
+        emailInput.value = '';
+        btn.textContent = "Être informé du lancement →";
+        btn.disabled = false;
+      }).catch(function () {
+        errorEl.style.display = 'block';
+        fallbackEl.style.display = 'flex';
+        btn.textContent = "Être informé du lancement →";
+        btn.disabled = false;
+      });
+
       return false;
     }
 
