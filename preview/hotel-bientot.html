@@ -143,6 +143,21 @@
     .notify-btn:hover { background: var(--gold-light); transform: translateY(-2px); }
     .notify-confirm { margin-top: 1rem; font-size: .82rem; color: var(--gold-light); display: none; }
 
+    .notify-fallback {
+      margin-top: .7rem; display: none;
+      align-items: center; justify-content: center; gap: .6rem; flex-wrap: wrap;
+    }
+    .notify-fallback-text { font-size: .78rem; color: rgba(255,255,255,.55); }
+    .notify-copy-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.25);
+      color: white; border-radius: 100px; padding: .35rem .95rem;
+      font-family: 'Jost', sans-serif; font-size: .78rem; cursor: pointer;
+      transition: all .25s ease;
+    }
+    .notify-copy-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+    .notify-copy-btn.copied { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
     .diamond-rule { display: inline-flex; align-items: center; gap: 8px; margin: 0 auto; }
     .diamond-rule .d-line { height: 1px; width: 60px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
     .diamond-rule .d-dot { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
@@ -191,6 +206,10 @@
         <button type="submit" class="notify-btn">Être informé du lancement →</button>
       </form>
       <p id="notify-confirm" class="notify-confirm">Merci ! Votre logiciel de messagerie va s'ouvrir pour confirmer l'envoi à contact@reputationazur.fr.</p>
+      <div id="notify-fallback" class="notify-fallback">
+        <span class="notify-fallback-text">Rien ne s'est ouvert ? Écrivez-nous directement :</span>
+        <button type="button" id="notify-copy-btn" class="notify-copy-btn" onclick="copyNotifyEmail()">📋 contact@reputationazur.fr</button>
+      </div>
 
       <div class="cta-row" style="margin-top:1.6rem;">
         <a href="restaurants.html" class="btn-outline">Voir notre offre restaurants</a>
@@ -212,7 +231,33 @@
       );
       document.getElementById('notify-confirm').style.display = 'block';
       window.location.href = "mailto:contact@reputationazur.fr?subject=" + subject + "&body=" + body;
+      // Si le mailto n'a pas déclenché d'application (aucun client mail par défaut,
+      // cas fréquent sur certains PC/Gmail sans association configurée), on propose
+      // une solution de repli après un court délai.
+      setTimeout(function () {
+        document.getElementById('notify-fallback').style.display = 'flex';
+      }, 1200);
       return false;
+    }
+
+    function copyNotifyEmail() {
+      var email = "contact@reputationazur.fr";
+      var btn = document.getElementById('notify-copy-btn');
+      function markCopied() {
+        btn.textContent = "✓ Adresse copiée";
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.textContent = "📋 " + email;
+          btn.classList.remove('copied');
+        }, 2200);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(markCopied).catch(function () {
+          window.prompt("Copiez notre adresse email :", email);
+        });
+      } else {
+        window.prompt("Copiez notre adresse email :", email);
+      }
     }
   </script>
 
