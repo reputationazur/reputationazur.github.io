@@ -174,7 +174,7 @@
 
     /* Stats mini */
     .panel-stats {
-      display: flex; gap: 2rem; justify-content: center;
+      display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center;
       margin-top: 2.5rem;
       opacity: 0; transform: translateY(8px);
       transition: opacity .4s ease, transform .4s ease;
@@ -185,6 +185,12 @@
       font-size: 1.6rem; font-weight: 600; color: var(--gold); line-height: 1;
     }
     .pstat-lbl { font-size: .65rem; color: rgba(255,255,255,.45); margin-top: .2rem; max-width: 100px; line-height: 1.4; }
+    .panel-stats-source {
+      text-align: center; font-size: .58rem; color: rgba(255,255,255,.28);
+      margin-top: .7rem; letter-spacing: .02em;
+      opacity: 0; transition: opacity .4s ease;
+    }
+    .panel:hover .panel-stats-source { opacity: 1; }
 
     /* Logo centré en haut */
     .site-logo {
@@ -265,6 +271,7 @@
       .panel-desc { display: none; }
       .panel-hotel .panel-desc { display: block; font-size: .78rem; max-width: 260px; margin: 0 auto .6rem; line-height: 1.5; }
       .panel-stats { display: none; }
+      .panel-stats-source { display: none; }
       .panel-cta { opacity: 1; padding: .55rem 1.3rem; font-size: .8rem; margin-top: .3rem; }
     }
   
@@ -295,10 +302,15 @@
           <div class="pstat-lbl">des clients lisent les avis avant de choisir</div>
         </div>
         <div>
+          <div class="pstat-num">88%</div>
+          <div class="pstat-lbl">choisissent un établissement qui répond à ses avis</div>
+        </div>
+        <div>
           <div class="pstat-num">9/10</div>
           <div class="pstat-lbl">attendent une réponse à leur avis</div>
         </div>
       </div>
+      <div class="panel-stats-source">Source : BrightLocal, Local Consumer Review Survey 2024 &amp; 2025</div>
     </div>
   </a>
 
@@ -320,13 +332,14 @@
       <div class="panel-stats">
         <div>
           <div class="pstat-num">81%</div>
-          <div class="pstat-lbl">des voyageurs lisent les avis avant de réserver</div>
+          <div class="pstat-lbl">des voyageurs lisent toujours ou souvent les avis avant de réserver</div>
         </div>
         <div>
-          <div class="pstat-num">62%</div>
-          <div class="pstat-lbl">réservent plus volontiers un hôtel qui répond aux avis</div>
+          <div class="pstat-num">77%</div>
+          <div class="pstat-lbl">réservent plus volontiers quand le propriétaire répond aux avis</div>
         </div>
       </div>
+      <div class="panel-stats-source">Source : TripAdvisor, The Power of Reviews &amp; étude TripAdvisor/Ipsos MORI (2019)</div>
     </div>
   </div>
 
