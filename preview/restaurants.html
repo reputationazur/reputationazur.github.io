@@ -266,7 +266,11 @@
     .f-row { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
     .f-submit { width:100%; margin-top:2rem; padding:1.1rem; background:var(--gold); color:var(--ink); border:none; border-radius:100px; font-family:'Jost',sans-serif; font-size:.9rem; font-weight:600; letter-spacing:.05em; cursor:pointer; transition:all .3s; }
     .f-submit:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 12px 30px rgba(192,152,80,.3); }
+    .f-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
     .f-note { text-align:center; font-size:.72rem; color:rgba(255,255,255,.2); margin-top:.8rem; letter-spacing:.03em; }
+    .f-msg { display:none; text-align:center; font-size:.82rem; margin-top:1.2rem; padding:.9rem; border-radius:4px; letter-spacing:.02em; }
+    .f-msg.success { display:block; background:rgba(120,200,120,.08); border:1px solid rgba(120,200,120,.3); color:#9fe6a0; }
+    .f-msg.error { display:block; background:rgba(220,100,100,.08); border:1px solid rgba(220,100,100,.3); color:#f0a0a0; }
 
     footer { background:var(--ink); border-top:1px solid rgba(255,255,255,.05); padding:2.5rem 3rem; }
     .footer-inner { max-width:1300px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
@@ -761,23 +765,28 @@
       <div class="rev-r">
         <div class="form-box">
           <h4>Demande de démonstration gratuite</h4>
-          <div class="f-row">
-            <div class="f-group"><label>Prénom</label><input type="text" placeholder="Jean"></div>
-            <div class="f-group"><label>Nom</label><input type="text" placeholder="Dupont"></div>
-          </div>
-          <div class="f-group"><label>Nom du restaurant</label><input type="text" placeholder="Le Bistrot du Port"></div>
-          <div class="f-group"><label>Email</label><input type="email" placeholder="jean@monresto.fr"></div>
-          <div class="f-group"><label>Offre souhaitée</label>
-            <select>
-              <option>Essentiel — 165€/mois (6 mois)</option>
-              <option selected>Prestige ★ — 220€/mois (6 mois)</option>
-              <option>Premium — 330€/mois (6 mois)</option>
-              <option>Pack Duo — 385€/mois (6 mois)</option>
-              <option>Je ne sais pas encore</option>
-            </select>
-          </div>
-          <button class="f-submit" onclick="alert('Merci ! Jennifer vous contacte sous 24h.')">Recevoir ma démonstration →</button>
-          <div class="f-note">Sans engagement · Avis offerts au démarrage · Réponse sous 24h</div>
+          <form id="demo-form" onsubmit="return submitDemoForm(event)">
+            <div class="f-row">
+              <div class="f-group"><label>Prénom</label><input type="text" id="demo-prenom" placeholder="Jean"></div>
+              <div class="f-group"><label>Nom</label><input type="text" id="demo-nom" placeholder="Dupont" required></div>
+            </div>
+            <div class="f-group"><label>Nom du restaurant</label><input type="text" id="demo-restaurant" placeholder="Le Bistrot du Port" required></div>
+            <div class="f-group"><label>Email</label><input type="email" id="demo-email" placeholder="jean@monresto.fr" required></div>
+            <div class="f-group"><label>Offre souhaitée</label>
+              <select id="demo-offre" required>
+                <option value="" disabled selected>Choisissez une offre</option>
+                <option>Essentiel — 165€/mois (6 mois)</option>
+                <option>Prestige ★ — 220€/mois (6 mois)</option>
+                <option>Premium — 330€/mois (6 mois)</option>
+                <option>Pack Duo — 385€/mois (6 mois)</option>
+                <option>Je ne sais pas encore</option>
+              </select>
+            </div>
+            <button type="submit" class="f-submit" id="demo-submit-btn">Recevoir ma démonstration →</button>
+            <p id="demo-success" class="f-msg success" style="display:none;">Merci ! Votre demande a bien été enregistrée, Jennifer vous contacte sous 24h.</p>
+            <p id="demo-error" class="f-msg error" style="display:none;">Une erreur est survenue. Vous pouvez nous écrire directement à <a href="mailto:contact@reputationazur.fr" style="color:inherit;">contact@reputationazur.fr</a>.</p>
+            <div class="f-note">Sans engagement · Avis offerts au démarrage · Réponse sous 24h</div>
+          </form>
         </div>
       </div>
     </div>
@@ -870,6 +879,62 @@
       document.querySelectorAll('.pp-card').forEach(c => c.classList.remove('open'));
     }
   });
+
+  // ── FORMULAIRE DEMANDE DE DEMONSTRATION (Google Forms) ──
+  var DEMO_GFORM_ACTION_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSc4CVrZXiTemllhE6P7i7GdrApugqTysS8gJmIwGtR2Ucvq6Q/formResponse";
+  var DEMO_GFORM_ENTRIES = {
+    prenom: "entry.465586366",
+    nom: "entry.2141442231",
+    restaurant: "entry.653132159",
+    email: "entry.458910783",
+    offre: "entry.946986761"
+  };
+
+  function submitDemoForm(e) {
+    e.preventDefault();
+    var prenomEl = document.getElementById('demo-prenom');
+    var nomEl = document.getElementById('demo-nom');
+    var restaurantEl = document.getElementById('demo-restaurant');
+    var emailEl = document.getElementById('demo-email');
+    var offreEl = document.getElementById('demo-offre');
+    var btn = document.getElementById('demo-submit-btn');
+    var successEl = document.getElementById('demo-success');
+    var errorEl = document.getElementById('demo-error');
+
+    if (!nomEl.value.trim() || !restaurantEl.value.trim() || !emailEl.value.trim() || !offreEl.value) {
+      return false;
+    }
+
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
+    var body = new URLSearchParams();
+    body.append(DEMO_GFORM_ENTRIES.prenom, prenomEl.value.trim());
+    body.append(DEMO_GFORM_ENTRIES.nom, nomEl.value.trim());
+    body.append(DEMO_GFORM_ENTRIES.restaurant, restaurantEl.value.trim());
+    body.append(DEMO_GFORM_ENTRIES.email, emailEl.value.trim());
+    body.append(DEMO_GFORM_ENTRIES.offre, offreEl.value);
+
+    fetch(DEMO_GFORM_ACTION_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    }).then(function () {
+      successEl.style.display = 'block';
+      document.getElementById('demo-form').reset();
+      btn.textContent = 'Recevoir ma démonstration →';
+      btn.disabled = false;
+    }).catch(function () {
+      errorEl.style.display = 'block';
+      btn.textContent = 'Recevoir ma démonstration →';
+      btn.disabled = false;
+    });
+
+    return false;
+  }
 </script>
 </body>
 </html>
