@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ReputationAzur — Gestion des avis Google & TripAdvisor · Restaurants</title>
-  <meta name="description" content="Gestion professionnelle de vos avis Google et TripAdvisor — restaurants des Alpes-Maritimes et du Var. Réponses multilingues, démonstration gratuite sur vos vrais avis.">
+  <title>ReputationAzur — Gestion des avis Google & TripAdvisor · Hôtels</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -42,7 +41,7 @@
       mix-blend-mode: overlay;
     }
 
-    .hero-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1800&q=85&auto=format&fit=crop'); background-size: cover; background-position: center 40%; transform: scale(1.05); animation: heroZoom 12s ease-out forwards; }
+    .hero-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1455587734955-081b22074882?w=1800&q=85&auto=format&fit=crop'); background-size: cover; background-position: center 40%; transform: scale(1.05); animation: heroZoom 12s ease-out forwards; }
     @keyframes heroZoom { from{transform:scale(1.1)} to{transform:scale(1.01)} }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(14,24,36,.15) 0%, rgba(14,24,36,.1) 30%, rgba(14,24,36,.6) 70%, rgba(14,24,36,.92) 100%); }
     .hero-line { position: absolute; top: 0; left: 50%; width: 1px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); transform: translateX(-50%); animation: lineDrop 2s ease-out .5s both; }
@@ -119,7 +118,6 @@
     .pp-price { font-family:'Cormorant',serif; font-size:1.8rem; color:white; font-weight:300; }
     .pp-short { font-size:.78rem; color:rgba(255,255,255,.4); margin-top:.4rem; line-height:1.5; }
     .pp-hint { font-size:.65rem; color:rgba(192,152,80,.5); margin-top:.5rem; letter-spacing:.04em; }
-    /* Tooltip */
     .pp-tooltip { position:absolute; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%); width:240px; background:rgba(18,28,40,.97); border:1px solid rgba(192,152,80,.25); border-radius:6px; padding:1rem 1.1rem; opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; transform:translateX(-50%) translateY(6px); z-index:100; box-shadow:0 8px 32px rgba(0,0,0,.5); }
     .pp-card:hover .pp-tooltip { opacity:1; transform:translateX(-50%) translateY(0); }
     .pp-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:rgba(192,152,80,.25); }
@@ -267,11 +265,7 @@
     .f-row { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
     .f-submit { width:100%; margin-top:2rem; padding:1.1rem; background:var(--gold); color:var(--ink); border:none; border-radius:100px; font-family:'Jost',sans-serif; font-size:.9rem; font-weight:600; letter-spacing:.05em; cursor:pointer; transition:all .3s; }
     .f-submit:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 12px 30px rgba(192,152,80,.3); }
-    .f-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; box-shadow:none; }
     .f-note { text-align:center; font-size:.72rem; color:rgba(255,255,255,.2); margin-top:.8rem; letter-spacing:.03em; }
-    .f-msg { display:none; text-align:center; font-size:.82rem; margin-top:1.2rem; padding:.9rem; border-radius:4px; letter-spacing:.02em; }
-    .f-msg.success { display:block; background:rgba(120,200,120,.08); border:1px solid rgba(120,200,120,.3); color:#9fe6a0; }
-    .f-msg.error { display:block; background:rgba(220,100,100,.08); border:1px solid rgba(220,100,100,.3); color:#f0a0a0; }
 
     footer { background:var(--ink); border-top:1px solid rgba(255,255,255,.05); padding:2.5rem 3rem; }
     .footer-inner { max-width:1300px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
@@ -300,17 +294,13 @@
       .footer-inner { flex-direction:column; text-align:center; }
       .f-legal { text-align:center; }
       .hero-bottom { flex-direction:column; align-items:flex-start; }
-      /* Offres : 1 colonne sur mobile */
       .offers-grid { grid-template-columns:1fr; }
       .scroll-hint { display:none; }
-      /* Prestations ponctuelles : 1 colonne, tooltip vers le bas sur mobile */
       .pp-grid { grid-template-columns:1fr; }
       .pp-tooltip { bottom:auto; top:calc(100% + 8px); transform:translateX(-50%) translateY(0); left:50%; }
       .pp-card:hover .pp-tooltip { transform:translateX(-50%) translateY(0); opacity:1; }
       .pp-tooltip::after { top:auto; bottom:100%; border-top-color:transparent; border-bottom-color:rgba(192,152,80,.25); }
-      /* Tooltip tactile : affichage au tap */
       .pp-card.open .pp-tooltip { opacity:1; pointer-events:auto; }
-      /* Objections : 1 colonne */
       .obj-grid { grid-template-columns:1fr; }
     }
   
@@ -359,11 +349,11 @@
     <div class="hero-eyebrow">
       <span class="brand-stars" aria-hidden="true"><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg><svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg></span>
       <div class="hero-eyebrow-line"></div>
-      <span>Restaurants · Alpes-Maritimes · Var</span>
+      <span>Hôtels & Hébergements · Alpes-Maritimes</span>
     </div>
     <h1 class="hero-h1">Vos avis Google<br><em>& TripAdvisor,</em><br><strong>gérés par des professionnels.</strong></h1>
     <div class="hero-bottom">
-      <p class="hero-desc">Chaque avis traité sous 5 jours ouvrés après détection (7 jours si vous validez chaque réponse) — en plusieurs langues selon l'offre — dans l'ambiance de votre établissement.</p>
+      <p class="hero-desc">Chaque avis Google et TripAdvisor, traité sous 5 jours ouvrés — en plusieurs langues — dans l'ambiance de votre établissement.</p>
       <div class="hero-actions">
         <a href="#pourquoi" class="btn-gold">En savoir plus ↓</a>
         <a href="#offres" class="btn-outline-white">Voir les offres</a>
@@ -377,19 +367,19 @@
   <div class="stats-inner">
     <div class="stats-row">
       <div class="s-stat">
-        <div class="s-num"><span class="ctr" data-t="93">0</span><span class="g">%</span></div>
-        <div class="s-label">des clients ont déjà effectué un achat après avoir lu des avis positifs</div>
-        <div class="s-src">BrightLocal 2026</div>
+        <div class="s-num"><span class="ctr" data-t="81">0</span><span class="g">%</span></div>
+        <div class="s-label">des voyageurs lisent toujours ou souvent les avis avant de réserver un hébergement</div>
+        <div class="s-src">TripAdvisor, The Power of Reviews (2019)</div>
       </div>
       <div class="s-stat">
-        <div class="s-num"><span class="ctr" data-t="88">0</span><span class="g">%</span></div>
-        <div class="s-label">choisiraient un établissement qui répond à tous ses avis</div>
-        <div class="s-src">BrightLocal 2024</div>
+        <div class="s-num"><span class="ctr" data-t="77">0</span><span class="g">%</span></div>
+        <div class="s-label">des voyageurs sont plus enclins à réserver si l'établissement répond à ses avis</div>
+        <div class="s-src">TripAdvisor / Ipsos MORI 2019</div>
       </div>
       <div class="s-stat">
-        <div class="s-num">9<span class="g">/10</span></div>
-        <div class="s-label">consommateurs attendent une réponse à leur avis — seuls 7% disent ne pas en attendre</div>
-        <div class="s-src">BrightLocal 2024 & 2025</div>
+        <div class="s-num">+<span class="g">13,5%</span></div>
+        <div class="s-label">de probabilité de réservation en plus par point de note supplémentaire</div>
+        <div class="s-src">Cornell University, Center for Hospitality Research</div>
       </div>
     </div>
   </div>
@@ -398,8 +388,8 @@
 <section class="section why-section" id="pourquoi">
   <div class="section-inner">
     <span class="s-tag" style="text-align:center;display:block;">Ce que coûte l'inaction</span>
-    <h2 class="s-title" style="text-align:center;margin-bottom:.5rem;">Chaque avis sans réponse,<br><em>c'est un couvert perdu</em></h2>
-    <p class="s-sub" style="margin:0 auto 3rem;text-align:center;">Sur la Côte d'Azur, vos clients lisent les avis avant même de réserver. Voyez concrètement la différence.</p>
+    <h2 class="s-title" style="text-align:center;margin-bottom:.5rem;">Chaque avis sans réponse,<br><em>c'est une réservation perdue</em></h2>
+    <p class="s-sub" style="margin:0 auto 3rem;text-align:center;">Les voyageurs comparent les avis avant de réserver. Avec une nuitée moyenne à 120€, deux réservations récupérées dans le mois couvrent largement notre service.</p>
 
     <!-- Toggle -->
     <div class="cmp-toggle-wrap rev">
@@ -427,17 +417,17 @@
           <div class="cmp-item">
             <div class="cmp-item-num sans">01</div>
             <div class="cmp-item-body">
-              <strong>Avis négatif sans réponse</strong>
-              <p>94% des consommateurs disent qu'un avis négatif les a déjà dissuadés de choisir un établissement (ReviewTrackers). Chaque avis ignoré est un client potentiel perdu.</p>
-              <div class="cmp-pill cmp-pill-bad">Clients potentiels perdus</div>
+              <strong>Réservations et tarif sous pression</strong>
+              <p>+1 point de note = +13,5% de probabilité de réservation en plus (Cornell University). Et 3 voyageurs sur 4 sont prêts à payer plus cher pour un hébergement mieux noté. Une mauvaise réputation, c'est donc moins de réservations et un tarif difficile à tenir.</p>
+              <div class="cmp-pill cmp-pill-bad">Note basse = tarif et taux d'occupation en baisse</div>
             </div>
           </div>
 
           <div class="cmp-item">
             <div class="cmp-item-num sans">02</div>
             <div class="cmp-item-body">
-              <strong>Touristes non répondus</strong>
-              <p>Les avis en langue étrangère restent sans réponse. Le touriste passe à la concurrence. La Côte d'Azur a accueilli plus de 12 millions de touristes en 2025, dont plus de la moitié venus de l'étranger (Observatoire du Tourisme Côte d'Azur) — chaque langue compte.</p>
+              <strong>Voyageurs internationaux sans réponse</strong>
+              <p>Les avis en langue étrangère restent sans réponse. Le voyageur passe à la concurrence. Sur la Côte d'Azur, chaque langue non traitée, c'est un segment de clientèle perdu.</p>
               <div class="cmp-pill cmp-pill-bad">Clientèle internationale perdue</div>
             </div>
           </div>
@@ -445,8 +435,8 @@
           <div class="cmp-item">
             <div class="cmp-item-num sans">03</div>
             <div class="cmp-item-body">
-              <strong>Vous répondez après le service</strong>
-              <p>Après 14h debout, sous le coup de l'émotion. Une réponse maladroite à un avis injuste peut faire plus de dégâts qu'une absence de réponse.</p>
+              <strong>Vous répondez entre deux check-in</strong>
+              <p>Sous le coup de l'émotion, après une longue journée. Une réponse maladroite à un avis injuste peut faire plus de dégâts qu'une absence de réponse.</p>
               <div class="cmp-pill cmp-pill-bad">Risque d'erreur au pire moment</div>
             </div>
           </div>
@@ -471,16 +461,16 @@
           <div class="cmp-item">
             <div class="cmp-item-num avec">01</div>
             <div class="cmp-item-body">
-              <strong>Réponse pro sous 5 jours</strong>
-              <p>Chaque avis négatif reçoit une réponse mesurée, dans l'ambiance de votre établissement. Le futur client voit que vous prenez soin de votre réputation.</p>
-              <div class="cmp-pill cmp-pill-good">88% préfèrent un établissement qui répond</div>
+              <strong>77% plus enclins à réserver</strong>
+              <p>C'est la part des voyageurs plus enclins à réserver quand l'établissement répond à ses avis (TripAdvisor / Ipsos MORI, 2019). Chaque réponse publiée travaille pour vous 24h/24.</p>
+              <div class="cmp-pill cmp-pill-good">Réservations et tarif consolidés</div>
             </div>
           </div>
 
           <div class="cmp-item">
             <div class="cmp-item-num avec">02</div>
             <div class="cmp-item-body">
-              <strong>Réponses multilingues (dès l'offre Prestige)</strong>
+              <strong>Réponses multilingues incluses</strong>
               <p>Chaque touriste reçoit une réponse dans sa langue. Ce geste simple transforme un visiteur en ambassadeur — et améliore votre positionnement sur Google.</p>
               <div class="cmp-pill cmp-pill-good">Clientèle internationale fidélisée</div>
             </div>
@@ -558,7 +548,7 @@
           </tr>
         </tbody>
       </table>
-      <p style="font-size:.72rem;color:rgba(255,255,255,.25);margin-top:.8rem;">Tarifs en euros/mois par établissement (Pack Duo : pour les deux établissements). TVA non applicable, art. 293 B du CGI.</p>
+      <p style="font-size:.72rem;color:rgba(255,255,255,.25);margin-top:.8rem;">Tarifs en euros/mois par établissement. TVA non applicable, art. 293 B du CGI.</p>
     </div>
 
     <!-- Sélecteur de durée -->
@@ -574,7 +564,7 @@
         <div class="o-name">Essentiel</div>
         <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="180" data-6="165" data-12="150">165</span><sub>/mois</sub></div>
         <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 5 avis offerts au démarrage" data-6="↳ Tarif 6 mois · 10 avis offerts au démarrage" data-12="↳ Tarif 12 mois · 20 avis offerts au démarrage">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
-        <div class="o-desc">Commerces locaux & restaurants · Avis Google</div>
+        <div class="o-desc">Petits hébergements & chambres d'hôtes · Avis Google</div>
         <div class="o-sep"></div>
         <ul class="o-list">
           <li>Surveillance hebdomadaire des avis Google</li>
@@ -582,7 +572,8 @@
           <li>Publication directe ou validation préalable</li>
           <li>Gestion avis positifs, négatifs et frauduleux</li>
           <li>Ambiance définie à la fiche de cadrage</li>
-          <li>Réponse sous 5 jours ouvrés après détection</li>
+          <li>Alertes avis critiques incluses</li>
+          <li>Réponse sous 5 jours ouvrés</li>
         </ul>
       </div>
       <div class="offer-card feat rev d2">
@@ -590,13 +581,13 @@
         <div class="o-name">Prestige</div>
         <div class="o-price"><sup>€</sup><span class="dyn-price" data-3="240" data-6="220" data-12="200">220</span><sub>/mois</sub></div>
         <div class="o-promo dyn-promo" data-3="↳ Tarif 3 mois · 5 avis offerts au démarrage" data-6="↳ Tarif 6 mois · 10 avis offerts au démarrage" data-12="↳ Tarif 12 mois · 20 avis offerts au démarrage">↳ Tarif 6 mois · 10 avis offerts au démarrage</div>
-        <div class="o-desc">Restaurants touristiques · Google + TripAdvisor</div>
+        <div class="o-desc">Hôtels à clientèle touristique · TripAdvisor + Google</div>
         <div class="o-sep"></div>
         <ul class="o-list">
           <li>Tout l&apos;Essentiel, plus :</li>
           <li>Avis TripAdvisor inclus</li>
           <li>Réponses multilingues</li>
-          <li>Priorité aux touristes internationaux</li>
+          <li>Priorité aux voyageurs internationaux</li>
           <li>Adapté zones touristiques & arrière-pays</li>
         </ul>
       </div>
@@ -665,23 +656,23 @@
 
         <div class="pp-card">
           <div class="pp-tooltip">
-            <div class="pp-tooltip-title">Pack Mise en Route</div>
-            <div class="pp-tooltip-body">Vous n'avez pas (ou plus) la main sur votre fiche ? Nous la revendiquons auprès de Google et TripAdvisor, puis la complétons (horaires, description, catégories, photos). Vous en restez propriétaire. Idéal pour une ouverture ou une fiche jamais revendiquée.</div>
-          </div>
-          <div class="pp-label">Pack Mise en Route</div>
-          <div class="pp-price">180€</div>
-          <div class="pp-short">Revendication et complétion de votre fiche Google & TripAdvisor</div>
-          <div class="pp-hint">→ Survolez pour le détail</div>
-        </div>
-
-        <div class="pp-card">
-          <div class="pp-tooltip">
             <div class="pp-tooltip-title">Optimisation Fiche Google</div>
             <div class="pp-tooltip-body">Remise à neuf complète de votre fiche : photos, description optimisée, horaires, catégories et attributs — via l'accès gestionnaire que vous nous fournissez.</div>
           </div>
           <div class="pp-label">Optimisation Fiche</div>
           <div class="pp-price">150€</div>
           <div class="pp-short">Remise à neuf : photos, description, horaires, catégories</div>
+          <div class="pp-hint">→ Survolez pour le détail</div>
+        </div>
+
+        <div class="pp-card">
+          <div class="pp-tooltip">
+            <div class="pp-tooltip-title">Pack Mise en Route</div>
+            <div class="pp-tooltip-body">Vous n'avez pas (ou plus) la main sur votre fiche ? Nous la revendiquons auprès de Google et TripAdvisor, puis la complétons (horaires, description, catégories, photos). Vous en restez propriétaire. Idéal pour une ouverture ou une fiche jamais revendiquée.</div>
+          </div>
+          <div class="pp-label">Pack Mise en Route</div>
+          <div class="pp-price">180€</div>
+          <div class="pp-short">Revendication et complétion de votre fiche Google & TripAdvisor</div>
           <div class="pp-hint">→ Survolez pour le détail</div>
         </div>
 
@@ -727,7 +718,7 @@
     <span class="s-tag">Vos questions</span>
     <h2 class="s-title">On a les réponses</h2>
     <div class="obj-grid rev">
-      <div class="obj-card"><div class="obj-q">C'est trop cher.</div><div class="obj-a">150€/mois, c'est moins cher que perdre 3 couverts par semaine. Un seul client récupéré grâce à une bonne réponse couvre le mois.</div></div>
+      <div class="obj-card"><div class="obj-q">C'est trop cher.</div><div class="obj-a">Dès 150€/mois, c'est moins cher que perdre une seule réservation. Avec une nuitée à 120€, deux réservations récupérées dans le mois couvrent largement le service.</div></div>
       <div class="obj-card"><div class="obj-q">Je réponds déjà moi-même.</div><div class="obj-a">Après un service de 12h, sous le coup de l'émotion — c'est risqué. Nous répondons avec recul, en plusieurs langues, dans l'ambiance que vos futurs clients vont juger.</div></div>
       <div class="obj-card"><div class="obj-q">Je n'ai pas beaucoup d'avis.</div><div class="obj-a">C'est le bon moment. Chaque avis sans réponse influence des dizaines de futurs clients. Mieux vaut construire sa réputation avant la haute saison.</div></div>
       <div class="obj-card"><div class="obj-q">Les réponses multilingues ?</div><div class="obj-a">IA pour la rédaction initiale, relecture humaine avant publication. Vitesse de la machine, qualité du professionnel.</div></div>
@@ -743,9 +734,9 @@
     <h2 class="s-title" style="text-align:center;margin-bottom:.5rem;">Démarrer en 3 étapes</h2>
     <p class="s-sub" style="margin:0 auto 5rem;text-align:center;">Aucune installation. Aucune complexité.</p>
     <div class="process-grid">
-      <div class="p-card rev d1"><div class="p-num">1</div><h3>Démonstration gratuite</h3><p>Nous rédigeons des exemples sur vos vrais avis Google — sans accès à votre compte, sans engagement.</p></div>
+      <div class="p-card rev d1"><div class="p-num">1</div><h3>Démonstration gratuite</h3><p>Nous rédigeons des exemples sur vos vrais avis Google et TripAdvisor — sans accès à votre compte, sans engagement.</p></div>
       <div class="p-card rev d2"><div class="p-num">2</div><h3>Vous validez, on signe</h3><p>Fiche de cadrage + devis. Vous définissez l'ambiance, les points forts, les sujets à éviter.</p></div>
-      <div class="p-card rev d3"><div class="p-num">3</div><h3>On gère, vous dirigez</h3><p>Chaque avis traité sous 5 jours ouvrés après détection. Vous pouvez consulter les réponses publiées à tout moment sur votre fiche Google.</p></div>
+      <div class="p-card rev d3"><div class="p-num">3</div><h3>On gère, vous dirigez</h3><p>Chaque avis traité sous 5 jours ouvrés. Vous pouvez consulter les réponses publiées à tout moment sur votre fiche Google.</p></div>
     </div>
     <div style="text-align:center;margin-top:4rem;"><a href="#contact" class="btn-gold">Je veux ma démonstration gratuite →</a></div>
   </div>
@@ -756,7 +747,7 @@
     <div class="contact-grid">
       <div class="rev-l">
         <span class="s-tag">Contact</span>
-        <h2 class="s-title" style="font-size:clamp(2rem,3.5vw,3rem);">Parlons de<br><em style="color:var(--gold);">votre restaurant</em></h2>
+        <h2 class="s-title" style="font-size:clamp(2rem,3.5vw,3rem);">Parlons de<br><em style="color:var(--gold);">votre établissement</em></h2>
         <p>Réponse sous 24h. Démonstration gratuite sur vos vrais avis — aucun accès à votre compte requis.</p>
         <a href="tel:0744419315" class="c-item"><div class="c-icon">📞</div><div class="c-txt"><strong>07.44.41.93.15</strong><small>Lun–Ven · 9h–18h</small></div></a>
         <a href="mailto:contact@reputationazur.fr" class="c-item"><div class="c-icon">✉️</div><div class="c-txt"><strong>contact@reputationazur.fr</strong></div></a>
@@ -765,30 +756,23 @@
       <div class="rev-r">
         <div class="form-box">
           <h4>Demande de démonstration gratuite</h4>
-          <form id="demo-form" onsubmit="return submitDemoForm(event)">
-            <div class="f-row">
-              <div class="f-group"><label>Prénom</label><input type="text" id="demo-prenom" placeholder="Jean"></div>
-              <div class="f-group"><label>Nom</label><input type="text" id="demo-nom" placeholder="Dupont" required></div>
-            </div>
-            <div class="f-group"><label>Nom du restaurant</label><input type="text" id="demo-restaurant" placeholder="Le Bistrot du Port" required></div>
-            <div class="f-group"><label>Email</label><input type="email" id="demo-email" placeholder="jean@monresto.fr" required></div>
-            <div class="f-group"><label>Offre souhaitée</label>
-              <select id="demo-offre" required>
-                <option value="" disabled selected>Choisissez une offre</option>
-                <option>Essentiel — 165€/mois (6 mois)</option>
-                <option>Prestige ★ — 220€/mois (6 mois)</option>
-                <option>Premium — 330€/mois (6 mois)</option>
-                <option>Pack Duo — 385€/mois (6 mois)</option>
-                <option>Je ne sais pas encore</option>
-              </select>
-            </div>
-            <div class="f-group"><label>Une question ou une demande particulière ?</label><textarea id="demo-message" rows="3" placeholder="Facultatif" style="width:100%;padding:.8rem 0;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.12);font-family:'Jost',sans-serif;font-size:.9rem;color:white;outline:none;resize:vertical;"></textarea></div>
-            <button type="submit" class="f-submit" id="demo-submit-btn">Recevoir ma démonstration →</button>
-            <p id="demo-success" class="f-msg success" style="display:none;">Merci ! Votre demande a bien été enregistrée, nous vous recontacterons sous 24h.</p>
-            <p id="demo-error" class="f-msg error" style="display:none;">Une erreur est survenue. Vous pouvez nous écrire directement à <a href="mailto:contact@reputationazur.fr" style="color:inherit;">contact@reputationazur.fr</a>.</p>
-            <div class="f-note">Sans engagement · Avis offerts au démarrage · Réponse sous 24h</div>
-            <p class="rgpd-note" style="font-size:.66rem;line-height:1.6;color:rgba(255,255,255,.45);margin-top:.8rem;text-align:center;">Les informations saisies sont traitées par Jennifer Biscaglia EI — ReputationAzur pour répondre à votre demande (mesures précontractuelles). Elles sont collectées via Google Forms et conservées 12 mois sans suite donnée. Droits d'accès, de rectification, d'effacement et d'opposition : contact@reputationazur.fr. Détails dans notre <a href="mentions-legales.html" style="color:inherit;text-decoration:underline;">politique de confidentialité</a>.</p>
-          </form>
+          <div class="f-row">
+            <div class="f-group"><label>Prénom</label><input type="text" placeholder="Jean"></div>
+            <div class="f-group"><label>Nom</label><input type="text" placeholder="Dupont"></div>
+          </div>
+          <div class="f-group"><label>Nom de l'hôtel</label><input type="text" placeholder="Hôtel Beau Rivage"></div>
+          <div class="f-group"><label>Email</label><input type="email" placeholder="jean@monresto.fr"></div>
+          <div class="f-group"><label>Offre souhaitée</label>
+            <select>
+              <option>Essentiel — 165€/mois (6 mois)</option>
+              <option selected>Prestige ★ — 220€/mois (6 mois)</option>
+              <option>Premium — 330€/mois (6 mois)</option>
+              <option>Pack Duo — 385€/mois (6 mois)</option>
+              <option>Je ne sais pas encore</option>
+            </select>
+          </div>
+          <button class="f-submit" onclick="alert('Merci ! Jennifer vous contacte sous 24h.')">Recevoir ma démonstration →</button>
+          <div class="f-note">Sans engagement · Avis offerts au démarrage · Réponse sous 24h</div>
         </div>
       </div>
     </div>
@@ -800,7 +784,7 @@
   <div class="footer-inner">
     <div class="f-logo">Reputation<em>Azur</em></div>
     <a href="index.html" class="f-back">← Changer de profil</a>
-    <div class="f-legal">Jennifer Biscaglia EI · SIRET 105 774 202 00011 · Code APE 7021Z · 11 Impasse des Arums, 06600 Antibes<br>TVA non applicable, art. 293 B du CGI (art. L. 233-3 du CIBS à compter du 01/01/2027 ; ancienne référence admise jusqu'au 30/06/2028)<br><a href="mentions-legales.html" style="color:inherit;text-decoration:underline;">Mentions légales &amp; politique de confidentialité</a> · © 2026 ReputationAzur</div>
+    <div class="f-legal">Jennifer Biscaglia EI · SIRET 105 774 202 00011 · Code APE 7021Z<br>06600 Antibes · TVA non applicable, art. 293 B du CGI (recodifié dans le CIBS à compter du 01/01/2027, ancienne référence tolérée jusqu'au 31/12/2027)<br>© 2026 ReputationAzur</div>
   </div>
 </footer>
 
@@ -881,65 +865,6 @@
       document.querySelectorAll('.pp-card').forEach(c => c.classList.remove('open'));
     }
   });
-
-  // ── FORMULAIRE DEMANDE DE DEMONSTRATION (Google Forms) ──
-  var DEMO_GFORM_ACTION_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSc4CVrZXiTemllhE6P7i7GdrApugqTysS8gJmIwGtR2Ucvq6Q/formResponse";
-  var DEMO_GFORM_ENTRIES = {
-    prenom: "entry.465586366",
-    nom: "entry.2141442231",
-    restaurant: "entry.653132159",
-    email: "entry.458910783",
-    offre: "entry.946986761",
-    message: "entry.172266905"
-  };
-
-  function submitDemoForm(e) {
-    e.preventDefault();
-    var prenomEl = document.getElementById('demo-prenom');
-    var nomEl = document.getElementById('demo-nom');
-    var restaurantEl = document.getElementById('demo-restaurant');
-    var emailEl = document.getElementById('demo-email');
-    var offreEl = document.getElementById('demo-offre');
-    var messageEl = document.getElementById('demo-message');
-    var btn = document.getElementById('demo-submit-btn');
-    var successEl = document.getElementById('demo-success');
-    var errorEl = document.getElementById('demo-error');
-
-    if (!nomEl.value.trim() || !restaurantEl.value.trim() || !emailEl.value.trim() || !offreEl.value) {
-      return false;
-    }
-
-    successEl.style.display = 'none';
-    errorEl.style.display = 'none';
-    btn.disabled = true;
-    btn.textContent = 'Envoi en cours…';
-
-    var body = new URLSearchParams();
-    body.append(DEMO_GFORM_ENTRIES.prenom, prenomEl.value.trim());
-    body.append(DEMO_GFORM_ENTRIES.nom, nomEl.value.trim());
-    body.append(DEMO_GFORM_ENTRIES.restaurant, restaurantEl.value.trim());
-    body.append(DEMO_GFORM_ENTRIES.email, emailEl.value.trim());
-    body.append(DEMO_GFORM_ENTRIES.offre, offreEl.value);
-    body.append(DEMO_GFORM_ENTRIES.message, messageEl.value.trim());
-
-    fetch(DEMO_GFORM_ACTION_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: body.toString()
-    }).then(function () {
-      successEl.style.display = 'block';
-      document.getElementById('demo-form').reset();
-      btn.textContent = 'Recevoir ma démonstration →';
-      btn.disabled = false;
-    }).catch(function () {
-      errorEl.style.display = 'block';
-      btn.textContent = 'Recevoir ma démonstration →';
-      btn.disabled = false;
-    });
-
-    return false;
-  }
 </script>
 </body>
 </html>

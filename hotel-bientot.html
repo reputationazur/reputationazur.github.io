@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReputationAzur — Offre Hôtellerie bientôt disponible</title>
+  <meta name="description" content="La gestion des avis Google et TripAdvisor pour les hôtels arrive bientôt chez ReputationAzur.">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C09850;
+      --gold-light: #F0D282;
+      --ink: #162332;
+      --muted: #4A5A6B;
+      --white: #FFFFFF;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: 'Jost', sans-serif; overflow-x: hidden; }
+
+    .hero-full {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1455587734955-081b22074882?w=1800&q=85&auto=format&fit=crop');
+      background-size: cover; background-position: center;
+      transform: scale(1.05);
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(14,24,36,.55) 0%, rgba(14,24,36,.88) 100%);
+    }
+    .hero-overlay::before {
+      content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: repeating-conic-gradient(from 0deg at 50% 30%, rgba(240,210,130,.06) 0deg 3deg, transparent 3deg 13deg);
+      mix-blend-mode: overlay;
+    }
+
+    .site-logo {
+      position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%);
+      z-index: 10;
+      font-family: 'Jost', sans-serif; font-size: 1.1rem; font-weight: 500; letter-spacing: .04em;
+      color: white; text-decoration: none; white-space: nowrap;
+      background: rgba(14,24,36,.75);
+      backdrop-filter: blur(8px);
+      padding: .5rem 1.6rem;
+      border-radius: 100px;
+      border: 1px solid rgba(192,152,80,.2);
+    }
+    .site-logo em { font-style: normal; font-family: 'Cormorant', serif; font-weight: 600; font-size: 1.3rem; color: var(--gold); margin-left: 2px; }
+
+    .back-link {
+      position: fixed; top: 1.7rem; left: 2rem; z-index: 10;
+      font-size: .85rem; color: rgba(255,255,255,.75); text-decoration: none;
+      display: flex; align-items: center; gap: .4rem;
+      transition: color .3s ease;
+    }
+    .back-link:hover { color: var(--gold-light); }
+
+    .content {
+      position: relative; z-index: 2;
+      text-align: center;
+      max-width: 640px;
+      padding: 2rem;
+    }
+
+    .brand-stars { display: inline-flex; align-items: center; gap: 4px; color: var(--gold); margin-bottom: 1.4rem; }
+    .brand-stars svg { display: block; width: 11px; height: 11px; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: rgba(0,0,0,.35); backdrop-filter: blur(6px);
+      padding: .5rem 1.2rem .5rem .6rem; border-radius: 100px;
+      margin-bottom: 1.8rem;
+    }
+    .badge-line { height: 1px; width: 32px; background: var(--gold); flex-shrink: 0; }
+    .badge span { font-size: .72rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: white; }
+
+    .tag { font-size: .7rem; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-light); margin-bottom: .9rem; display: block; }
+
+    h1 {
+      font-family: 'Cormorant', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 300; line-height: 1.15;
+      color: white; letter-spacing: -.01em;
+      margin-bottom: 1.4rem;
+    }
+    h1 em { font-style: italic; color: var(--gold-light); }
+
+    .desc {
+      font-size: .98rem; font-weight: 300; line-height: 1.8;
+      color: rgba(255,255,255,.72);
+      max-width: 480px; margin: 0 auto 2.2rem;
+    }
+
+    .cta-row { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.4rem; }
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: var(--gold); color: var(--ink);
+      padding: .95rem 2rem; border-radius: 100px;
+      font-size: .88rem; font-weight: 500; letter-spacing: .04em;
+      text-decoration: none; transition: all .3s ease;
+    }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: transparent; color: white;
+      padding: .95rem 2rem; border-radius: 100px;
+      border: 1px solid rgba(255,255,255,.35);
+      font-size: .88rem; font-weight: 400; letter-spacing: .04em;
+      text-decoration: none; transition: all .3s ease;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); }
+
+    .notify-form { display: flex; align-items: stretch; gap: .6rem; flex-wrap: wrap; justify-content: center; }
+    .notify-input {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 100px;
+      padding: .95rem 1.4rem;
+      font-family: 'Jost', sans-serif;
+      font-size: .88rem;
+      color: white;
+      min-width: 240px;
+      transition: border-color .3s ease, background .3s ease;
+    }
+    .notify-input::placeholder { color: rgba(255,255,255,.45); }
+    .notify-input:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,.1); }
+    .notify-btn {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: var(--gold); color: var(--ink);
+      padding: .95rem 1.8rem; border-radius: 100px;
+      font-family: 'Jost', sans-serif;
+      font-size: .88rem; font-weight: 500; letter-spacing: .04em;
+      border: none; cursor: pointer; transition: all .3s ease;
+    }
+    .notify-btn:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .notify-btn:disabled { opacity: .6; cursor: default; transform: none; }
+    .notify-confirm { margin-top: 1rem; font-size: .82rem; color: var(--gold-light); display: none; }
+    .notify-error { margin-top: 1rem; font-size: .82rem; color: #E8A0A0; display: none; }
+
+    .notify-fallback {
+      margin-top: .7rem; display: none;
+      align-items: center; justify-content: center; gap: .6rem; flex-wrap: wrap;
+    }
+    .notify-fallback-text { font-size: .78rem; color: rgba(255,255,255,.55); }
+    .notify-copy-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.25);
+      color: white; border-radius: 100px; padding: .35rem .95rem;
+      font-family: 'Jost', sans-serif; font-size: .78rem; cursor: pointer;
+      transition: all .25s ease;
+    }
+    .notify-copy-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+    .notify-copy-btn.copied { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+    .diamond-rule { display: inline-flex; align-items: center; gap: 8px; margin: 0 auto; }
+    .diamond-rule .d-line { height: 1px; width: 60px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+    .diamond-rule .d-dot { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+
+    .note { margin-top: 1.6rem; font-size: .78rem; color: rgba(255,255,255,.4); }
+    .note strong { color: rgba(255,255,255,.6); font-weight: 500; }
+
+    @media (max-width: 600px) {
+      .site-logo { top: .8rem; font-size: 1rem; padding: .4rem 1.2rem; }
+      .back-link { top: 1rem; left: 1rem; font-size: .8rem; }
+      .content { padding: 1.5rem; }
+      .cta-row { flex-direction: column; width: 100%; }
+      .btn-gold, .btn-outline { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back-link">← Retour</a>
+  <a href="index.html" class="site-logo">Reputation<em>Azur</em></a>
+
+  <div class="hero-full">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="content">
+      <span class="brand-stars" aria-hidden="true">
+        <svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg>
+        <svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg>
+        <svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg>
+        <svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg>
+        <svg viewBox="0 0 12 12"><polygon points="6.00,0.00 7.35,4.15 11.71,4.15 8.18,6.71 9.53,10.85 6.00,8.29 2.47,10.85 3.82,6.71 0.29,4.15 4.65,4.15" fill="currentColor"/></svg>
+      </span>
+
+      <div class="badge">
+        <div class="badge-line"></div>
+        <span>Vous êtes hôtelier ou responsable d'hébergement</span>
+      </div>
+
+      <span class="tag">Offre hôtellerie</span>
+      <h1>Bientôt <em>disponible</em></h1>
+      <p class="desc">Nous préparons actuellement notre offre dédiée aux hôtels et hébergements de la Côte d'Azur — gestion des avis Google et TripAdvisor, réponses multilingues, mise en avant des réservations. Elle sera proposée prochainement. Vous souhaitez un devis dès maintenant ? Écrivez-nous à contact@reputationazur.fr ou appelez le 07 44 41 93 15.</p>
+
+      <form class="notify-form" id="notify-form" onsubmit="return submitNotify(event)">
+        <input type="email" id="notify-email" class="notify-input" placeholder="Votre adresse email" required>
+        <button type="submit" id="notify-btn" class="notify-btn">Être informé du lancement →</button>
+      </form>
+      <p id="notify-confirm" class="notify-confirm">Merci ! Votre demande a bien été enregistrée, nous vous préviendrons dès le lancement.</p>
+      <p id="notify-error" class="notify-error">Une erreur est survenue. Vous pouvez nous écrire directement :</p>
+      <div id="notify-fallback" class="notify-fallback">
+        <span class="notify-fallback-text">Rien ne s'est ouvert ? Écrivez-nous directement :</span>
+        <button type="button" id="notify-copy-btn" class="notify-copy-btn" onclick="copyNotifyEmail()">📋 contact@reputationazur.fr</button>
+      </div>
+      <p class="rgpd-note" style="font-size:.66rem;line-height:1.6;color:rgba(255,255,255,.55);margin-top:.8rem;">Les informations saisies sont traitées par Jennifer Biscaglia EI — ReputationAzur pour répondre à votre demande (mesures précontractuelles). Elles sont collectées via Google Forms et conservées 12 mois sans suite donnée. Droits d'accès, de rectification, d'effacement et d'opposition : contact@reputationazur.fr. Détails dans notre <a href="mentions-legales.html" style="color:inherit;text-decoration:underline;">politique de confidentialité</a>.</p>
+
+      <div class="cta-row" style="margin-top:1.6rem;">
+        <a href="restaurants.html" class="btn-outline">Voir notre offre restaurants</a>
+      </div>
+
+      <div class="diamond-rule"><span class="d-line"></span><span class="d-dot"></span><span class="d-line"></span></div>
+      <p class="note">En attendant, <strong>ReputationAzur</strong> accompagne déjà les restaurants des Alpes-Maritimes et du Var sur la gestion de leurs avis Google & TripAdvisor.</p>
+    </div>
+  </div>
+
+  <script>
+    // Formulaire Google Forms relié au compte reputationazur@gmail.com.
+    // La notification par email à chaque nouvelle réponse est activée côté Google Forms.
+    var GFORM_ACTION_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSdJzrxDZ9j9oAVEBT1mnwDyyn_ckL7tR-CChvcU5Y-9UCxrEw/formResponse";
+    var GFORM_EMAIL_ENTRY = "entry.913983701";
+
+    function submitNotify(e) {
+      e.preventDefault();
+      var emailInput = document.getElementById('notify-email');
+      var email = emailInput.value.trim();
+      if (!email) return false;
+
+      var btn = document.getElementById('notify-btn');
+      var confirmEl = document.getElementById('notify-confirm');
+      var errorEl = document.getElementById('notify-error');
+      var fallbackEl = document.getElementById('notify-fallback');
+
+      confirmEl.style.display = 'none';
+      errorEl.style.display = 'none';
+      fallbackEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = "Envoi en cours…";
+
+      var body = new URLSearchParams();
+      body.append(GFORM_EMAIL_ENTRY, email);
+
+      fetch(GFORM_ACTION_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
+      }).then(function () {
+        // En mode no-cors la réponse est opaque : une requête qui part sans
+        // exception réseau est considérée comme un succès.
+        confirmEl.style.display = 'block';
+        emailInput.value = '';
+        btn.textContent = "Être informé du lancement →";
+        btn.disabled = false;
+      }).catch(function () {
+        errorEl.style.display = 'block';
+        fallbackEl.style.display = 'flex';
+        btn.textContent = "Être informé du lancement →";
+        btn.disabled = false;
+      });
+
+      return false;
+    }
+
+    function copyNotifyEmail() {
+      var email = "contact@reputationazur.fr";
+      var btn = document.getElementById('notify-copy-btn');
+      function markCopied() {
+        btn.textContent = "✓ Adresse copiée";
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.textContent = "📋 " + email;
+          btn.classList.remove('copied');
+        }, 2200);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(markCopied).catch(function () {
+          window.prompt("Copiez notre adresse email :", email);
+        });
+      } else {
+        window.prompt("Copiez notre adresse email :", email);
+      }
+    }
+  </script>
+
+
+<footer style="position:relative;z-index:5;background:#0E1824;color:rgba(255,255,255,.35);font-family:Jost,sans-serif;font-size:.68rem;line-height:1.8;text-align:center;padding:1rem 1.2rem;"><div >Jennifer Biscaglia EI · SIRET 105 774 202 00011 · Code APE 7021Z · 11 Impasse des Arums, 06600 Antibes<br>TVA non applicable, art. 293 B du CGI (art. L. 233-3 du CIBS à compter du 01/01/2027 ; ancienne référence admise jusqu'au 30/06/2028)<br><a href="mentions-legales.html" style="color:inherit;text-decoration:underline;">Mentions légales &amp; politique de confidentialité</a> · © 2026 ReputationAzur</div></footer>
+</body>
+</html>
