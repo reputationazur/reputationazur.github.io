@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <meta name="google-site-verification" content="yFr4Af1_wCKPMSuYfPvE2TxDfSKa8Nbsf8yi6eF_Ja4" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ReputationAzur — Gestion des avis Google & TripAdvisor · Côte d'Azur</title>
@@ -132,8 +133,8 @@
       .soon-badge { top: .6rem; right: .8rem; font-size: .58rem; padding: .3rem .7rem; }
     }
 
-    /* Panel hôtel : plus un lien, formulaire d'inscription intégré directement */
-    .panel-hotel { cursor: default; }
+    /* Panel hôtel : lien vers hotel-bientot.html, formulaire conservé (stopPropagation) */
+    
     .hotel-notify-form {
       display: flex; align-items: stretch; gap: .5rem; flex-wrap: wrap;
       justify-content: center; max-width: 320px; margin: 0 auto;
@@ -325,7 +326,7 @@
   </a>
 
   <!-- Panel Hôtels -->
-  <div class="panel panel-hotel">
+  <a href="hotel-bientot.html" class="panel panel-hotel">
     <div class="panel-bg"></div>
     <div class="panel-overlay"></div>
     <div class="panel-content">
@@ -333,7 +334,7 @@
       <span class="panel-tag">Vous êtes</span>
       <h1 class="panel-title">Hôtelier<br><em>ou responsable</em><br>d'hébergement</h1>
       <p class="panel-desc">Notre offre hôtellerie arrive bientôt. Laissez votre email pour être informé(e) du lancement.</p>
-      <form class="hotel-notify-form" id="hotel-notify-form" onsubmit="return submitHotelNotify(event)">
+      <form class="hotel-notify-form" id="hotel-notify-form" onsubmit="return submitHotelNotify(event)" onclick="event.stopPropagation()">
         <input type="email" id="hotel-notify-email" class="hotel-notify-input" placeholder="Votre email" required>
         <button type="submit" id="hotel-notify-btn" class="hotel-notify-btn">M'informer</button>
       </form>
@@ -351,8 +352,7 @@
       </div>
       <div class="panel-stats-source">Source : TripAdvisor, The Power of Reviews &amp; étude TripAdvisor/Ipsos MORI (2019)</div>
     </div>
-  </div>
-
+  </a>
   <script>
     // Formulaire Google Forms relié au compte reputationazur@gmail.com
     // (le même que celui utilisé sur hotel-bientot.html).
