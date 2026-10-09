@@ -80,11 +80,14 @@
     .panel:hover .panel-content { transform: translateY(-6px); }
 
     .panel-icon {
-      font-size: 3rem;
       display: block;
-      margin-bottom: 1.2rem;
+      width: 46px; height: 46px;
+      margin: 0 auto 1.4rem;
+      color: var(--gold-light);
+      opacity: .92;
       filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
     }
+    .panel-icon svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
 
     .panel-tag {
       font-size: .7rem; font-weight: 500; letter-spacing: .22em;
@@ -274,7 +277,7 @@
 
       .panel-resto .panel-content { padding-top: 3rem; }
       .panel-hotel .panel-content { padding-bottom: 4.5rem; }
-      .panel-icon { font-size: 2rem; margin-bottom: 0; }
+      .panel-icon { width: 30px; height: 30px; margin-bottom: 0; }
       .panel-tag { font-size: .62rem; margin-bottom: 0; }
       .panel-title { font-size: clamp(1.8rem, 7vw, 2.4rem); margin-bottom: 0; }
       .panel-desc { display: none; }
@@ -300,7 +303,7 @@
     <div class="panel-bg"></div>
     <div class="panel-overlay"></div>
     <div class="panel-content">
-      <span class="panel-icon">🍽️</span>
+      <span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M14 6v13a4 4 0 0 0 4 4v19M10 6v13M18 6v13M22 6v13a4 4 0 0 1-4 4"/><path d="M34 42V6c-4 2-7 8-7 15 0 4 2 6 7 6"/></svg></span>
       <span class="panel-tag">Vous êtes</span>
       <h1 class="panel-title">Restaurateur<br><em>ou propriétaire</em><br>de restaurant</h1>
       <p class="panel-desc">Gérez vos avis Google et TripAdvisor. Réponses pro sous 5 jours ouvrés après détection, multilingues à partir de l'offre Prestige.</p>
@@ -330,7 +333,7 @@
     <div class="panel-bg"></div>
     <div class="panel-overlay"></div>
     <div class="panel-content">
-      <span class="panel-icon">🏨</span>
+      <span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 36h36M10 36a14 14 0 0 1 28 0M24 22v-5M20 17h8M4 42h40"/></svg></span>
       <span class="panel-tag">Vous êtes</span>
       <h1 class="panel-title">Hôtelier<br><em>ou responsable</em><br>d'hébergement</h1>
       <p class="panel-desc">Notre offre hôtellerie arrive bientôt. Laissez votre email pour être informé(e) du lancement.</p>
