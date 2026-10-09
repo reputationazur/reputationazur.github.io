@@ -78,7 +78,11 @@
     .s-num { font-family: 'Cormorant', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 600; color: white; line-height: 1; }
     .s-num .g { color: var(--gold); }
     .s-label { font-size: .78rem; color: rgba(255,255,255,.45); margin-top: .4rem; line-height: 1.55; max-width: 200px; }
-    .s-src { font-size: .62rem; color: rgba(255,255,255,.2); margin-top: .3rem; }
+    .s-src { font-size: .62rem; color: rgba(255,255,255,.2); margin-top: .3rem; max-width: 240px; line-height: 1.5; }
+    .s-intro { font-size: .78rem; color: rgba(255,255,255,.45); margin-bottom: .6rem; line-height: 1.55; max-width: 240px; }
+    .s-pair { display: flex; gap: 1.4rem; }
+    .s-pair .s-num { font-size: clamp(2rem, 3vw, 3rem); }
+    .s-pair .s-label { max-width: 120px; }
 
     /* ── SECTIONS ── */
     .section { padding: 7rem 3rem; }
@@ -378,19 +382,41 @@
   <div class="stats-inner">
     <div class="stats-row">
       <div class="s-stat">
-        <div class="s-num"><span class="ctr" data-t="93">0</span><span class="g">%</span></div>
-        <div class="s-label">des clients ont déjà effectué un achat après avoir lu des avis positifs</div>
-        <div class="s-src">BrightLocal 2026</div>
+        <div class="s-num"><span class="ctr" data-t="62">0</span><span class="g">%</span></div>
+        <div class="s-label">des Français consultent des avis avant de choisir un restaurant</div>
+        <div class="s-src">Ipsos pour le Guide Michelin, enquête en ligne du 21 au 24 mars 2025, 1 000 personnes (18-75 ans)</div>
       </div>
       <div class="s-stat">
-        <div class="s-num"><span class="ctr" data-t="88">0</span><span class="g">%</span></div>
-        <div class="s-label">choisiraient un établissement qui répond à tous ses avis</div>
-        <div class="s-src">BrightLocal 2024</div>
+        <div class="s-intro">Parmi ceux qui consultent des avis :</div>
+        <div class="s-pair">
+          <div>
+            <div class="s-num"><span class="ctr" data-t="53">0</span><span class="g">%</span></div>
+            <div class="s-label">Google Maps</div>
+          </div>
+          <div>
+            <div class="s-num"><span class="ctr" data-t="45">0</span><span class="g">%</span></div>
+            <div class="s-label">TripAdvisor</div>
+          </div>
+        </div>
+        <div class="s-src">Ipsos pour le Guide Michelin, mars 2025 (même étude)</div>
+      </div>
+      <div class="s-stat">
+        <div class="s-pair">
+          <div>
+            <div class="s-num"><span class="ctr" data-t="93">0</span><span class="g">%</span></div>
+            <div class="s-label">ont déjà acheté après avoir lu des avis</div>
+          </div>
+          <div>
+            <div class="s-num"><span class="ctr" data-t="80">0</span><span class="g">%</span></div>
+            <div class="s-label">utiliseraient une entreprise qui répond à tous ses avis</div>
+          </div>
+        </div>
+        <div class="s-src">BrightLocal, Local Consumer Review Survey 2026, consommateurs américains (États-Unis)</div>
       </div>
       <div class="s-stat">
         <div class="s-num">9<span class="g">/10</span></div>
         <div class="s-label">consommateurs attendent une réponse à leur avis — seuls 7% disent ne pas en attendre</div>
-        <div class="s-src">BrightLocal 2024 & 2025</div>
+        <div class="s-src">BrightLocal 2024 et 2025, consommateurs américains (États-Unis)</div>
       </div>
     </div>
   </div>
@@ -474,7 +500,7 @@
             <div class="cmp-item-body">
               <strong>Réponse pro sous 5 jours</strong>
               <p>Chaque avis négatif reçoit une réponse mesurée, dans l'ambiance de votre établissement. Le futur client voit que vous prenez soin de votre réputation.</p>
-              <div class="cmp-pill cmp-pill-good">88% préfèrent un établissement qui répond (BrightLocal 2024)</div>
+              <div class="cmp-pill cmp-pill-good">80% utiliseraient une entreprise qui répond à tous ses avis (BrightLocal 2026, États-Unis)</div>
             </div>
           </div>
 
